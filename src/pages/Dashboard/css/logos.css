@@ -1,0 +1,49 @@
+.website_visits_color {
+    color: #DD2465 !important;
+    font-size: 12px !important;
+}
+
+.cost_of_items_color {
+    color: #49A44D !important;
+    font-size: 12px !important;
+}
+
+.nb_of_items_color {
+    color:#20C2D6 !important;
+    font-size: 12px !important;
+}
+
+.nb_of_users_color {
+    color:#FC9009 !important;
+    font-size: 12px !important;
+}
+
+.nb_v_p_m {
+    color: #DD2465 !important;
+    margin-top: 35px !important;
+    margin-bottom: 20px !important;
+    text-align: center !important;
+}
+
+.i_a_p_m {
+    color: #49A44D  !important;
+    margin-top: 35px !important;
+    margin-bottom: 20px !important;
+    text-align: center !important;
+}
+
+.logo {
+    width: 56px !important;
+    height: 56px !important;
+}
+
+.icon {
+    margin-right: 5px !important;
+    padding: 12px !important;
+}
+
+.uppercase {
+    text-transform: uppercase !important;
+}
+
+

@@ -1,0 +1,467 @@
+<template>
+  <div class="md-layout">
+    <div class="md-layout-item md-size-100">
+      <div
+        class="md-layout  md-alignment-center "
+        style="margin-bottom: 10px !important;"
+      >
+        <div class="md-layout-item md-size-45" style="text-align: center;">
+          <md-button
+            class="md-primary md-dense"
+            @click="showDialog_category = true"
+            style="background-color: #5aaf45 !important; "
+          >
+            Add Category
+          </md-button>
+        </div>
+      </div>
+    </div>
+    <div class="md-layout-item md-size-100">
+      <md-table v-model="searched" md-sort="name" md-sort-order="asc">
+        <md-table-toolbar>
+          <div class="md-toolbar-section-start">
+            <h1 class="md-title">Categories</h1>
+          </div>
+
+          <md-field md-clearable class="md-toolbar-section-end">
+            <md-input
+              placeholder="Search by name..."
+              v-model="search"
+              @input="searchOnTable"
+            />
+          </md-field>
+        </md-table-toolbar>
+
+        <md-table-empty-state
+          md-label="No categories found"
+          :md-description="
+            `No category found for this '${search}' query. Try a different search term or create a new category.`
+          "
+        >
+          <md-button
+            class="md-primary md-raised"
+            @click="showDialog_category = true"
+            >Create New Category</md-button
+          >
+        </md-table-empty-state>
+
+        <md-table-row slot="md-table-row" slot-scope="{ item }">
+          <md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{
+            item.id
+          }}</md-table-cell>
+          <md-table-cell md-label="Name" md-sort-by="name"
+            ><p style="margin-left: 15px;">{{ item.name }}</p></md-table-cell
+          >
+          <md-table-cell md-label="Description" md-sort-by="description"
+            ><p style="margin-left: 15px;">
+              {{ item.description }}
+            </p></md-table-cell
+          >
+          <md-table-cell class="avatar" md-label="Avatar"
+            ><img
+              :src="item.image_url"
+              style="width: 50px; height: 50px;object-fit: cover; margin-left: 15px;"
+          /></md-table-cell>
+          <md-table-cell md-label="created at" md-sort-by="created_at"
+            ><p style="margin-left: 15px;">
+              {{ item.created_at }}
+            </p></md-table-cell
+          >
+          <md-table-cell md-label="Available" md-sort-by="email">
+            <p style="margin-left: 15px;">
+              {{ item.is_available ? "yes" : "no" }}
+            </p>
+          </md-table-cell>
+          <md-table-cell md-label="Categroy Actions">
+            <div style="margin-left: 15px;">
+              <md-button
+                v-if="user.role == 'admin' || user.id == item.managed_by"
+                class="md-icon-button md-raised md-round md-info"
+                @click="editCategpory(item.id)"
+                style="margin: 0.2rem"
+              >
+                <md-icon>edit</md-icon>
+              </md-button>
+              <md-button
+                v-if="user.role == 'admin' || user.id == item.managed_by"
+                class="md-icon-button md-raised md-round md-danger mr-2"
+                @click="deleteCategory(item.id)"
+                style="margin-right: 38px;"
+              >
+                <md-icon>delete</md-icon>
+              </md-button>
+              <md-button
+                class="md-raised"
+                style="width: auto;"
+                @click="goToItems(item.id)"
+                >items({{ item.items_count }})</md-button
+              >
+            </div>
+          </md-table-cell>
+        </md-table-row>
+      </md-table>
+      <Pagination
+        style="margin-left:  50%; translate: -25%;"
+        :pageCount="categories_page_meta.last_page"
+        :perPage="categories_page_meta.per_page"
+        :total="categories_page_meta.total"
+        :value="categories_page_meta.current_page"
+        @input="getAllPaginatedCategories"
+        type="success"
+      ></Pagination>
+    </div>
+
+    <!-- dialog Category Start -->
+    <md-dialog
+      :md-active.sync="showDialog_category"
+      style="margin-left: auto; margin-right: auto; overflow: auto; border-radius: 10px;"
+    >
+      <div style="margin-left: auto; margin-right: auto; width: 400px ;">
+        <div>
+          <div class="md-layout " style="color: white; text-align: center; ">
+            <div
+              class="md-layout-item "
+              style="background-color: #5aaf45 !important; padding: 8px 10px; background-color: #5aaf45 ;
+                margin: 0 0 5px 0;
+                width: 100%;
+                text-align: center;
+                font-size: 20px;"
+            >
+              ADD CATEGORY
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="md-layout text-center " style="color: white; ">
+            <div class="md-layout-item">
+              <md-field>
+                <label>Name</label>
+                <md-input v-model="category_name"></md-input>
+                <span class="md-helper-text">Name</span>
+              </md-field>
+              <validation-error
+                :errors="apiValidationErrors['name_translation.en']"
+                style="color: red"
+              />
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="md-layout text-center " style="color: white; ">
+            <div class="md-layout-item">
+              <md-field>
+                <label>Description</label>
+                <md-textarea v-model="category_description"></md-textarea>
+                <md-icon>description</md-icon>
+                <validation-error
+                  :errors="apiValidationErrors.description"
+                  style="color: red"
+                />
+              </md-field>
+            </div>
+          </div>
+        </div>
+
+        <div
+          style="display: flex; flex-direction: column; align-items: center; justify-content: center;"
+        >
+          <div
+            class="md-layout text-center info-text"
+            style="color: white; display: flex !important; gap: 50px; align-items: center; margin-top: 10px;"
+          >
+            <label for="avatar" class="user-avatar">
+              Upload Image
+              <input
+                type="file"
+                name="browse"
+                id="avatar"
+                style="display: none;"
+                @change="onUploadCategoryImage($event)"
+              />
+            </label>
+            <img
+              v-if="tmpCategoryImage"
+              style="position: relative !important; height: 110px; object-fit: cover;"
+              :src="tmpCategoryImage"
+              width="110"
+            />
+          </div>
+          <validation-error
+            :errors="apiValidationErrors.image_url"
+            style="color: red; "
+          />
+        </div>
+
+        <div class="md-layout-item">
+          <div
+            class="md-layout md-gutter md-alignment-center-space-around"
+            style="padding: 10px 0; "
+          >
+            <div class="md-layout-item md-size-45 " style="text-align: right;">
+              <md-button
+                class="md-dense md-primary"
+                style="width: 40%; margin-right: 1em; background-color: #5aaf45 !important; "
+                @click="addCategory()"
+                >ADD</md-button
+              >
+            </div>
+            <div class="md-layout-item md-size-45" style="text-align: left;">
+              <md-button
+                @click="showDialog_category = false"
+                class="md-dense md-raised"
+                style="background-color: white !important; color: gray !important; "
+                >Cancel</md-button
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </md-dialog>
+
+    <!-- Edit Dialog For Category -->
+    <EditCategoryDialoge
+      :categoryId="editCategoryId"
+      :showEditDialog="showEditDialog"
+      v-if="showEditDialog"
+      @closeShowDialog="showEditDialog = false"
+      @updateCategoryList="
+        getAllPaginatedCategories(categories_page_meta.current_page)
+      "
+    ></EditCategoryDialoge>
+    <!-- Edit Dialog For Category -->
+    <!-- Category dialog ends -->
+
+    <LoaderFull v-if="isLoading"></LoaderFull>
+  </div>
+</template>
+<script>
+import { TableSearch } from "./TableAdmin.vue";
+import { ValidationError } from "@/components";
+import formMixin from "@/mixins/form-mixin";
+import { LoaderFull } from "@/components";
+import { Pagination } from "@/components";
+import EditCategoryDialoge from "./EditCategoryDialoge.vue";
+import { resolve } from "path";
+
+const toLower = (text) => {
+  return text.toString().toLowerCase();
+};
+
+const searchByName = (items, term) => {
+  // if (term) {
+  //   return items.filter((item) => toLower(item.name).includes(toLower(term)));
+  // }
+  // return items;
+  // console.log(term);
+};
+export default {
+  data() {
+    return {
+      // Category form Binding
+      category_name: "",
+      category_description: "",
+      categoryImage: null,
+      selected: [],
+      showDialog_category: false,
+      search: null,
+      searched: [],
+      categories: [],
+      categories_page_meta: {
+        current_page: 1,
+      },
+      tmpCategoryImage: null,
+      editCategoryId: 1,
+      showEditDialog: false,
+      isLoading: false,
+      timer: null,
+      user: {},
+    };
+  },
+
+  components: {
+    ValidationError,
+    LoaderFull,
+    Pagination,
+    EditCategoryDialoge,
+  },
+
+  mixins: [formMixin],
+  watch: {
+    showDialog_category(newv) {
+      if (!newv) {
+        this.closeCategoryDialog();
+      }
+    },
+  },
+
+  async mounted() {
+    await this.$store.dispatch("myUser");
+    this.user = await this.$store.getters.myUser;
+  },
+  methods: {
+    goToItems(categoryId) {
+      this.$router.push({
+        name: "Items",
+        params: { id: categoryId },
+      });
+    },
+    onUploadCategoryImage(e) {
+      this.categoryImage = e.target.files[0];
+
+      const reader = new FileReader();
+      reader.readAsDataURL(e.target.files[0]);
+      reader.onload = () => {
+        this.tmpCategoryImage = reader.result;
+      };
+    },
+
+    getClass: ({ id }) => ({
+      "table-success": id === 1,
+      "table-info": id === 3,
+      "table-danger": id === 5,
+      "table-warning": id === 7,
+    }),
+
+    closeCategoryDialog(aVar) {
+      this.showDialog_category = false;
+      this.resetApiValidation();
+      this.resetInputs();
+    },
+
+    resetInputs() {
+      this.categoryImage = null;
+      this.category_description = null;
+      this.category_name = null;
+      this.tmpCategoryImage = null;
+    },
+
+    async addCategory() {
+      var formData = new FormData();
+      formData.append("is_available", 1);
+      formData.append("image_url", this.categoryImage);
+      formData.append("name_translation[en]", this.category_name);
+      formData.append(
+        "description_translation[en]",
+        this.category_description || "-"
+      );
+
+      try {
+        this.isLoading = true;
+        await this.$store.dispatch("storeCategory", formData);
+        this.isLoading = false;
+        this.closeCategoryDialog(this.showDialog_category);
+        await this.$store.dispatch("alerts/warning", "Done!");
+
+        await this.getAllPaginatedCategories(1);
+      } catch (e) {
+        this.isLoading = false;
+        await this.$store.dispatch("alerts/error", "Invalid input");
+        this.setApiValidation(e.data.errors);
+      }
+    },
+
+    async searchOnTable() {
+      clearTimeout(this.timer);
+
+      try {
+        this.timer = setTimeout(() => {
+          this.isLoading = true;
+          this.getAllPaginatedCategories(1, this.search);
+          this.isLoading = false;
+        }, 500);
+      } catch (error) {}
+    },
+
+    async getAllPaginatedCategories(page, search = "") {
+      await this.$store.dispatch("getAllCategories", { page, search });
+      this.categories = this.$store.getters["getAllCategories"].data;
+      this.categories_page_meta = this.$store.getters["getAllCategories"].meta;
+      this.searched = this.categories;
+    },
+
+    async deleteCategory(categoryId) {
+      if (
+        confirm(
+          "Are you sure want to delete?\n\nNote that all items belong to this category will be deleted too!!"
+        )
+      ) {
+        await this.$store.dispatch("deleteCategory", categoryId);
+        var goToPage = this.categories_page_meta.current_page;
+        if (
+          this.categories.length == 1 &&
+          this.categories_page_meta.current_page != 1
+        ) {
+          goToPage = this.categories_page_meta.current_page - 1;
+        }
+
+        await this.getAllPaginatedCategories(goToPage);
+      }
+    },
+
+    editCategpory(categoryId) {
+      this.showEditDialog = true;
+      this.editCategoryId = categoryId;
+    },
+  },
+
+  created() {
+    this.getAllPaginatedCategories(1, this.rowsPerPage);
+  },
+};
+</script>
+<style>
+.table-transparent {
+  background-color: transparent !important;
+}
+
+.mt-0 {
+  margin-top: 0 !important;
+}
+
+.add-item-form-header {
+  margin: 0 0 5px 0;
+  width: 100%;
+  text-align: left;
+  font-size: 20px;
+  background-color: #588ac3 !important;
+  padding: 8px 10px;
+  text-align: center;
+}
+
+.md-active-button:hover {
+  background-color: #91a865 !important;
+}
+
+.custom-file-upload {
+  border: 1px solid #ccc;
+  display: inline-block;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.mdb:hover {
+  background-color: #5aaf45 !important;
+}
+
+.md-table-head-label {
+  padding-left: 20px !important;
+}
+
+.md-table-head.md-sortable:first-of-type .md-table-sortable-icon,
+.md-table-head.md-table-cell-selection + .md-sortable .md-table-sortable-icon {
+  right: 0 !important;
+  left: 0 !important;
+}
+
+.user-avatar {
+  width: 150px;
+  height: 40px;
+  border: 1px dashed rgb(97, 92, 92);
+  color: black;
+  padding: 4px 2px;
+  margin-block: 10px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+</style>
