@@ -22,7 +22,7 @@ export default {
   async mounted() {
     await this.$store.dispatch("getAllItems", { page: 1, search: "" });
     this.items = await this.$store.getters.getAllItems;
-    console.log(this.items);
+    //console.log(this.items);
   },
 };
 </script>
