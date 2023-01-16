@@ -98,7 +98,7 @@
           :link="{
             name: 'Manage Products',
             icon: 'library_books',
-            path: '/',
+            path: '/components/all-products',
           }"
         />
 

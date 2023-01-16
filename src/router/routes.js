@@ -31,6 +31,7 @@ import guest from "@/middleware/guest";
 import ItemsList from "../pages/Dashboard/Tables/ItemsList.vue";
 import ProductsList from "../pages/Dashboard/Tables/ProductsList.vue";
 import AllItems from "../pages/Dashboard/Tables/AllItems.vue";
+import AllProducts from "../pages/Dashboard/Tables/AllProducts.vue";
 
 let componentsMenu = {
   path: "/components",
@@ -58,8 +59,14 @@ let componentsMenu = {
     },
     {
       path: "all-items",
-      name: "Items",
+      name: "All Items",
       components: { default: AllItems },
+      meta: { middleware: auth },
+    },
+    {
+      path: "all-products",
+      name: "All Products",
+      components: { default: AllProducts },
       meta: { middleware: auth },
     },
     {

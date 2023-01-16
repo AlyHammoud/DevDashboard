@@ -6,6 +6,7 @@ import App from "./App.vue";
 import Chartist from "chartist";
 import VueAxios from "vue-axios";
 import DashboardPlugin from "./material-dashboard";
+import "vue-search-select/dist/VueSearchSelect.css";
 
 // plugin setup
 Vue.use(DashboardPlugin);

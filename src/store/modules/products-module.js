@@ -19,6 +19,34 @@ const mutations = {
 };
 
 const actions = {
+  async getAllIProducts({ commit }, { page, search = "" }) {
+    return await axios
+      .get(`/products?page=${page}&search=${search}`)
+      .then(({ data }) => {
+        commit("setAllProducts", data);
+      });
+  },
+
+  async getAllIProductsFiltered(
+    { commit },
+    { page, categoryIds, itemIds, prices }
+  ) {
+    let url = `/filtered-products`;
+    if (categoryIds) url += `/${categoryIds}`;
+    else url += `/no-cat`;
+
+    if (itemIds) url += `/${itemIds}`;
+    else url += `/no-item`;
+
+    url += `?page=${page}`;
+
+    if (prices) url += `&prices=${prices}`;
+
+    return await axios.get(url).then(({ data }) => {
+      commit("setAllProducts", data);
+    });
+  },
+
   async getAllIProductsByItem({ commit }, { page, itemId, search = "" }) {
     return await axios
       .get(`/products/${itemId}?page=${page}&search=${search}`)

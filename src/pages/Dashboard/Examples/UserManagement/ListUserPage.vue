@@ -379,7 +379,7 @@ export default {
         await this.$store.dispatch("alerts/error", "User added successfully");
         this.closeForm();
       } catch (e) {
-        //console.log(e);
+        // console.log(e);
         this.isLoading = false;
         await this.$store.dispatch("alerts/error", "error, try again");
         this.setApiValidation(e.data.errors);

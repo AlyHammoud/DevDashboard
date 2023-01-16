@@ -7,6 +7,7 @@ import axios from "../../axios/index.js";
 const state = {
   categories: [],
   category: null,
+  names: [],
 };
 
 const mutations = {
@@ -16,10 +17,13 @@ const mutations = {
   setSingleCategory: (state, category) => {
     state.category = category;
   },
+  setCategoriesNames: (state, names) => {
+    state.names = names;
+  },
 };
 
 const actions = {
-  async getAllCategories({ commit }, { page = 1, search }) {
+  async getAllCategories({ commit }, { page = 1, search = "" }) {
     return await axios
       .get(`/category?page=${page}&search=${search}`)
       .then(({ data }) => {
@@ -41,14 +45,21 @@ const actions = {
     });
   },
 
-  async updateCategory({ commit, state }, { id, category }) {
+  async updateCategory({ commit }, { id, category }) {
     return await axios.post(`/category/${id}?_method=PUT`, category);
+  },
+
+  async getCategoriesNames({ commit }) {
+    return await axios.get("categories-names").then(({ data }) => {
+      commit("setCategoriesNames", data);
+    });
   },
 };
 
 const getters = {
   getAllCategories: (state) => state.categories,
   getSingleCategory: (state) => state.category,
+  getCategoryNames: (state) => state.names,
 };
 
 const categories = {

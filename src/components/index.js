@@ -8,6 +8,8 @@ import ChartCard from "./Cards/ChartCard.vue";
 import NavTabsCard from "./Cards/NavTabsCard.vue";
 import ValidationError from "./ValidationError.vue";
 import LoaderFull from "./LoaderFull.vue";
+import SearchableCheckBox from "./SearchableCheckBox.vue";
+import ItemCard from "./ItemCard.vue";
 
 import Pagination from "./Pagination.vue";
 import SidebarPlugin from "./SidebarPlugin";
@@ -24,4 +26,6 @@ export {
   DropDown,
   LoaderFull,
   SidebarPlugin,
+  SearchableCheckBox,
+  ItemCard,
 };

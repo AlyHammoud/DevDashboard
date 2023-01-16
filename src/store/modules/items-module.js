@@ -7,6 +7,7 @@ import axios from "../../axios/index.js";
 const state = {
   items: [],
   item: null,
+  names: [],
 };
 
 const mutations = {
@@ -15,6 +16,10 @@ const mutations = {
   },
   setSingleItem: (state, item) => {
     state.item = item;
+  },
+
+  setItemsNames: (state, names) => {
+    state.names = names;
   },
 };
 
@@ -26,12 +31,25 @@ const actions = {
         commit("setAllItems", data);
       });
   },
+  async getAllItemsFiltered({ commit }, { page, search, categoryId }) {
+    return await axios
+      .get(`/filtered-items/${categoryId}?page=${page}&search=${search}`)
+      .then(({ data }) => {
+        commit("setAllItems", data);
+      });
+  },
   async getAllItemsByCategory({ commit }, { page, categoryId, search }) {
     return await axios
       .get(`/items/${categoryId}?page=${page}&search=${search}`)
       .then(({ data }) => {
         commit("setAllItems", data);
       });
+  },
+
+  async getItemsNames({ commit }) {
+    return await axios.get("itemsNames").then(({ data }) => {
+      commit("setItemsNames", data);
+    });
   },
 
   async storeItem({ commit, state }, item) {
@@ -56,6 +74,7 @@ const actions = {
 const getters = {
   getAllItems: (state) => state.items,
   getSingleItem: (state) => state.item,
+  getItemsNames: (state) => state.names,
 };
 
 const items = {
