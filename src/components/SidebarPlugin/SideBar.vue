@@ -16,7 +16,7 @@
         <template v-if="$route.meta.rtlActive">{{ rtlTitle }}</template>
         <template v-else>{{ title }}</template>
       </a>
-      <div class="navbar-minimize xxx">
+      <div class="navbar-minimize xxx" style="width: 40px;">
         <md-button
           id="minimizeSidebar"
           class="md-round md-just-icon md-transparent"
