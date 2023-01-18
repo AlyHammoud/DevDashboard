@@ -194,7 +194,10 @@
       <div
         class="md-layout-item md-large-size-30 md-medium-size-33 md-small-size-50 md-xsmall-size-85"
       >
-        <md-card class="hoverElevate" style="border-radius:45px !important;  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+        <md-card
+          class="hoverElevate"
+          style="border-radius:45px !important;  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);"
+        >
           <md-card-area>
             <md-card-media>
               <img
@@ -207,7 +210,12 @@ max-height:100%;"
             </md-card-media>
 
             <md-card-header>
-              <div class="md-title" style="text-align: center; font-size: 22px !important;">Patagonia Pack 28L</div>
+              <div
+                class="md-title"
+                style="text-align: center; font-size: 22px !important;"
+              >
+                Patagonia Pack 28L
+              </div>
               <div class=" md-layout md-alignment-center-space-around">
                 <div
                   class="md-layout-item md-size-60"
@@ -215,8 +223,11 @@ max-height:100%;"
                 >
                   Sport Accessories
                 </div>
-                <div class="md-layout-item md-size-10" style="padding: 0; font-weight: bold; font-size: 20px;">
-                  &dollar; 
+                <div
+                  class="md-layout-item md-size-10"
+                  style="padding: 0; font-weight: bold; font-size: 20px;"
+                >
+                  &dollar;
                 </div>
                 <div
                   class="md-layout-item md-size-30"
@@ -268,10 +279,13 @@ max-height:100%;"
       <!-- Card-1 end -->
 
       <!-- Card-2 Start -->
-         <div
+      <div
         class="md-layout-item md-large-size-30 md-medium-size-33 md-small-size-50 md-xsmall-size-85"
       >
-        <md-card class="hoverElevate"  style="border-radius:45px !important;  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+        <md-card
+          class="hoverElevate"
+          style="border-radius:45px !important;  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);"
+        >
           <md-card-area>
             <md-card-media>
               <img
@@ -284,7 +298,12 @@ max-height:100%;"
             </md-card-media>
 
             <md-card-header>
-              <div class="md-title" style="text-align: center; font-size: 22px !important;">Patagonia Pack 28L</div>
+              <div
+                class="md-title"
+                style="text-align: center; font-size: 22px !important;"
+              >
+                Patagonia Pack 28L
+              </div>
               <div class=" md-layout md-alignment-center-space-around">
                 <div
                   class="md-layout-item md-size-60"
@@ -292,8 +311,11 @@ max-height:100%;"
                 >
                   Sport Accessories
                 </div>
-                <div class="md-layout-item md-size-10" style="padding: 0; font-weight: bold; font-size: 20px;">
-                  &dollar; 
+                <div
+                  class="md-layout-item md-size-10"
+                  style="padding: 0; font-weight: bold; font-size: 20px;"
+                >
+                  &dollar;
                 </div>
                 <div
                   class="md-layout-item md-size-30"
@@ -345,10 +367,13 @@ max-height:100%;"
       <!-- Card-2 End -->
 
       <!-- Card-3 Start -->
-         <div
+      <div
         class="md-layout-item md-large-size-30 md-medium-size-33 md-small-size-50 md-xsmall-size-85"
       >
-        <md-card class="hoverElevate"  style="border-radius:45px !important;  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+        <md-card
+          class="hoverElevate"
+          style="border-radius:45px !important;  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);"
+        >
           <md-card-area>
             <md-card-media>
               <img
@@ -361,7 +386,12 @@ max-height:100%;"
             </md-card-media>
 
             <md-card-header>
-              <div class="md-title" style="text-align: center; font-size: 22px !important;">Patagonia Pack 28L</div>
+              <div
+                class="md-title"
+                style="text-align: center; font-size: 22px !important;"
+              >
+                Patagonia Pack 28L
+              </div>
               <div class=" md-layout md-alignment-center-space-around">
                 <div
                   class="md-layout-item md-size-60"
@@ -369,8 +399,11 @@ max-height:100%;"
                 >
                   Sport Accessories
                 </div>
-                <div class="md-layout-item md-size-10" style="padding: 0; font-weight: bold; font-size: 20px;">
-                  &dollar; 
+                <div
+                  class="md-layout-item md-size-10"
+                  style="padding: 0; font-weight: bold; font-size: 20px;"
+                >
+                  &dollar;
                 </div>
                 <div
                   class="md-layout-item md-size-30"
@@ -592,6 +625,11 @@ export default {
     };
   },
 
+  // async mounted() {
+  //   await this.$store.dispatch("myUser");
+  //   this.user = await this.$store.getters.myUser;
+  // },
+
   methods: {
     onSelect: function(items) {
       this.selected = items;
@@ -630,8 +668,8 @@ export default {
   border-image: initial;
   border-radius: 0px 0px 30px 30px;
 }
-.hoverElevate:hover{
-   box-shadow: 0px 10px 20px 5px rgba(0, 0, 0, 0.1);
+.hoverElevate:hover {
+  box-shadow: 0px 10px 20px 5px rgba(0, 0, 0, 0.1);
   transform: translateY(-5px);
 }
 </style>
