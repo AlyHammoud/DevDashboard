@@ -7,6 +7,7 @@ import axios from "../../axios/index.js";
 const state = {
   products: [],
   product: null,
+  sales: [],
 };
 
 const mutations = {
@@ -15,6 +16,9 @@ const mutations = {
   },
   setSingleProduct: (state, product) => {
     state.product = product;
+  },
+  setSales: (state, sales) => {
+    state.sales = sales;
   },
 };
 
@@ -29,7 +33,7 @@ const actions = {
 
   async getAllIProductsFiltered(
     { commit },
-    { page, categoryIds, itemIds, prices }
+    { page, categoryIds, itemIds, prices, sales, search }
   ) {
     let url = `/filtered-products`;
     if (categoryIds) url += `/${categoryIds}`;
@@ -41,9 +45,17 @@ const actions = {
     url += `?page=${page}`;
 
     if (prices) url += `&prices=${prices}`;
+    if (sales) url += `&sales=${sales}`;
+    if (search) url = `/filtered-products?page=${page}&search=${search}`;
 
     return await axios.get(url).then(({ data }) => {
       commit("setAllProducts", data);
+    });
+  },
+
+  async getSales({ commit }) {
+    return await axios.get("product-sales").then(({ data }) => {
+      commit("setSales", data);
     });
   },
 
@@ -77,6 +89,7 @@ const actions = {
 const getters = {
   getAllProducts: (state) => state.products,
   getSingleProduct: (state) => state.product,
+  getSales: (state) => state.sales,
 };
 
 const products = {

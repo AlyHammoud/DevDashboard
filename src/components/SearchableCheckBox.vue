@@ -4,7 +4,7 @@
     <multi-select
       :options="selectOptions"
       :selected-options="items"
-      placeholder="select item"
+      :placeholder="placeholder"
       @select="onSelect"
       :isDisabled="!isEnabled"
     >
@@ -34,6 +34,10 @@ export default {
     resets: {
       type: Boolean,
       default: false,
+    },
+    placeholder: {
+      type: String,
+      default: "select item",
     },
   },
   data() {

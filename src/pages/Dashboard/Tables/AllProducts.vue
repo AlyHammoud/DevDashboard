@@ -1,16 +1,13 @@
 <template>
   <div style="display: flex; flex-direction: column;" class="all-products">
     <div>
-      <!-- <md-checkbox v-model="enableFilter" class="md-primary"
-        ><span class="filtering">Enable filters</span></md-checkbox
-      > -->
-
       <div class="searchable">
         <SearchableCheckBox
           class="searcable"
           name="By categories:"
           :selectOptions="categoryNames"
           :resets="resetSearchableBoxForCategory"
+          :isEnabled="searchableCategoryEnabled"
           style="max-width: 200px;"
           @filterItems="setCategoryFilterOption"
         />
@@ -20,8 +17,20 @@
           name="By Items:"
           :selectOptions="itemsNames"
           :resets="resetSearchableBoxForItems"
+          :isEnabled="searchableItemEnabled"
           style="max-width: 200px;"
           @filterItems="setItemFilterOption"
+        />
+
+        <SearchableCheckBox
+          class="searcable"
+          name="By Sales:"
+          placeholder="Sales"
+          :selectOptions="salesList"
+          :resets="resetSearchableBoxForSales"
+          :isEnabled="searchableSalesEnabled"
+          style="max-width: 90px;"
+          @filterItems="setSaleFilterOption"
         />
 
         <label for="price" class="filter-price">
@@ -39,6 +48,7 @@
               v-model="higherPrice"
               @input="setPriceFilterOption"
             />
+            <button @click="resetPrice">reset</button>
           </div>
         </label>
       </div>
@@ -46,58 +56,59 @@
 
     <div class="item-search-field-wrapper">
       Search an item by name:
-      <!-- <input
+      <input
         type="text"
         class="item-search-field"
-        v-model="searchItem"
-        @input="searchItems"
+        v-model="searchProduct"
+        @input="searchProducts"
         placeholder="Search here"
       />
-      <div></div> -->
+      <div></div>
     </div>
 
     <md-field>
       <div class="items-cards">
-        <!-- <div v-for="item in items" :key="item.id"> -->
-        <!-- <ItemCard
-            :item="item"
-            @editCategory="editCategory"
-            @deleteItem="deleteItem"
-          /> -->
-        <!-- </div> -->
+        <div v-for="product in products" :key="product.id">
+          <ProductCard
+            :product="product"
+            @editProduct="editProduct"
+            @deleteProduct="deleteProduct"
+          />
+        </div>
       </div>
     </md-field>
 
-    <!-- <EditItemDialoge
-      v-if="showEditItemDialog"
-      :showEditDialog="showEditItemDialog"
-      :itemId="itemIdInEdit"
-      @closeShowDialog="showEditItemDialog = false"
-      @updateItemList="getAllItemsAfterEdit"
-    /> -->
-    <!-- <Pagination
-      style="margin-left:  50%; translate: -25%;"
-      :pageCount="itemsMeta.last_page"
-      :perPage="itemsMeta.per_page"
-      :total="itemsMeta.total"
-      :value="itemsMeta.current_page"
-      @input="getAllItems"
-      v-if="items.length"
-      type="success"
-    /> -->
+    <EditProductDialoge
+      v-if="showEditProductDialog"
+      :showEditDialog="showEditProductDialog"
+      :productId="productIdInEdit"
+      @closeShowDialog="showEditProductDialog = false"
+      @updateProductList="getAllProducts((page = productsMeta.current_page))"
+    />
 
-    <!-- <LoaderFull v-if="isLoading" /> -->
+    <Pagination
+      style="margin-left:  50%; translate: -25%;"
+      :pageCount="productsMeta.last_page"
+      :perPage="productsMeta.per_page"
+      :total="productsMeta.total"
+      :value="productsMeta.current_page"
+      @input="getAllProducts"
+      type="success"
+    />
+
+    <LoaderFull v-if="isLoading" />
   </div>
 </template>
 
 <script>
 // import ShowImages from "../ShowImages";
 // import AddItem from "../ItemsManagement/AddItem";
-// import EditItemDialoge from "./ItemsManagement/EditItemDialoge";
-// import { Pagination } from "@/components";
-// import { LoaderFull } from "@/components";
+import EditProductDialoge from "./ProductsManagement/EditProductDialoge";
+import { Pagination } from "@/components";
+import { LoaderFull } from "@/components";
 import { SearchableCheckBox } from "@/components";
-// import { ItemCard } from "@/components";
+// import { PriceRange } from "@/components";
+import { ProductCard } from "@/components";
 
 export default {
   name: "all-products",
@@ -108,28 +119,80 @@ export default {
       categoryNames: [],
       resetSearchableBoxForItems: false,
       resetSearchableBoxForCategory: false,
+      resetSearchableBoxForSales: false,
       filterOptions: {
         category: [],
         item: [],
+        sales: [],
       },
       itemsNames: [],
+      salesList: [],
       lowerPrice: 0,
       higherPrice: 0,
+      searchProduct: null,
       timer: null,
+      isLoading: false,
+
+      showEditProductDialog: false,
+      productIdInEdit: null,
+
+      searchableCategoryEnabled: false,
+      searchableItemEnabled: false,
+      searchableSalesEnabled: false,
     };
   },
-  components: { SearchableCheckBox },
+  components: {
+    SearchableCheckBox,
+    ProductCard,
+    EditProductDialoge,
+    Pagination,
+    LoaderFull,
+  },
 
   watch: {},
   mounted() {
     this.getAllProducts();
     this.getCategoriesNamesFunc();
     this.getItemsNamesFunc();
+    this.getSales();
   },
 
   methods: {
     async getAllProducts(page = 1, search = "") {
       try {
+        if (
+          this.filterOptions.category.length ||
+          this.filterOptions.item.length ||
+          this.filterOptions.sales.length ||
+          this.searchProduct != null ||
+          this.lowerPrice > 0 ||
+          this.higherPrice > 0
+        ) {
+          this.getFilteredProducts({
+            page: page,
+            categoryIds: this.filterOptions.category.length
+              ? this.filterOptions.category
+              : null,
+            itemIds: this.filterOptions.item.length
+              ? this.filterOptions.item
+              : null,
+            prices:
+              Number(this.lowerPrice) > 0 || Number(this.higherPrice) > 0
+                ? [Number(this.lowerPrice), Number(this.higherPrice)].sort(
+                    (a, b) => a - b
+                  )
+                : null,
+            sales: this.filterOptions.sales.length
+              ? this.filterOptions.sales
+              : null,
+            search: this.searchProduct,
+          });
+          // this.isLoading = false;
+
+          return;
+        }
+
+        this.isLoading = true;
         await this.$store.dispatch("getAllIProducts", {
           page: page,
           search: search,
@@ -137,8 +200,11 @@ export default {
 
         this.products = await this.$store.getters.getAllProducts.data;
         this.productsMeta = await this.$store.getters.getAllProducts.meta;
-        // console.log(this.products);
-      } catch (error) {}
+
+        this.isLoading = false;
+      } catch (error) {
+        this.isLoading = false;
+      }
     },
 
     async getCategoriesNamesFunc() {
@@ -150,6 +216,8 @@ export default {
             text: name.name,
           });
         });
+
+        this.searchableCategoryEnabled = true;
       } catch (error) {}
     },
 
@@ -158,47 +226,55 @@ export default {
       itemIds = null,
       page = 1,
       prices = null,
+      sales = null,
+      search = "",
     }) {
       try {
+        this.isLoading = true;
         await this.$store.dispatch("getAllIProductsFiltered", {
           categoryIds,
           itemIds,
           page,
           prices,
+          sales,
+          search,
         });
         this.products = this.$store.getters.getAllProducts.data;
         this.productsMeta = this.$store.getters.getAllProducts.meta;
 
+        this.isLoading = false;
+
         // console.log(this.products);
-      } catch (error) {}
+      } catch (error) {
+        this.isLoading = false;
+      }
     },
 
     async setCategoryFilterOption(categoryIds) {
       this.lowerPrice = 0;
       this.higherPrice = 0;
       this.filterOptions.category = categoryIds;
+      this.searchProduct = "";
 
       await this.getFilteredProducts({
         categoryIds: categoryIds.length ? categoryIds : null,
         itemIds: null,
         prices: "",
+        sales: null,
       });
 
       this.resetSearchableBoxForItems = !this.resetSearchableBoxForItems;
+      this.resetSearchableBoxForSales = !this.resetSearchableBoxForSales;
 
-      this.itemsNames = [];
-      this.products.map((product) => {
-        this.itemsNames.push({
-          value: product.item.id,
-          text: product.item.name,
-        });
-      });
+      this.getItemsNamesFunc(categoryIds);
     },
 
     setItemFilterOption(itemIds) {
       this.lowerPrice = 0;
       this.higherPrice = 0;
       this.filterOptions.item = itemIds;
+      this.resetSearchableBoxForSales = !this.resetSearchableBoxForSales;
+      this.searchProduct = "";
 
       this.getFilteredProducts({
         categoryIds: this.filterOptions.category.length
@@ -206,10 +282,13 @@ export default {
           : null,
         itemIds: itemIds.length ? itemIds : null,
         prices: "",
+        sales: null,
       });
     },
 
     setPriceFilterOption(number) {
+      this.searchProduct = "";
+
       clearTimeout(this.timer);
 
       this.timer = setTimeout(() => {
@@ -223,20 +302,119 @@ export default {
           prices: [Number(this.lowerPrice), Number(this.higherPrice)].sort(
             (a, b) => a - b
           ),
+          sales: this.filterOptions.sales.length
+            ? this.filterOptions.sales
+            : null,
         });
       }, 700);
     },
 
-    async getItemsNamesFunc() {
+    setSaleFilterOption(salesNumber) {
+      this.searchProduct = "";
+      this.filterOptions.sales = salesNumber;
+
+      clearTimeout(this.timer);
+
+      this.timer = setTimeout(() => {
+        this.getFilteredProducts({
+          categoryIds: this.filterOptions.category.length
+            ? this.filterOptions.category
+            : null,
+          itemIds: this.filterOptions.item.length
+            ? this.filterOptions.item
+            : null,
+          prices:
+            Number(this.lowerPrice) > 0 || Number(this.higherPrice) > 0
+              ? [Number(this.lowerPrice), Number(this.higherPrice)].sort(
+                  (a, b) => a - b
+                )
+              : null,
+          sales: salesNumber,
+        });
+      }, 700);
+    },
+
+    async getItemsNamesFunc(categoryIds = "") {
       try {
-        await this.$store.dispatch("getItemsNames");
+        this.itemsNames = [];
+        await this.$store.dispatch("getItemsNames", { categoryIds });
         this.$store.getters.getItemsNames.forEach((name) => {
           this.itemsNames.push({
             value: name.id,
             text: name.name,
           });
         });
+        this.searchableItemEnabled = true;
       } catch (error) {}
+    },
+
+    async getSales() {
+      await this.$store.dispatch("getSales");
+      this.$store.getters.getSales.forEach((sale) => {
+        this.salesList.push({
+          value: sale.sale,
+          text: sale.sale + "%",
+        });
+      });
+      this.searchableSalesEnabled = true;
+    },
+
+    async searchProducts(input) {
+      input = input.target.value;
+      clearTimeout(this.timer);
+
+      this.resetSearchableBoxForItems = !this.resetSearchableBoxForItems;
+      this.resetSearchableBoxForSales = !this.resetSearchableBoxForSales;
+      this.resetSearchableBoxForCategory = !this.resetSearchableBoxForCategory;
+      this.lowerPrice = 0;
+      this.higherPrice = 0;
+
+      this.timer = setTimeout(() => {
+        this.getFilteredProducts({ search: input });
+      }, 500);
+    },
+
+    editProduct(id) {
+      this.productIdInEdit = id;
+      this.showEditProductDialog = true;
+    },
+
+    async deleteProduct(id) {
+      try {
+        if (
+          confirm(
+            "are you sure want to delete this item? \n All products related to this item will be deleted too!"
+          )
+        ) {
+          this.isLoading = true;
+          await this.$store.dispatch("deleteProduct", id);
+
+          var goToPage = this.productsMeta.current_page;
+          if (
+            this.products.length == 1 &&
+            this.productsMeta.current_page != 1
+          ) {
+            goToPage--;
+          }
+
+          this.getAllProducts(goToPage);
+          this.isLoading = false;
+        }
+      } catch (error) {
+        this.isLoading = false;
+        await this.$store.dispatch(
+          "alerts/error",
+          "error deleting this product! try again"
+        );
+      }
+    },
+
+    resetPrice() {
+      this.lowerPrice = 0;
+      this.higherPrice = 0;
+      setTimeout(() => {
+        this.getAllProducts(1);
+      }, 300);
     },
   },
 };
@@ -351,15 +529,13 @@ body {
 }
 
 .items-cards {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
   width: 100%;
   gap: 20px;
   margin-block: 20px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, 200px);
+  grid-template-columns: repeat(auto-fit, 300px);
+  justify-content: center;
+  align-items: center;
 
   div {
     height: 100%;
@@ -404,8 +580,8 @@ body {
 
     div {
       display: grid;
-      grid-template-columns: 50px 50px;
-      gap: 10px;
+      grid-template-columns: 33px 33px 33px;
+      gap: 20px;
       margin-top: -13px;
       // place-items: center;
 
@@ -414,6 +590,13 @@ body {
         height: 32px;
         margin-left: 50%;
         border: 0.2px solid rgb(211, 200, 200);
+      }
+
+      button {
+        cursor: pointer;
+        border: none;
+        background-color: #fff;
+        box-shadow: 0 1px 5px rgb(59, 54, 54);
       }
     }
   }

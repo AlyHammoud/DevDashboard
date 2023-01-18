@@ -46,10 +46,12 @@ const actions = {
       });
   },
 
-  async getItemsNames({ commit }) {
-    return await axios.get("itemsNames").then(({ data }) => {
-      commit("setItemsNames", data);
-    });
+  async getItemsNames({ commit }, { categoryIds }) {
+    return await axios
+      .get(`itemsNames?categoryIds=${categoryIds}`)
+      .then(({ data }) => {
+        commit("setItemsNames", data);
+      });
   },
 
   async storeItem({ commit, state }, item) {
