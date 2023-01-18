@@ -52,10 +52,8 @@ axios.interceptors.response.use(
 
         case 401:
           localStorage.clear("USERTOKEN");
-          router.go({
-            path: "/login",
-            query: { redirect: router.currentRoute.fullPath },
-          });
+	  
+          
           break;
         case 403:
           router.replace({
