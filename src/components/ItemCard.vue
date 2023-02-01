@@ -1,5 +1,9 @@
 <template>
-  <div class="item-card">
+  <div
+    class="item-card"
+    @mouseover="autoLoopCarousel()"
+    @mouseleave="stopCarousel()"
+  >
     <div class="item-imgs">
       <div v-if="item.images.length" class="item-img">
         <img :src="item.images[imageIndex].image_url" />
@@ -65,8 +69,19 @@
       </div>
     </div>
     <div class="item-card-actions">
-      <button @click="$emit('editCategory', item.id)">Edit</button>
-      <button @click="$emit('deleteItem', item.id)">Delete</button>
+      <button
+        v-if="user.role == 'admin' || user.id == item.managed_by"
+        @click="$emit('editCategory', item.id)"
+      >
+        Edit
+      </button>
+
+      <button
+        v-if="user.role == 'admin' || user.id == item.managed_by"
+        @click="$emit('deleteItem', item.id)"
+      >
+        Delete
+      </button>
     </div>
     <div class="item-card-created">
       <span>{{ item.created_at }}</span>
@@ -80,6 +95,10 @@ export default {
   data() {
     return {
       imageIndex: 0,
+      user: {}, //the user variable i want to fill with data from api
+      isHovering: false,
+      initialTimeInterval: null,
+      myInterval: null,
     };
   },
 
@@ -89,23 +108,43 @@ export default {
     },
   },
 
-  mounted() {
-    this.autoLoopCarousel();
-  },
+  // mounted() {
+  //   this.autoLoopCarousel();
+  // },
+
+  // async unmounted(){
+  //   if(isHovering){
+  //     this.autoLoopCarousel();
+  //   }
+  // }
+  // ,
+
+  async mounted() {
+    // this.autoLoopCarousel();
+
+    await this.$store.dispatch("myUser");
+    this.user = await this.$store.getters.myUser;
+  }, //this is the method to get user data from db
 
   methods: {
     carouselImage(item_id, index) {
       this.imageIndex = index;
     },
 
+    intervalCarousel() {
+      if (this.item.images.length - 1 > this.imageIndex) {
+        this.imageIndex++;
+        return;
+      }
+      this.imageIndex = 0;
+    },
+
     autoLoopCarousel() {
-      setInterval(() => {
-        if (this.item.images.length - 1 > this.imageIndex) {
-          this.imageIndex++;
-          return;
-        }
-        this.imageIndex = 0;
-      }, 3000);
+      this.myInterval = setInterval(this.intervalCarousel, 3000); //make the loop function execute
+    },
+
+    stopCarousel() {
+      clearInterval(this.myInterval); //make the loop function stop
     },
   },
 };

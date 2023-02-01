@@ -53,6 +53,10 @@
         @include btn-styles($gray-light);
     }
 
+    &.md-blue{
+      @include btn-styles($myBlue)
+    }
+
     &.md-primary{
       @include btn-styles($brand-primary);
     }

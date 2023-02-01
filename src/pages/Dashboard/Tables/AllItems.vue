@@ -18,16 +18,17 @@
       </div>
     </div>
 
-    <div class="item-search-field-wrapper">
+    <div class="item-search-field-wrapper" style="width: 75%;">
       Search an item by name:
       <input
         type="text"
         class="item-search-field"
         v-model="searchItem"
         @input="searchItems"
-        placeholder="Search here"
+        placeholder="Type here"
+        style="margin-top: 0.7rem; "
       />
-      <div></div>
+      <div style="margin-top: -2px ;"></div>
     </div>
 
     <md-field>
@@ -399,30 +400,37 @@ body {
     border: none;
     height: 50px;
     width: 100%;
-    border-bottom: 1px solid rgb(223, 111, 223);
+    border-bottom: 1.5px solid green;
+    border-radius: 1.5rem;
     background-color: rgb(248, 247, 247);
     padding: 5px 10px;
     position: relative;
 
     &:focus {
-      border-bottom: none;
+      border-bottom: 1.5px solid red;
+      border-radius: 2rem;
+      transition: all 0.6s;
+      transform-origin: center center;
+      align-self: center;
     }
 
-    &:focus ~ div {
-      width: 100%;
-      height: 1px;
-      background-color: red;
-    }
-    &:not(:focus) ~ div {
-      width: 0;
-      height: 1px;
-    }
+    // &:focus ~ div {
+    //   width: 95%;
+    //   height: 1px;
+    //   background-color: red;
+    // }
+    // &:not(:focus) ~ div {
+    //   width: 0;
+    //   height: 0.1px;
+    // }
   }
   div {
     width: 0px;
     transition: all 0.3s;
     transform-origin: center center;
     align-self: center;
+    // border-bottom: 5px solid red;
+    // border-radius: 2rem;
   }
 }
 </style>

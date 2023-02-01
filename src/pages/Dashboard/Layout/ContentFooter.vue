@@ -12,18 +12,18 @@
             </a>
           </li> -->
           <li>
-            <a v-if="$route.meta.rtlActive" href="https://www.develution.it/privacy" target="_blank">
+            <a v-if="$route.meta.rtlActive" href="https://www.develution.it/privacy" target="_blank" class="footer-color">
               سياسة الخصوصية
             </a>
-            <a href="https://www.develution.it/privacy" target="_blank">
+            <a href="https://www.develution.it/privacy" target="_blank" class="footer-color">
               PRIVACY POLICY
             </a>
           </li>
           <li>
-            <a v-if="$route.meta.rtlActive" href="http://blog.creative-tim.com" target="_blank">
+            <a v-if="$route.meta.rtlActive" href="http://blog.creative-tim.com" target="_blank" class="footer-color">
              معلومات عنا
             </a>
-            <a v-else href="https://creative-tim.com/presentation">
+            <a v-else href="https://creative-tim.com/presentation" class="footer-color" >
               About Us
             </a>
           </li>
@@ -45,7 +45,7 @@
           </li> -->
         </ul>
       </nav>
-      <div class="copyright text-center">
+      <div class="copyright text-center" style="font-weight: 400;">
         <!-- &copy; {{ new Date().getFullYear() }}, -->
         Designed and Coded
         by
@@ -61,4 +61,8 @@
 <script>
 export default {};
 </script>
-<style></style>
+<style>
+.footer-color{
+  color: #FFFFFF;
+}
+</style>

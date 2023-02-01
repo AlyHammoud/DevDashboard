@@ -189,286 +189,58 @@
       </div>
     </div>
 
-    <div class="md-layout  md-alignment-center-space-around md-size-100 ">
-      <!-- Card-1 Start -->
+    <!-- <div
+      class="md-layout  md-alignment-center-space-around md-size-100 "
+      v-for="mvItem in mvItems"
+      :key="mvItem.id"
+    >
+      <mv-items-card :item="mvItem" />
+    </div> -->
+
+    <div class="md-layout md-alignment-center-space-around ">
       <div
         class="md-layout-item md-large-size-30 md-medium-size-33 md-small-size-50 md-xsmall-size-85"
+        v-for="mvItem in mvItems"
+        :key="mvItem.id"
       >
-        <md-card
-          class="hoverElevate"
-          style="border-radius:45px !important;  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);"
-        >
-          <md-card-area>
-            <md-card-media>
-              <img
-                src="https://cdn.shopify.com/s/files/1/0559/0899/1136/products/s-l1600-32_1500x.png?v=1670788356"
-                alt="People"
-                class="most_view_products"
-                style="max-width:100%;
-max-height:100%;"
-              />
-            </md-card-media>
-
-            <md-card-header>
-              <div
-                class="md-title"
-                style="text-align: center; font-size: 22px !important;"
-              >
-                Patagonia Pack 28L
-              </div>
-              <div class=" md-layout md-alignment-center-space-around">
-                <div
-                  class="md-layout-item md-size-60"
-                  style=" padding:0 0 0 10px !important; font-weight: bold; color: green;"
-                >
-                  Sport Accessories
-                </div>
-                <div
-                  class="md-layout-item md-size-10"
-                  style="padding: 0; font-weight: bold; font-size: 20px;"
-                >
-                  &dollar;
-                </div>
-                <div
-                  class="md-layout-item md-size-30"
-                  style="text-align: left !important; color: black !important; font-weight: bold !important; font-size: 1rem !important; padding: 0 !important;"
-                >
-                  129.00
-                </div>
-              </div>
-            </md-card-header>
-
-            <md-card-content class="card_content">
-              <div class="md-layout ">
-                <div class="md-layout-item md-size-15" style="padding: 0;">
-                  <img
-                    src="../../assets/images/eye.png"
-                    alt=""
-                    style="width: 50%;"
-                  />
-                </div>
-                <div
-                  class="md-layout-item md-size-85"
-                  style="font-weight: bold; padding: 0;"
-                >
-                  4850
-                </div>
-              </div>
-              <div
-                class="md-layout md-alignment-center-space-around"
-                style="margin-top: 1em;"
-              >
-                <div class="md-layout-item md-size-15" style="padding: 0;">
-                  <img
-                    src="../../assets/images/kartone.png"
-                    alt=""
-                    style="width: 50%;"
-                  />
-                </div>
-                <div
-                  class="md-layout-item md-size-85"
-                  style="font-weight: bold; padding: 0;"
-                >
-                  100
-                </div>
-              </div>
-            </md-card-content>
-          </md-card-area>
-        </md-card>
+        <mv-items-card :item="mvItem" />
       </div>
-      <!-- Card-1 end -->
-
-      <!-- Card-2 Start -->
-      <div
-        class="md-layout-item md-large-size-30 md-medium-size-33 md-small-size-50 md-xsmall-size-85"
-      >
-        <md-card
-          class="hoverElevate"
-          style="border-radius:45px !important;  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);"
-        >
-          <md-card-area>
-            <md-card-media>
-              <img
-                src="https://cdn.shopify.com/s/files/1/0559/0899/1136/products/s-l1600-32_1500x.png?v=1670788356"
-                alt="People"
-                class="most_view_products"
-                style="max-width:100%;
-max-height:100%;"
-              />
-            </md-card-media>
-
-            <md-card-header>
-              <div
-                class="md-title"
-                style="text-align: center; font-size: 22px !important;"
-              >
-                Patagonia Pack 28L
-              </div>
-              <div class=" md-layout md-alignment-center-space-around">
-                <div
-                  class="md-layout-item md-size-60"
-                  style=" padding:0 0 0 10px !important; font-weight: bold; color: green;"
-                >
-                  Sport Accessories
-                </div>
-                <div
-                  class="md-layout-item md-size-10"
-                  style="padding: 0; font-weight: bold; font-size: 20px;"
-                >
-                  &dollar;
-                </div>
-                <div
-                  class="md-layout-item md-size-30"
-                  style="text-align: left !important; color: black !important; font-weight: bold !important; font-size: 1rem !important; padding: 0 !important;"
-                >
-                  129.00
-                </div>
-              </div>
-            </md-card-header>
-
-            <md-card-content class="card_content">
-              <div class="md-layout ">
-                <div class="md-layout-item md-size-15" style="padding: 0;">
-                  <img
-                    src="../../assets/images/eye.png"
-                    alt=""
-                    style="width: 50%;"
-                  />
-                </div>
-                <div
-                  class="md-layout-item md-size-85"
-                  style="font-weight: bold; padding: 0;"
-                >
-                  4850
-                </div>
-              </div>
-              <div
-                class="md-layout md-alignment-center-space-around"
-                style="margin-top: 1em;"
-              >
-                <div class="md-layout-item md-size-15" style="padding: 0;">
-                  <img
-                    src="../../assets/images/kartone.png"
-                    alt=""
-                    style="width: 50%;"
-                  />
-                </div>
-                <div
-                  class="md-layout-item md-size-85"
-                  style="font-weight: bold; padding: 0;"
-                >
-                  100
-                </div>
-              </div>
-            </md-card-content>
-          </md-card-area>
-        </md-card>
-      </div>
-      <!-- Card-2 End -->
-
-      <!-- Card-3 Start -->
-      <div
-        class="md-layout-item md-large-size-30 md-medium-size-33 md-small-size-50 md-xsmall-size-85"
-      >
-        <md-card
-          class="hoverElevate"
-          style="border-radius:45px !important;  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);"
-        >
-          <md-card-area>
-            <md-card-media>
-              <img
-                src="https://cdn.shopify.com/s/files/1/0559/0899/1136/products/s-l1600-32_1500x.png?v=1670788356"
-                alt="People"
-                class="most_view_products"
-                style="max-width:100%;
-max-height:100%;"
-              />
-            </md-card-media>
-
-            <md-card-header>
-              <div
-                class="md-title"
-                style="text-align: center; font-size: 22px !important;"
-              >
-                Patagonia Pack 28L
-              </div>
-              <div class=" md-layout md-alignment-center-space-around">
-                <div
-                  class="md-layout-item md-size-60"
-                  style=" padding:0 0 0 10px !important; font-weight: bold; color: green;"
-                >
-                  Sport Accessories
-                </div>
-                <div
-                  class="md-layout-item md-size-10"
-                  style="padding: 0; font-weight: bold; font-size: 20px;"
-                >
-                  &dollar;
-                </div>
-                <div
-                  class="md-layout-item md-size-30"
-                  style="text-align: left !important; color: black !important; font-weight: bold !important; font-size: 1rem !important; padding: 0 !important;"
-                >
-                  129.00
-                </div>
-              </div>
-            </md-card-header>
-
-            <md-card-content class="card_content">
-              <div class="md-layout ">
-                <div class="md-layout-item md-size-15" style="padding: 0;">
-                  <img
-                    src="../../assets/images/eye.png"
-                    alt=""
-                    style="width: 50%;"
-                  />
-                </div>
-                <div
-                  class="md-layout-item md-size-85"
-                  style="font-weight: bold; padding: 0;"
-                >
-                  4850
-                </div>
-              </div>
-              <div
-                class="md-layout md-alignment-center-space-around"
-                style="margin-top: 1em;"
-              >
-                <div class="md-layout-item md-size-15" style="padding: 0;">
-                  <img
-                    src="../../assets/images/kartone.png"
-                    alt=""
-                    style="width: 50%;"
-                  />
-                </div>
-                <div
-                  class="md-layout-item md-size-85"
-                  style="font-weight: bold; padding: 0;"
-                >
-                  100
-                </div>
-              </div>
-            </md-card-content>
-          </md-card-area>
-        </md-card>
-      </div>
-      <!-- Card-3 End -->
     </div>
   </div>
 </template>
 
 <script>
-import { StatsCard, ChartCard, NavTabsCard } from "@/components";
-
+import { StatsCard, ChartCard, NavTabsCard, mvItemsCard } from "@/components";
 export default {
   components: {
     StatsCard,
     ChartCard,
+    mvItemsCard,
     // NavTabsCard,
   },
 
   data() {
     return {
+      mvItems: [
+        {
+          id: 0,
+          name: "pack 1",
+          category: "BackPacks",
+          price: 129,
+          views: 100,
+          purchases: 55,
+        },
+        {
+          id: 1,
+          name: "pack 2",
+          category: "Front Packs",
+          price: 12,
+          views: 500,
+          purchases: 505,
+        },
+        
+      ],
+
       product1: process.env.VUE_APP_BASE_URL + "/img/card-2.jpg",
       product2: process.env.VUE_APP_BASE_URL + "/img/card-3.jpg",
       product3: process.env.VUE_APP_BASE_URL + "/img/card-1.jpg",

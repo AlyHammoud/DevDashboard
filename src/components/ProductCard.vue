@@ -1,5 +1,7 @@
 <template>
-  <div class="product-card">
+  <div class="product-card"
+  @mouseover="autoLoopCarousel()"
+  @mouseleave="stopCarousel()">
     <div class="product-imgs">
       <div v-if="product.images.length" class="product-img">
         <img :src="product.images[imageIndex].image_url" />
@@ -135,8 +137,18 @@
       </div>
     </div>
     <div class="product-card-actions">
-      <button @click="$emit('editProduct', product.id)">Edit</button>
-      <button @click="$emit('deleteProduct', product.id)">Delete</button>
+      <button
+        v-if="user.role == 'admin' || user.id == product.managed_by"
+        @click="$emit('editProduct', product.id)"
+      >
+        Edit
+      </button>
+      <button
+        v-if="user.role == 'admin' || user.id == product.managed_by"
+        @click="$emit('deleteProduct', product.id)"
+      >
+        Delete
+      </button>
     </div>
 
     <div class="product-card-created">
@@ -151,6 +163,8 @@ export default {
   data() {
     return {
       imageIndex: 0,
+      user: {}, //object to fill user data in it,
+      myInterval: null,
     };
   },
 
@@ -160,23 +174,32 @@ export default {
     },
   },
 
-  mounted() {
-    this.autoLoopCarousel();
-  },
+
+  async mounted() {
+
+    await this.$store.dispatch("myUser");
+    this.user = await this.$store.getters.myUser;
+  }, //this is the method to get user data from db
 
   methods: {
     carouselImage(product_id, index) {
       this.imageIndex = index;
     },
 
+    intervalCarousel() {
+      if (this.product.images.length - 1 > this.imageIndex) {
+        this.imageIndex++;
+        return;
+      }
+      this.imageIndex = 0;
+    },
+
     autoLoopCarousel() {
-      setInterval(() => {
-        if (this.product.images.length - 1 > this.imageIndex) {
-          this.imageIndex++;
-          return;
-        }
-        this.imageIndex = 0;
-      }, 3000);
+      this.myInterval = setInterval(this.intervalCarousel, 3000); //make the loop function execute
+    },
+
+    stopCarousel() {
+      clearInterval(this.myInterval);//make the loop function stop
     },
   },
 };

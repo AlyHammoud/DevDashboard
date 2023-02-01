@@ -1,117 +1,152 @@
 <template>
   <div class="md-layout">
     <div class="md-layout-item md-size-100">
-      <div
-        class="md-layout  md-alignment-center "
-        style="margin-bottom: 10px !important;"
-      >
-        <div class="md-layout-item md-size-45" style="text-align: center;">
-          <md-button
-            class="md-primary md-dense"
-            @click="showDialog_category = true"
-            style="background-color: #5aaf45 !important; "
-          >
-            Add Category
-          </md-button>
-        </div>
-      </div>
-    </div>
-    <div class="md-layout-item md-size-100">
-      <md-table v-model="searched" md-sort="name" md-sort-order="asc">
-        <md-table-toolbar>
-          <div class="md-toolbar-section-start">
-            <h1 class="md-title">Categories</h1>
+      <!-- Table -->
+      <md-card>
+        <md-card-header class="md-card-header-icon md-card-header-green">
+          <div class="card-icon">
+            <md-icon>assignment</md-icon>
           </div>
+          <h4 class="title">Categories</h4>
+        </md-card-header>
+        <md-card-content>
+          <div class="text-right">
+            <md-button
+              class="md-success md-dense"
+              @click="showDialog_category = true"
+            >
+              Add Category
+            </md-button>
+          </div>
+          <md-table
+            v-model="searched"
+            md-sort="name"
+            md-sort-order="asc"
+            class="paginated-table table-striped table-hover"
+          >
+            <md-table-toolbar>
+              <div class="md-toolbar-section-start">
+                <h1 class="md-title">Categories</h1>
+              </div>
 
-          <md-field md-clearable class="md-toolbar-section-end">
-            <md-input
-              placeholder="Search by name..."
-              v-model="search"
-              @input="searchOnTable"
-            />
-          </md-field>
-        </md-table-toolbar>
+              <md-field md-clearable class="md-toolbar-section-end">
+                <md-input
+                  placeholder="Search by name..."
+                  v-model="search"
+                  @input="searchOnTable"
+                />
+              </md-field>
+            </md-table-toolbar>
 
-        <md-table-empty-state
-          md-label="No categories found"
-          :md-description="
-            `No category found for this '${search}' query. Try a different search term or create a new category.`
-          "
-        >
-          <md-button
-            class="md-primary md-raised"
-            @click="showDialog_category = true"
-            >Create New Category</md-button
-          >
-        </md-table-empty-state>
+            <md-table-empty-state
+              md-label="No categories found"
+              :md-description="
+                `No category found for this '${search}' query. Try a different search term or create a new category.`
+              "
+            >
+              <md-button
+                class="md-success md-raised"
+                @click="showDialog_category = true"
+                >Create New Category</md-button
+              >
+            </md-table-empty-state>
 
-        <md-table-row slot="md-table-row" slot-scope="{ item }">
-          <md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{
-            item.id
-          }}</md-table-cell>
-          <md-table-cell md-label="Name" md-sort-by="name"
-            ><p style="margin-left: 15px;">{{ item.name }}</p></md-table-cell
-          >
-          <md-table-cell md-label="Description" md-sort-by="description"
-            ><p style="margin-left: 15px;">
-              {{ item.description }}
-            </p></md-table-cell
-          >
-          <md-table-cell class="avatar" md-label="Avatar"
-            ><img
-              :src="item.image_url"
-              style="width: 50px; height: 50px;object-fit: cover; margin-left: 15px;"
-          /></md-table-cell>
-          <md-table-cell md-label="created at" md-sort-by="created_at"
-            ><p style="margin-left: 15px;">
-              {{ item.created_at }}
-            </p></md-table-cell
-          >
-          <md-table-cell md-label="Available" md-sort-by="email">
-            <p style="margin-left: 15px;">
-              {{ item.is_available ? "yes" : "no" }}
-            </p>
-          </md-table-cell>
-          <md-table-cell md-label="Categroy Actions">
-            <div style="margin-left: 15px;">
-              <md-button
-                v-if="user.role == 'admin' || user.id == item.managed_by"
-                class="md-icon-button md-raised md-round md-info"
-                @click="editCategpory(item.id)"
-                style="margin: 0.2rem"
+            <md-table-row slot="md-table-row" slot-scope="{ item }">
+              <md-table-cell md-label="ID" md-sort-by="id"
+                ><p class="pl-20">
+                  {{ item.id }}
+                </p></md-table-cell
               >
-                <md-icon>edit</md-icon>
-              </md-button>
-              <md-button
-                v-if="user.role == 'admin' || user.id == item.managed_by"
-                class="md-icon-button md-raised md-round md-danger mr-2"
-                @click="deleteCategory(item.id)"
-                style="margin-right: 38px;"
-              >
-                <md-icon>delete</md-icon>
-              </md-button>
-              <md-button
-                class="md-raised"
-                style="width: auto;"
-                @click="goToItems(item.id)"
-                >items({{ item.items_count }})</md-button
-              >
-            </div>
-          </md-table-cell>
-        </md-table-row>
-      </md-table>
-      <Pagination
-        style="margin-left:  50%; translate: -25%;"
-        :pageCount="categories_page_meta.last_page"
-        :perPage="categories_page_meta.per_page"
-        :total="categories_page_meta.total"
-        :value="categories_page_meta.current_page"
-        @input="getAllPaginatedCategories"
-        type="success"
-      ></Pagination>
+              <md-table-cell md-label="Name" md-sort-by="name">
+                <p class="pl-20">
+                  {{ item.name }}
+                </p>
+              </md-table-cell>
+              <md-table-cell md-label="Description" md-sort-by="description">
+                <p class="pl-20" >
+                  {{ item.description }}
+                  <!-- I am hassan mohammad shalhoub 4th  year university LIU student i work in web development -->
+                </p>
+              </md-table-cell>
+              <md-table-cell class="avatar" md-label="Avatar"
+                ><img
+                  :src="item.image_url"
+                  style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-left: 20px;"
+              /></md-table-cell>
+              <md-table-cell md-label="Created At" md-sort-by="created_at">
+                <p class="pl-20">
+                  {{ item.created_at }}
+                </p>
+              </md-table-cell>
+              <md-table-cell md-label="Available" md-sort-by="email">
+                <p class="pl-20">
+                  {{ item.is_available ? "yes" : "no" }}
+                </p>
+              </md-table-cell>
+              <md-table-cell md-label="Categroy Actions">
+                <div class="md-layout md-alignment-center">
+                  <div
+                    class="md-layout-item md-size-50"
+                    style="padding-right: 2px;"
+                    v-if="user.role == 'admin' || user.id == item.managed_by"
+                  >
+                    <md-button
+                      class="md-icon-button md-raised md-round md-info"
+                      @click="editCategpory(item.id)"
+                      style="margin-right: 1px"
+                    >
+                      <md-icon>edit</md-icon>
+                    </md-button>
+                    <md-button
+                      class="md-icon-button md-raised md-round md-danger mr-2"
+                      style="margin: 0 2px;"
+                      @click="deleteCategory(item.id)"
+                    >
+                      <md-icon>delete</md-icon>
+                    </md-button>
+                  </div>
+                  <div
+                    class="md-layout-item md-size-50"
+                    style="padding-left: 0;"
+                  >
+                    <md-button
+                      class="md-raised"
+                      style="width: 100%; padding: 3px;"
+                      @click="goToItems(item.id)"
+                    >
+                      <span
+                        class="material-icons"
+                        style="margin-right: 4px;
+                      font-size: 21px;
+                      margin-bottom: 2px;"
+                        >visibility</span
+                      >
+                      items
+                    </md-button>
+                  </div>
+                </div>
+              </md-table-cell>
+            </md-table-row>
+          </md-table>
+        </md-card-content>
+
+        <md-card-actions md-alignment="space-between">
+          <Pagination
+            :pageCount="categories_page_meta.last_page"
+            :perPage="categories_page_meta.per_page"
+            :total="categories_page_meta.total"
+            :value="categories_page_meta.current_page"
+            @input="getAllPaginatedCategories"
+            type="success"
+          ></Pagination>
+        </md-card-actions>
+      </md-card>
     </div>
+
+    
 
     <!-- dialog Category Start -->
+   
     <md-dialog
       :md-active.sync="showDialog_category"
       style="margin-left: auto; margin-right: auto; overflow: auto; border-radius: 10px;"
@@ -463,5 +498,24 @@ export default {
   display: grid;
   place-items: center;
   cursor: pointer;
+}
+
+.pl-20 {
+  padding-left: 20px;
+}
+
+.dialog-content {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.dialog-content::-webkit-scrollbar {
+  width: 10px;
+  background-color: transparent;
+}
+
+.dialog-content::-webkit-scrollbar-thumb {
+  background-color: #30303099;
+  border-radius: 60px;
 }
 </style>

@@ -10,7 +10,7 @@
         </md-card-header>
         <md-card-content>
           <div class="text-right">
-            <md-button class="md-primary md-dense" @click="showDialog = true">
+            <md-button class="md-success md-dense" @click="showDialog = true" >
               Add User
             </md-button>
           </div>
@@ -22,52 +22,62 @@
             class="paginated-table table-striped table-hover"
           >
             <md-table-row slot="md-table-row" slot-scope="{ item }">
-              <md-table-cell md-label="Role" md-sort-by="role"
-                >{{ item.role }}
+              <md-table-cell md-label="Role" md-sort-by="role">
+                <p class="pl-20">
+                  {{ item.role }}
+                </p>
               </md-table-cell>
-              <md-table-cell md-label="Name" md-sort-by="name">{{
-                item.name
-              }}</md-table-cell>
-              <md-table-cell md-label="Username" md-sort-by="username">{{
-                item.username
-              }}</md-table-cell>
+              <md-table-cell md-label="Name" md-sort-by="name"
+                ><p class="pl-20">
+                  {{ item.name }}
+                </p></md-table-cell
+              >
+              <md-table-cell md-label="Username" md-sort-by="username"
+                ><p class="pl-20">{{ item.username }}</p></md-table-cell
+              >
               <md-table-cell md-label="Avatar">
                 <img
                   v-if="item.image"
                   :src="item.image"
-                  style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;  "
+                  style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-left: 20px;  "
                 />
-                <p v-else>No Image</p>
+                <p v-else class="pl-20">No Image</p>
               </md-table-cell>
-              <md-table-cell md-label="Email" md-sort-by="email">{{
-                item.email
-              }}</md-table-cell>
-              <md-table-cell md-label="Created At" md-sort-by="created_at">{{
-                new Date(item.created_at).toLocaleDateString()
-              }}</md-table-cell>
+              <md-table-cell md-label="Email" md-sort-by="email"
+                ><p class="pl-20">
+                  {{ item.email }}
+                </p></md-table-cell
+              >
+              <md-table-cell md-label="Created At" md-sort-by="created_at"
+                ><p style="padding-left: 30px;">
+                  {{ new Date(item.created_at).toLocaleDateString() }}
+                </p></md-table-cell
+              >
               <md-table-cell
                 md-label="Actions"
                 v-if="$store.getters.myUser.role == 'admin'"
               >
-                <md-button
-                  class="md-icon-button md-raised md-round md-info"
-                  @click="editUser(item.id)"
-                  style="margin: 0.2rem"
-                >
-                  <md-icon>edit</md-icon>
-                </md-button>
-                <md-button
-                  class="md-icon-button md-raised md-round md-danger mr-2"
-                  @click="deleteUser(item.id)"
-                  style="margin-right: 38px;"
-                >
-                  <md-icon>delete</md-icon>
-                </md-button>
+                <div style="text-align: center; margin-right: 26px !important;">
+                  <md-button
+                    class="md-icon-button md-raised md-round md-info"
+                    @click="editUser(item.id)"
+                    style="margin-right: 4px;"
+                  >
+                    <md-icon>edit</md-icon>
+                  </md-button>
+                  <md-button
+                    class="md-icon-button md-raised md-round md-danger mr-2"
+                    @click="deleteUser(item.id)"
+                    
+                  >
+                    <md-icon>delete</md-icon>
+                  </md-button>
+                </div>
               </md-table-cell>
             </md-table-row>
           </md-table>
 
-          <div class="footer-table md-table">
+          <!-- <div class="footer-table md-table">
             <table>
               <tfoot>
                 <tr>
@@ -85,7 +95,7 @@
                 </tr>
               </tfoot>
             </table>
-          </div>
+          </div> -->
         </md-card-content>
 
         <md-card-actions md-alignment="space-between">
@@ -117,7 +127,7 @@
         style="margin:0 auto; z-index: 9999;"
         :md-click-outside-to-close="false"
       >
-        <div class="dialog-content">
+        <div class="dialog-content" style="margin-bottom: 10px ;">
           <div style="margin: 0 auto; width: 550px;">
             <div>
               <div class="md-layout  " style="color: #fff;  ">
@@ -193,11 +203,11 @@
               <div class="md-layout text-center " style="color: white; ">
                 <div class="md-layout-item">
                   <md-field>
-                    <label>Password</label>
+                    <label>Confirm Password</label>
                     <md-input v-model="user.password_confirmation"
                       >Password</md-input
                     >
-                    <span class="md-helper-text">User Password</span>
+                    <span class="md-helper-text">Confirm Password</span>
                   </md-field>
                 </div>
               </div>
@@ -216,7 +226,7 @@
                 style="color: white; "
               >
                 <div class="md-layout-item">
-                  <md-radio v-model="user.role_id" :value="1">Admins</md-radio>
+                  <md-radio v-model="user.role_id" :value="1">admin</md-radio>
                 </div>
                 <div class="md-layout-item">
                   <md-radio v-model="user.role_id" :value="2" class="md-primary"
@@ -514,5 +524,9 @@ export default {
   display: grid;
   place-items: center;
   cursor: pointer;
+}
+
+.pl-20 {
+  padding-left: 20px;
 }
 </style>

@@ -1,148 +1,206 @@
 <template>
   <div style="display: flex; flex-direction: column;">
     <p
-      style="text-align: center; cursor: pointer; padding: 10px 5px;"
+      style="text-align: center; cursor: pointer; padding: 10px 5px; font-size: 1.5em;"
       @click="$router.push({ name: 'Categories' })"
     >
-      Back to categories
+      Back to <span style="color:#5aaf45; font-weight: 400;">Categories</span>
     </p>
-    <md-card
+    <!-- <md-card
       class="md-primary"
-      style="max-width: 60%; margin-inline: auto; margin-top: -12px"
+      style="max-width: 60%; margin-inline: auto; margin-top: -12px;background-color: #00AEC5 !important;"
     >
       <md-card-header>
         <md-card-header-text>
-          <div class="md-title">Category Name: {{ category.name }}</div>
-          <div class="md-subhead">Description: {{ category.description }}</div>
+          <div class="md-title">{{ category.name }}</div>
+          <div class="md-subhead">{{ category.description }}</div>
         </md-card-header-text>
 
         <md-card-media style="margin-top: 20px; ">
           <img
             :src="category.image_url"
-            style="height: 80px; object-fit: cover;"
+            style="height: 80px; width: 80px; border-radius: 50%; object-fit: cover;"
             alt="Avatar"
           />
         </md-card-media>
       </md-card-header>
-    </md-card>
-    <div style="align-self: center;">
-      <md-button
-        v-if="user.role == 'admin' || user.id == category.managed_by"
-        @click="showAddItemHandler(category.id)"
-        class="md-raised md-primary"
-        style="background-color: #5aaf45 !important;"
-        >Add Item</md-button
-      >
+    </md-card> -->
+    <div class="md-layout parent">
+      <div class="md-layout-item md-size-50">
+        <div class="md-title">{{ category.name }}</div>
+        <div class="md-subhead">{{ category.description }}</div>
+      </div>
+      <div class="md-layout-item md-size-50" style="text-align: right ;">
+        <img
+          :src="category.image_url"
+          style="height: 80px; width: 80px; border-radius: 50%; object-fit: cover;"
+          alt="Avatar"
+        />
+      </div>
     </div>
 
     <!-- Items list Table -->
-    <div class="md-layout-item md-size-100">
-      <md-table v-model="searched" md-sort="name" md-sort-order="asc">
-        <md-table-toolbar>
-          <div class="md-toolbar-section-start">
-            <h1 class="md-title">Items</h1>
-          </div>
-
-          <md-field md-clearable class="md-toolbar-section-end">
-            <md-input
-              placeholder="Search by name..."
-              v-model="search"
-              @input="searchOnTable"
-            />
-          </md-field>
-        </md-table-toolbar>
-
-        <md-table-empty-state
-          md-label="No users found"
-          :md-description="
-            `No item found for this '${search}' query. Try a different search term or create a new Item.`
-          "
-        >
+    <md-card>
+      <md-card-header class="md-card-header-icon md-card-header-green">
+        <div class="card-icon">
+          <md-icon>assignment</md-icon>
+        </div>
+        <h4 class="title">Items</h4>
+      </md-card-header>
+      <md-card-content>
+        <div class="text-right">
           <md-button
-            class="md-primary md-raised"
-            @click="() => ''"
             v-if="user.role == 'admin' || user.id == category.managed_by"
-            >Add new Item</md-button
+            @click="showAddItemHandler(category.id)"
+            class="md-dense md-success"
+            >Add Item</md-button
           >
-        </md-table-empty-state>
-
-        <md-table-row slot="md-table-row" slot-scope="{ item }">
-          <md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{
-            item.id
-          }}</md-table-cell>
-          <md-table-cell md-label="Name" md-sort-by="name"
-            ><p style="margin-left: 15px;">{{ item.name }}</p></md-table-cell
-          >
-          <md-table-cell md-label="Description" md-sort-by="description"
-            ><p style="margin-left: 15px;">
-              {{ item.description }}
-            </p></md-table-cell
-          >
-          <md-table-cell md-label="Available"
-            ><p style="margin-left: 15px;">
-              {{ item.is_available == 1 ? "Yes" : "No" }}
-            </p></md-table-cell
-          >
-          <md-table-cell md-label="Created at" md-sort-by="created_at"
-            ><p style="margin-left: 15px;">
-              {{ item.created_at }}
-            </p></md-table-cell
-          >
-          <md-table-cell md-label="Price" md-sort-by="price"
-            ><p style="margin-left: 15px;">
-              {{ item.price ? item.price : 0 }}$
-            </p></md-table-cell
-          >
-          <md-table-cell md-label="Images">
-            <p v-if="!item.images.length">No Images</p>
-            <md-button
-              v-else
-              class="md-primary"
-              @click="viewImagesHandler(item.images)"
-              style="width: auto; padding: 0 !important"
-              >View ({{ item.images.length }})</md-button
-            ></md-table-cell
-          >
-
-          <md-table-cell md-label="Item Actions">
-            <div style="margin-left: 15px;">
-              <md-button
-                v-if="user.role == 'admin' || user.id == item.managed_by"
-                class="md-icon-button md-raised md-round md-info"
-                @click="editItem(item.id)"
-                style="margin: 0.2rem"
-              >
-                <md-icon>edit</md-icon>
-              </md-button>
-              <md-button
-                v-if="user.role == 'admin' || user.id == item.managed_by"
-                class="md-icon-button md-raised md-round md-danger mr-2"
-                @click="deleteItem(item.id)"
-                style="margin-right: 38px;"
-              >
-                <md-icon>delete</md-icon> </md-button
-              ><br />
-              <button
-                class="md-raised"
-                style="cursor: pointer; border: none; box-shadow: 0 2px 20px #30303090;padding:5px 15px; border-radius: 10px;"
-                @click="goToProducts(item.id)"
-              >
-                Products({{ item.products_count }})
-              </button>
+        </div>
+        <md-table
+          v-model="searched"
+          md-sort="name"
+          md-sort-order="asc"
+          class="paginated-table table-striped table-hover"
+        >
+          <md-table-toolbar>
+            <div class="md-toolbar-section-start">
+              <h1 class="md-title">Items</h1>
             </div>
-          </md-table-cell>
-        </md-table-row>
-      </md-table>
 
-      <Pagination
-        style="margin-left:  50%; translate: -25%;"
-        :pageCount="itemsMeta.last_page"
-        :perPage="itemsMeta.per_page"
-        :total="itemsMeta.total"
-        :value="itemsMeta.current_page"
-        @input="getItems"
-        type="success"
-      ></Pagination>
+            <md-field md-clearable class="md-toolbar-section-end">
+              <md-input
+                placeholder="Search by name..."
+                v-model="search"
+                @input="searchOnTable"
+              />
+            </md-field>
+          </md-table-toolbar>
+          <md-table-empty-state
+            md-label="No Items found"
+            :md-description="
+              `No item found for this '${search}' query. Try a different search term or create a new Item.`
+            "
+          >
+            <md-button
+              class="md-success md-raised"
+              @click="showAddItemHandler(category.id)"
+              v-if="user.role == 'admin' || user.id == category.managed_by"
+              >Add new Item</md-button
+            >
+          </md-table-empty-state>
+          <md-table-row slot="md-table-row" slot-scope="{ item }">
+            <md-table-cell md-label="ID" md-sort-by="id"
+              ><p class="pl-20">{{ item.id }}</p></md-table-cell
+            >
+            <md-table-cell md-label="Name" md-sort-by="name"
+              ><p class="pl-20">{{ item.name }}</p></md-table-cell
+            >
+            <md-table-cell md-label="Description" md-sort-by="description"
+              ><p class="pl-20">
+                {{ item.description }}
+              </p></md-table-cell
+            >
+            <md-table-cell md-label="Available"
+              ><p class="pl-20">
+                {{ item.is_available == 1 ? "Yes" : "No" }}
+              </p></md-table-cell
+            >
+            <md-table-cell md-label="Created at" md-sort-by="created_at"
+              ><p class="pl-20">
+                {{ item.created_at }}
+              </p></md-table-cell
+            >
+            <md-table-cell md-label="Price" md-sort-by="price"
+              ><p class="pl-20">
+                {{ item.price ? item.price : 0 }}$
+              </p></md-table-cell
+            >
+            <md-table-cell md-label="Images">
+              <p v-if="!item.images.length" class="pl-20">No Images</p>
+              <md-button
+                v-else
+                class="md-blue"
+                @click="viewImagesHandler(item.images)"
+                style="width: auto; padding: 0 !important;"
+                >View ({{ item.images.length }})</md-button
+              ></md-table-cell
+            >
+
+            <md-table-cell
+              md-label="Item Actions"
+              v-if="user.role == 'admin' || user.id == item.managed_by"
+            >
+              <div class="md-layout md-alignment-center">
+                <div
+                  class="md-layout-item md-size-60"
+                  style="padding-right: 2px; padding-left: 0;"
+                >
+                  <div class="md-layout">
+                    <div
+                      class="md-layout-item md-size-50"
+                      style="padding-right: 1px; padding-left: 5px;"
+                    >
+                      <md-button
+                        class="md-icon-button md-raised md-round md-info"
+                        @click="editItem(item.id)"
+                        style="margin:0 3px"
+                      >
+                        <md-icon>edit</md-icon>
+                      </md-button>
+                    </div>
+                    <div
+                      class="md-layout-item md-size-50"
+                      style="padding-left: 1px;"
+                    >
+                      <md-button
+                        class="md-icon-button md-raised md-round md-danger mr-2"
+                        style="margin: 0 3px;"
+                        @click="deleteItem(item.id)"
+                      >
+                        <md-icon>delete</md-icon>
+                      </md-button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </md-table-cell>
+            <md-table-cell md-label="View Products">
+              <div class="md-layout md-alignment-center">
+                <div class="md-layout-item md-size-65" style="padding: 0;">
+                  <md-button
+                    class="md-raised"
+                    style="width: 100%; padding: 0 !important;"
+                    @click="goToProducts(item.id)"
+                  >
+                    <span
+                      class="material-icons"
+                      style="margin-right: 4px;
+                      font-size: 21px;
+                      margin-bottom: 2px;"
+                      >visibility</span
+                    >
+                    products
+                  </md-button>
+                </div>
+              </div>
+            </md-table-cell>
+          </md-table-row>
+        </md-table>
+      </md-card-content>
+
+      <md-card-actions md-alignment="space-between">
+        <Pagination
+          :pageCount="itemsMeta.last_page"
+          :perPage="itemsMeta.per_page"
+          :total="itemsMeta.total"
+          :value="itemsMeta.current_page"
+          @input="getItems"
+          type="success"
+        ></Pagination>
+      </md-card-actions>
+    </md-card>
+    <!-- Items list Table -->
+    <div class="md-layout-item md-size-100">
       <ShowImages
         v-if="showImagesDialog"
         @closeShowDialog="showImagesDialog = false"
@@ -299,4 +357,17 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.pl-20 {
+  padding-left: 20px;
+}
+
+.parent{
+  width: 50%; 
+  margin-left: auto; 
+  margin-right: auto; 
+  background-color: #00AEC5; 
+  padding:  5px 0; 
+  border-radius: 10px;
+}
+</style>

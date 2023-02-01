@@ -8,7 +8,7 @@
           :selectOptions="categoryNames"
           :resets="resetSearchableBoxForCategory"
           :isEnabled="searchableCategoryEnabled"
-          style="max-width: 200px;"
+          style="max-width: 200px; "
           @filterItems="setCategoryFilterOption"
         />
 
@@ -34,19 +34,21 @@
         />
 
         <label for="price" class="filter-price">
-          <p>Filter between two prices:</p>
+          <p >Filter between two prices:</p>
           <div>
             <input
               type="number"
               min="0"
               v-model="lowerPrice"
               @input="setPriceFilterOption"
+              style="margin-left: 0 !important;"
             />
             <input
               type="number"
               min="0"
               v-model="higherPrice"
               @input="setPriceFilterOption"
+              style="margin-left: 1px !important;"
             />
             <button @click="resetPrice">reset</button>
           </div>
@@ -54,14 +56,15 @@
       </div>
     </div>
 
-    <div class="item-search-field-wrapper">
+    <div class="item-search-field-wrapper" style="width: 75% ;">
       Search an item by name:
       <input
         type="text"
         class="item-search-field"
         v-model="searchProduct"
         @input="searchProducts"
-        placeholder="Search here"
+        placeholder="Type here"
+        style="margin-top: 0.7rem;  border-radius: 2rem; border-color: green;"
       />
       <div></div>
     </div>
@@ -576,6 +579,7 @@ body {
 
     p {
       margin-top: -1px;
+      margin-left:0px;
     }
 
     div {
@@ -590,13 +594,15 @@ body {
         height: 32px;
         margin-left: 50%;
         border: 0.2px solid rgb(211, 200, 200);
+        border-radius: 3px;
       }
 
       button {
         cursor: pointer;
         border: none;
         background-color: #fff;
-        box-shadow: 0 1px 5px rgb(59, 54, 54);
+        //box-shadow: 0 1px 5px rgb(59, 54, 54);
+        box-shadow: 0 1px 3px 0px #3b3636;
       }
     }
   }
