@@ -1,7 +1,7 @@
 <template>
-  <div class="md-layout">
+  <div>
     <LoaderFull v-if="isLoading"></LoaderFull>
-    <md-dialog
+    <!-- <md-dialog
       :md-active.sync="showEditDialog"
       style="margin:0 auto; z-index: 9999; "
       :md-click-outside-to-close="false"
@@ -104,12 +104,12 @@
               class="md-layout text-center info-text"
               style="color: white;margin: 20px 0; "
             >
-              <!-- <div class="md-layout-item">
+              <div class="md-layout-item">
                 <md-radio v-model="user.role_id" :value="1">Admin</md-radio>
               </div>
               <div class="md-layout-item">
                 <md-radio v-model="user.role_id" :value="2">User</md-radio>
-              </div> -->
+              </div>
               <label for="roleAdmin" style="color: gray; cursor: pointer;"
                 >Admin
                 <input
@@ -189,6 +189,154 @@
           </div>
         </div>
       </div>
+    </md-dialog> -->
+
+    <md-dialog :md-active.sync="showEditDialog" :md-click-outside-to-close=false>
+      <md-dialog-title class="dialog-title">
+        <!-- Update User
+        <span class="material-icons">
+          close
+        </span> -->
+        <div class="md-layout">
+          <div class="md-layout-item md-size-10"></div>
+          <div class="md-layout-item md-size-80">Update User</div>
+          <div class="md-layout-item md-size-10 md-layout md-alignment-center" style="padding-right: 0;">
+            <div class="material-icons" style="font-size: 25px; cursor: pointer;" @click="closeForm(true)">
+              close
+            </div>
+          </div>
+        </div>
+      </md-dialog-title>
+      <div class="md-layout">
+        <div
+          class="md-layout-item md-layout md-size-100 md-alignment-center" style="margin-bottom: 10px;"
+        >
+          <label for="avatar" class="user-avatar">
+            Upload Image
+            <input
+              type="file"
+              name="browse"
+              id="avatar"
+              style="display: none;"
+              @change="userImageHandler"
+            />
+          </label>
+          <img
+            v-if="user.image"
+            style=" height: 110px; object-fit: cover; border-radius: 50%; margin-left: 10px;"
+            :src="user.image"
+            width="110"
+          />
+        </div>
+        <div class="md-layout-item md-layout md-size-100">
+          <div class="md-layout-item md-size-50">
+            <md-field>
+              <label>Name</label>
+              <md-input v-model="user.name"></md-input>
+              <span class="md-helper-text">Name</span>
+            </md-field>
+            <validation-error
+              :errors="apiValidationErrors.name"
+              style="color: red"
+            />
+          </div>
+          <div class="md-layout-item md-size-50">
+            <md-field>
+              <label>Username</label>
+              <md-input v-model="user.username"></md-input>
+              <span class="md-helper-text">User Name</span>
+            </md-field>
+            <validation-error
+              :errors="apiValidationErrors.username"
+              style="color: red"
+            />
+          </div>
+        </div>
+        <div class="md-layout-item md-layout  md-size-100" style="margin: 10px 0;">
+          <div class="md-layout-item md-size-100">
+            <md-field>
+              <label>Email</label>
+              <md-input v-model="user.email"></md-input>
+              <span class="md-helper-text">User Email</span>
+            </md-field>
+            <validation-error
+              :errors="apiValidationErrors.email"
+              style="color: red"
+            />
+          </div>
+        </div>
+        <div class="md-layout-item md-layout md-size-100">
+          <div class="md-layout-item md-size-50">
+            <md-field>
+              <label>Password</label>
+              <md-input v-model="user.password">Password</md-input>
+              <span class="md-helper-text">User Password</span>
+            </md-field>
+            <validation-error
+              :errors="apiValidationErrors.password"
+              style="color: red"
+            />
+          </div>
+          <div class="md-layout-item md-size-50">
+            <md-field>
+              <label>Password</label>
+              <md-input v-model="user.password_confirmation">Password</md-input>
+              <span class="md-helper-text">User Password</span>
+            </md-field>
+          </div>
+        </div>
+        <div class="md-layout-item md-size-100" style="text-align: center; margin-top: 10px;">
+          Role
+        </div>
+
+        <div class="md-layout-item md-layout md-size-100 md-alignment-center">
+          <div class="md-layout-item  md-size-50" style="text-align: right;">
+            <label for="roleAdmin" style="cursor: pointer; "
+              >Admin
+              <input
+                type="radio"
+                v-model="user.role_id"
+                :value="1"
+                name="role"
+                id="roleAdmin"
+                style="margin-right: 0px;"
+            /></label>
+          </div>
+          <div class="md-layout-item md-size-50">
+            <label for="roleUser" style=" cursor: pointer;"
+              >User
+              <!-- style="accent-color: purple;" -->
+              <input
+                type="radio"
+                v-model="user.role_id"
+                :value="2"
+                name="role"
+                id="roleUser"
+            /></label>
+          </div>
+        </div>
+        <validation-error
+          :errors="apiValidationErrors.role_id"
+          style="color: red"
+        />
+
+       
+      </div>
+      <md-dialog-actions>
+        <md-button
+          class="md-dense md-blue "
+          style=" margin-right: 0; "
+          @click="updateUser()"
+          >Update User</md-button
+        >
+        <md-button
+          @click="closeForm(true)"
+          class="md-dense md-raised "
+          style="background-color: white !important; color: gray !important;"
+        >
+          Cancel
+        </md-button>
+      </md-dialog-actions>
     </md-dialog>
   </div>
 </template>
@@ -309,5 +457,11 @@ export default {
   display: grid;
   place-items: center;
   cursor: pointer;
+}
+.dialog-title {
+  background-color: #00aec5;
+  color: white;
+  padding: 12px 8px 12px !important;
+  text-align: center;
 }
 </style>

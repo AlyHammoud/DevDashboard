@@ -63,7 +63,7 @@
                 </p>
               </md-table-cell>
               <md-table-cell md-label="Description" md-sort-by="description">
-                <p class="pl-20" >
+                <p class="pl-20">
                   {{ item.description }}
                   <!-- I am hassan mohammad shalhoub 4th  year university LIU student i work in web development -->
                 </p>
@@ -114,6 +114,8 @@
                       style="width: 100%; padding: 3px;"
                       @click="goToItems(item.id)"
                     >
+                      <!-- <md-badge class="md-primary md-square" md-content="{}" /> -->
+
                       <span
                         class="material-icons"
                         style="margin-right: 4px;
@@ -143,11 +145,9 @@
       </md-card>
     </div>
 
-    
-
     <!-- dialog Category Start -->
-   
-    <md-dialog
+
+    <!-- <md-dialog
       :md-active.sync="showDialog_category"
       style="margin-left: auto; margin-right: auto; overflow: auto; border-radius: 10px;"
     >
@@ -251,6 +251,93 @@
           </div>
         </div>
       </div>
+    </md-dialog> -->
+
+    <md-dialog
+      :md-active.sync="showDialog_category"
+      :md-click-outside-to-close="false"
+    >
+      <md-dialog-title
+        class="dialog-title "
+        style=" background-color:#4caf50 !important"
+        ><div class="md-layout">
+          <div class="md-layout-item md-size-10"></div>
+          <div class="md-layout-item md-size-80">Add Category</div>
+          <div
+            class="md-layout-item md-size-10 md-layout md-alignment-center"
+            style="padding-right: 0;"
+          >
+            <div
+              class="material-icons"
+              style="font-size: 25px; cursor: pointer;"
+              @click="showDialog_category = false"
+            >
+              close
+            </div>
+          </div>
+        </div></md-dialog-title
+      >
+      <div class="md-layout">
+        <div class="md-layout-item md-layout md-size-100 md-alignment-center">
+          <label for="avatar" class="user-avatar">
+            Upload Image
+            <input
+              type="file"
+              name="browse"
+              id="avatar"
+              style="display: none;"
+              @change="onUploadCategoryImage($event)"
+            />
+          </label>
+          <img
+            v-if="tmpCategoryImage"
+            style="position: relative !important; height: 110px; width:110px; object-fit: cover; border-radius: 50%; margin-left: 1em;"
+            :src="tmpCategoryImage"
+          />
+          <validation-error
+            :errors="apiValidationErrors.image_url"
+            style="color: red; "
+          />
+        </div>
+        <div class="md-layout-item md-size-100">
+          <md-field>
+            <label>Name</label>
+            <md-input v-model="category_name"></md-input>
+            <span class="md-helper-text">Name</span>
+          </md-field>
+          <validation-error
+            :errors="apiValidationErrors['name_translation.en']"
+            style="color: red"
+          />
+        </div>
+        <div class="md-layout-item md-size-100">
+          <md-field>
+            <label>Description</label>
+            <md-textarea v-model="category_description"></md-textarea>
+            <md-icon>description</md-icon>
+            <validation-error
+              :errors="apiValidationErrors.description"
+              style="color: red"
+            />
+          </md-field>
+        </div>
+      </div>
+      <md-dialog-actions>
+        <md-button
+          class="md-dense md-success"
+          @click="addCategory()"
+          style="margin-right: 0;"
+        >
+          Add
+        </md-button>
+        <md-button
+          @click="showDialog_category = false"
+          class="md-dense md-raised "
+          style="background-color: white !important; color: gray !important;"
+        >
+          Cancel
+        </md-button>
+      </md-dialog-actions>
     </md-dialog>
 
     <!-- Edit Dialog For Category -->
@@ -271,6 +358,7 @@
 </template>
 <script>
 import { TableSearch } from "./TableAdmin.vue";
+// import { Badge } from "@/components";
 import { ValidationError } from "@/components";
 import formMixin from "@/mixins/form-mixin";
 import { LoaderFull } from "@/components";
@@ -310,6 +398,7 @@ export default {
       isLoading: false,
       timer: null,
       user: {},
+      image_url: "",
     };
   },
 
@@ -318,6 +407,7 @@ export default {
     LoaderFull,
     Pagination,
     EditCategoryDialoge,
+    // Badge
   },
 
   mixins: [formMixin],
@@ -344,10 +434,10 @@ export default {
       this.categoryImage = e.target.files[0];
 
       const reader = new FileReader();
-      reader.readAsDataURL(e.target.files[0]);
       reader.onload = () => {
         this.tmpCategoryImage = reader.result;
       };
+      reader.readAsDataURL(e.target.files[0]);
     },
 
     getClass: ({ id }) => ({
@@ -364,7 +454,7 @@ export default {
     },
 
     resetInputs() {
-      this.categoryImage = null;
+      this.categoryImage =null;
       this.category_description = null;
       this.category_name = null;
       this.tmpCategoryImage = null;
@@ -442,6 +532,15 @@ export default {
   created() {
     this.getAllPaginatedCategories(1, this.rowsPerPage);
   },
+  // categoryImageHandler(e) {
+  //   this.category.image_url = e.target.files[0];
+
+  //   var fileReader = new FileReader();
+  //   fileReader.onload = () => {
+  //     this.category.image_url = fileReader.result;
+  //   };
+  //   fileReader.readAsDataURL(e.target.files[0]);
+  // },
 };
 </script>
 <style>
@@ -517,5 +616,12 @@ export default {
 .dialog-content::-webkit-scrollbar-thumb {
   background-color: #30303099;
   border-radius: 60px;
+}
+
+.dialog-title {
+  background-color: #4caf50;
+  color: white;
+  padding: 12px 8px 12px !important;
+  text-align: center;
 }
 </style>

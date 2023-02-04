@@ -10,7 +10,7 @@
         </md-card-header>
         <md-card-content>
           <div class="text-right">
-            <md-button class="md-success md-dense" @click="showDialog = true" >
+            <md-button class="md-success md-dense" @click="showDialog = true">
               Add User
             </md-button>
           </div>
@@ -68,7 +68,6 @@
                   <md-button
                     class="md-icon-button md-raised md-round md-danger mr-2"
                     @click="deleteUser(item.id)"
-                    
                   >
                     <md-icon>delete</md-icon>
                   </md-button>
@@ -121,7 +120,7 @@
         @getList="getList(userMeta.current_page)"
       ></EditUserDialoge>
     </div>
-    <div>
+    <!-- <div>
       <md-dialog
         :md-active.sync="showDialog"
         style="margin:0 auto; z-index: 9999;"
@@ -291,6 +290,136 @@
             </div>
           </div>
         </div>
+      </md-dialog>
+    </div> -->
+    <div>
+      <md-dialog
+        :md-active.sync="showDialog"
+        :md-click-outside-to-close="false"
+      >
+        <md-dialog-title
+          class="dialog-title"
+          style="background-color: #4caf50 !important;"
+        >
+          <div class="md-layout">
+            <div class="md-layout-item md-size-10"></div>
+            <div class="md-layout-item md-size-80">Add User</div>
+            <div
+              class="md-layout-item md-size-10 md-layout md-alignment-center"
+              style="padding-right: 0;"
+            >
+              <div
+                class="material-icons"
+                style="font-size: 25px; cursor: pointer;"
+                @click="closeForm()"
+              >
+                close
+              </div>
+            </div>
+          </div></md-dialog-title
+        >
+
+        <div class="md-layout">
+          <div class="md-layout-item md-layout md-size-100 md-alignment-center">
+            <label for="avatar" class="user-avatar">
+              Upload Image
+              <input
+                type="file"
+                name="browse"
+                id="avatar"
+                style="display: none;"
+                @change="userImageHandler"
+              />
+            </label>
+            <img
+              v-if="user.imageUserSrc"
+              style="position: relative !important; height: 110px; border-radius: 50%; margin-left: 10px;"
+              :src="user.imageUserSrc"
+              width="110"
+            />
+          </div>
+          <div class="md-layout-item md-layout md-size-100">
+            <div class="md-layout-item md-size-50">
+              <md-field>
+                <label>Name</label>
+                <md-input v-model="user.name"></md-input>
+                <span class="md-helper-text">Name</span>
+              </md-field>
+              <validation-error
+                :errors="apiValidationErrors.name"
+                style="color: red"
+              />
+            </div>
+            <div class="md-layout-item md-size-50">
+              <md-field>
+                <label>Email</label>
+                <md-input v-model="user.email"></md-input>
+                <span class="md-helper-text">User Email</span>
+              </md-field>
+              <validation-error
+                :errors="apiValidationErrors.email"
+                style="color: red"
+              />
+            </div>
+          </div>
+          <div class="md-layout-item md-layout md-size-100">
+            <div class="md-layout-item md-size-50">
+              <md-field>
+                <label>Password</label>
+                <md-input v-model="user.password">Password</md-input>
+                <span class="md-helper-text">User Password</span>
+              </md-field>
+              <validation-error
+                :errors="apiValidationErrors.password"
+                style="color: red"
+              />
+            </div>
+            <div class="md-layout-item md-size-50">
+              <md-field>
+                <label>Confirm Password</label>
+                <md-input v-model="user.password_confirmation"
+                  >Password</md-input
+                >
+                <span class="md-helper-text">Confirm Password</span>
+              </md-field>
+              <validation-error
+                :errors="apiValidationErrors.password"
+                style="color: red"
+              />
+            </div>
+          </div>
+          <div class="md-layout-item md-layout md-size-100 md-alignment-center" style="margin-top: 10px;">
+            Role
+          </div>
+          <div class="md-layout-item md-layout md-size-100 md-alignment-center">
+            <div class="md-layout-item md-size-50" style="text-align: right; padding-right:0 ;">
+              <md-radio v-model="user.role_id" :value="1">admin</md-radio>
+            </div>
+            <div class="md-layout-item md-size-50">
+              <md-radio v-model="user.role_id" :value="2" class="md-primary"
+                >user</md-radio
+              >
+            </div>
+            <validation-error
+              :errors="apiValidationErrors.role_id"
+              style="color: red"
+            />
+          </div>
+        </div>
+        <md-dialog-actions>
+          <md-button
+            class="md-dense md-success"
+            style=" margin-right: 0; "
+            @click="createUser()"
+            >Create User</md-button
+          >
+          <md-button
+            @click="closeForm()"
+            class="md-dense md-raised "
+            style="background-color: white !important; color: gray !important;"
+            >Cancel</md-button
+          >
+        </md-dialog-actions>
       </md-dialog>
     </div>
   </div>
@@ -476,12 +605,14 @@ export default {
   },
 };
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
+.md-dialog .md-dialog-container {
+  max-width: 900px !important;
+  width: 900px !important;
+  border-radius: 5px !important;
+}
 #pro-feature {
   font-weight: bold;
-}
-.md-dialog .md-dialog-container {
-  max-width: 568px;
 }
 
 .header {
@@ -528,5 +659,12 @@ export default {
 
 .pl-20 {
   padding-left: 20px;
+}
+
+.dialog-title {
+  background-color: #4caf50;
+  color: white;
+  padding: 12px 8px 12px !important;
+  text-align: center;
 }
 </style>

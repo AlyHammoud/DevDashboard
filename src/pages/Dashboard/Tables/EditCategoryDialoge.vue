@@ -1,6 +1,6 @@
 <template>
   <div>
-    <md-dialog
+    <!-- <md-dialog
       :md-active.sync="mdShowDialog"
       style="margin-left: auto; margin-right: auto; overflow: auto; border-radius: 10px;"
     >
@@ -56,7 +56,7 @@
             style="margin-left: 50%; translate: -25%;"
             >Is available</md-switch
           >
-          <!-- <div class="md-layout text-center " style="color: white; ">
+          <div class="md-layout text-center " style="color: white; ">
             <div class="md-layout-item">
               <md-field>
                 <label>Image</label>
@@ -71,7 +71,7 @@
                 style="color: red"
               />
             </div>
-          </div> -->
+          </div>
         </div>
 
         <div
@@ -128,6 +128,94 @@
           </div>
         </div>
       </div>
+    </md-dialog>-->
+    <md-dialog
+      :md-active.sync="mdShowDialog"
+      :md-click-outside-to-close="false"
+    >
+      <md-dialog-title class="dialog-title" style="background-color: #00aec5;">
+        <div class="md-layout">
+          <div class="md-layout-item md-size-10"></div>
+          <div class="md-layout-item md-size-80">
+            Edit Category - {{ category.name }}
+          </div>
+          <div
+            class="md-layout-item md-size-10 md-layout md-alignment-center"
+            style="padding-right: 0;"
+          >
+            <div
+              class="material-icons"
+              style="font-size: 25px; cursor: pointer;"
+              @click="() => this.$emit('closeShowDialog')"
+            >
+              close
+            </div>
+          </div>
+        </div>
+      </md-dialog-title>
+      <div class="md-layout">
+        <div class="md-layout-item md-layout md-size-100 md-alignment-center">
+          <label for="avatar" class="user-avatar">
+            Upload Image
+            <input
+              type="file"
+              name="browse"
+              id="avatar"
+              style="display: none;"
+              @change="onUploadCategoryImage($event)"
+            />
+          </label>
+          <img
+            v-if="category.image_url"
+            style="position: relative !important; height: 110px; width:110px; object-fit: cover; border-radius: 50%; margin-left: 1em;"
+            :src="category.image_url"
+          />
+          <validation-error
+            :errors="apiValidationErrors.image_url"
+            style="color: red; "
+          />
+        </div>
+        <div class="md-layout-item md-size-100">
+          <md-field>
+            <label>Name</label>
+            <md-input v-model="category.name"></md-input>
+            <span class="md-helper-text">Name</span>
+          </md-field>
+          <validation-error
+            :errors="apiValidationErrors['name_translation.en']"
+            style="color: red"
+          />
+        </div>
+        <div class="md-layout-item md-layout md-size-100">
+          <md-field>
+            <label>Description</label>
+            <md-textarea v-model="category.description"></md-textarea>
+            <md-icon>description</md-icon>
+            <validation-error
+              :errors="apiValidationErrors.description"
+              style="color: red"
+            />
+          </md-field>
+        </div>
+        <div class="md-layout-item md-layout md-size-100">
+          <md-switch
+            v-model="category.is_available"
+            style="margin-left: 50%; translate: -25%;"
+            >Is available</md-switch
+          >
+        </div>
+      </div>
+      <md-dialog-actions>
+        <md-button class="md-dense md-blue" @click="editCategory()"
+          >Edit</md-button
+        >
+        <md-button
+          @click="() => this.$emit('closeShowDialog')"
+          class="md-dense md-raised"
+          style="background-color: white !important; color: gray !important; "
+          >Cancel</md-button
+        >
+      </md-dialog-actions>
     </md-dialog>
     <LoaderFull v-if="isLoading"></LoaderFull>
   </div>
@@ -241,3 +329,11 @@ export default {
   },
 };
 </script>
+<style>
+.dialog-title {
+  background-color: #00aec5;
+  color: white;
+  padding: 12px 8px 12px !important;
+  text-align: center;
+}
+</style>

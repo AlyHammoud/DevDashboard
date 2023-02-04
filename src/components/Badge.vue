@@ -9,24 +9,24 @@ export default {
   props: {
     tag: {
       type: String,
-      default: "span"
+      default: "span",
     },
     type: {
       type: String,
       default: "default",
-      validator: value => {
+      validator: (value) => {
         let acceptedValues = [
           "primary",
           "info",
           "success",
           "warning",
           "danger",
-          "rose"
+          "rose",
         ];
         return acceptedValues.indexOf(value) !== -1;
-      }
-    }
-  }
+      },
+    },
+  },
 };
 </script>
 <style></style>

@@ -140,7 +140,7 @@ export default {
     },
 
     autoLoopCarousel() {
-      this.myInterval = setInterval(this.intervalCarousel, 3000); //make the loop function execute
+      this.myInterval = setInterval(this.intervalCarousel, 1500); //make the loop function execute
     },
 
     stopCarousel() {
@@ -251,6 +251,7 @@ export default {
       }
     }
   }
+
   .item-card-actions {
     display: flex;
     justify-content: center;

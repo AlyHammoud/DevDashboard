@@ -1,6 +1,6 @@
 <template>
   <div>
-    <md-dialog
+    <!-- <md-dialog
       :md-active.sync="mdShowDialog"
       style="margin-left: auto; margin-right: auto; overflow: auto; border-radius: 10px;"
     >
@@ -149,6 +149,119 @@
           </div>
         </div>
       </div>
+    </md-dialog> -->
+    <md-dialog
+      :md-active.sync="mdShowDialog"
+      :md-click-outside-to-close="false"
+    >
+      <md-dialog-title class="dialog-title"
+        ><div class="md-layout">
+          <div class="md-layout-item md-size-10"></div>
+          <div class="md-layout-item md-size-80">Add Item</div>
+          <div
+            class="md-layout-item md-size-10 md-layout md-alignment-center"
+            style="padding-right: 0;"
+          >
+            <div
+              class="material-icons"
+              style="font-size: 25px; cursor: pointer;"
+              @click="() => this.$emit('closeShowDialog')"
+            >
+              close
+            </div>
+          </div>
+        </div></md-dialog-title
+      >
+      <div class="md-layout" style="overflow-y:scroll">
+        <div class="md-layout-item md-size-100 md-layout md-alignment-center">
+          <label for="avatar" class="user-avatar">
+            Upload Image
+            <input
+              type="file"
+              name="browse"
+              id="avatar"
+              style="display: none;"
+              @change="onUploadItemImages($event)"
+              multiple
+            />
+          </label>
+        </div>
+        <div class="md-layout-item md-size-100">
+          <md-list v-if="tmpImages.length">
+            <md-list-item md-expand>
+              <md-icon style="color: #4caf50;">images</md-icon>
+              <span
+                class="md-list-item-text"
+                style="margin-left: 40px; margin-top: 15px;"
+                >Images</span
+              >
+
+              <md-list
+                slot="md-expand"
+                v-if="tmpImages.length"
+                style="text-align: center;"
+              >
+                <md-list-item
+                  class="md-inset"
+                  v-for="(image, index) in tmpImages"
+                  :key="index"
+                  style="width: 100%;"
+                >
+                  <img :src="image" class="images"/>
+                </md-list-item>
+              </md-list>
+            </md-list-item>
+          </md-list>
+        </div>
+        <div class="md-layout-item md-size-100">
+          <md-field>
+            <label>Name</label>
+            <md-input v-model="item.name"></md-input>
+            <span class="md-helper-text">Name</span>
+          </md-field>
+          <validation-error
+            :errors="apiValidationErrors['name_translation.en']"
+            style="color: red"
+          />
+        </div>
+        <div class="md-layout-item md-size-100">
+          <md-field>
+            <label>Description</label>
+            <md-textarea v-model="item.description"></md-textarea>
+            <md-icon>description</md-icon>
+            <validation-error
+              :errors="apiValidationErrors.description"
+              style="color: red"
+            />
+          </md-field>
+        </div>
+        <div class="md-layout-item md-size-100" style="margin-top:10px ;">
+          <md-field>
+            <label>Price</label>
+            <md-input v-model="item.price" type="number"></md-input>
+            <span class="md-helper-text">Price</span>
+          </md-field>
+          <validation-error
+            :errors="apiValidationErrors.price"
+            style="color: red"
+          />
+        </div>
+        <div class="md-layout-item md-layout md-alignment-center">
+          <md-switch v-model="item.is_available">Is available</md-switch>
+        </div>
+      </div>
+      <md-dialog-actions>
+        <md-button class="md-dense md-success" @click="addItem()">
+          Add
+        </md-button>
+        <md-button
+          @click="() => this.$emit('closeShowDialog')"
+          class="md-dense md-raised"
+          style="background-color: white !important; color: gray !important; "
+        >
+          Cancel
+        </md-button>
+      </md-dialog-actions>
     </md-dialog>
     <LoaderFull v-if="isLoading"></LoaderFull>
   </div>
@@ -256,3 +369,14 @@ export default {
   },
 };
 </script>
+<style>
+.images {
+  height: 150px;
+  width: 150px;
+  border-radius: 50% !important;
+  object-fit: cover;
+  filter: contrast(0.7);
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>

@@ -34,10 +34,10 @@
   }
 
   &.md-checked .md-radio-container{
-    border-color: $brand-primary !important;
+    border-color: $brand-success !important;
 
     &:after{
-      background-color: $brand-primary !important;
+      background-color: $brand-success !important;
     }
   }
 

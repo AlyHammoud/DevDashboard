@@ -1,78 +1,77 @@
 <template>
-  
-    <md-card class="hoverElevate">
-      <md-card-area>
-        <md-card-media>
-          <img
-            src="https://cdn.shopify.com/s/files/1/0559/0899/1136/products/s-l1600-32_1500x.png?v=1670788356"
-            alt="People"
-            class="most_view_products"
-            style="max-width:100%; max-height:100%;"
-          />
-        </md-card-media>
+  <md-card class="hoverElevate">
+    <md-card-area>
+      <md-card-media>
+        <img
+          src="https://cdn.shopify.com/s/files/1/0559/0899/1136/products/s-l1600-32_1500x.png?v=1670788356"
+          alt="People"
+          class="most_view_products"
+          style="max-width:100%; max-height:100%;"
+        />
+      </md-card-media>
 
-        <md-card-header>
+      <md-card-header>
+        <div
+          class="md-title"
+          style="text-align: center; font-size: 22px !important;"
+        >
+          {{ item.name }}
+        </div>
+        <div class=" md-layout md-alignment-center-space-around">
           <div
-            class="md-title"
-            style="text-align: center; font-size: 22px !important;"
+            class="md-layout-item md-size-60"
+            style=" padding:0 0 0 10px !important; font-weight: bold; color: green;"
           >
-            {{ item.name }}
-          </div>
-          <div class=" md-layout md-alignment-center-space-around">
-            <div
-              class="md-layout-item md-size-60"
-              style=" padding:0 0 0 10px !important; font-weight: bold; color: green;"
-            >
-              {{ item.category }}
-            </div>
-            <div
-              class="md-layout-item md-size-10"
-              style="padding: 0; font-weight: bold; font-size: 20px;"
-            >
-              &dollar;
-            </div>
-            <div
-              class="md-layout-item md-size-30"
-              style="text-align: left !important; color: black !important; font-weight: bold !important; font-size: 1rem !important; padding: 0 !important;"
-            >
-              {{ item.price }}
-            </div>
-          </div>
-        </md-card-header>
-
-        <md-card-content class="card_content">
-          <div class="md-layout ">
-            <div class="md-layout-item md-size-15" style="padding: 0;">
-              <img src="../assets/images/eye.png" alt="" style="width: 50%;" />
-            </div>
-            <div
-              class="md-layout-item md-size-85"
-              style="font-weight: bold; padding: 0;"
-            >
-              {{ item.views }}
-            </div>
+            {{ item.category }}
           </div>
           <div
-            class="md-layout md-alignment-center-space-around"
-            style="margin-top: 1em;"
+            class="md-layout-item md-size-10"
+            style="padding: 0; font-weight: bold; font-size: 20px;"
           >
-            <div class="md-layout-item md-size-15" style="padding: 0;">
-              <img
-                alt=""
-                style="width: 50%;"
-                src="../assets/images/kartone.png"
-              />
-            </div>
-            <div
-              class="md-layout-item md-size-85"
-              style="font-weight: bold; padding: 0;"
-            >
-              {{ item.purchases }}
-            </div>
+            &dollar;
           </div>
-        </md-card-content>
-      </md-card-area>
-    </md-card>
+          <div
+            class="md-layout-item md-size-30"
+            style="text-align: left !important; color: black !important; font-weight: bold !important; font-size: 1rem !important; padding: 0 !important;"
+          >
+            {{ item.price }}
+          </div>
+        </div>
+      </md-card-header>
+
+      <md-card-content class="card_content">
+        <div class="md-layout ">
+          <div class="md-layout-item md-size-15" style="padding: 0;">
+            <img src="../assets/images/eye.png" alt="" style="width: 50%;" />
+          </div>
+          <div
+            class="md-layout-item md-size-85"
+            style="font-weight: bold; padding: 0;"
+          >
+            {{ item.views }}
+          </div>
+        </div>
+        <div
+          class="md-layout md-alignment-center-space-around"
+          style="margin-top: 1em;"
+        >
+          <div class="md-layout-item md-size-15" style="padding: 0;">
+            <img
+              alt=""
+              style="width: 50%;"
+              src="../assets/images/kartone.png"
+            />
+          </div>
+          <div
+            class="md-layout-item md-size-85"
+            style="font-weight: bold; padding: 0;"
+          >
+            {{ item.purchases }}
+          </div>
+        </div>
+      </md-card-content>
+    </md-card-area>
+  </md-card>
 </template>
 
 <script>
@@ -81,14 +80,14 @@ import { type } from "os";
 export default {
   data() {
     return {
-    //   item: {
-    //     //   type:Object
-    //     name: "pack 1",
-    //     category: "BackPacks",
-    //     price: 129,
-    //     views: 100,
-    //     purchases: 55,
-    //   },
+      //   item: {
+      //     //   type:Object
+      //     name: "pack 1",
+      //     category: "BackPacks",
+      //     price: 129,
+      //     views: 100,
+      //     purchases: 55,
+      //   },
     };
   },
 
@@ -101,9 +100,9 @@ export default {
     //   views: 100,
     //   purchases: 55,
     // },
-    item:{
-        type:Object
-    }
+    item: {
+      type: Object,
+    },
   },
 };
 </script>

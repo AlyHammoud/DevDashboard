@@ -3,7 +3,7 @@
     :class="[
       { open: isOpen },
       { dropdown: direction === 'down' },
-      { dropup: direction === 'up' }
+      { dropup: direction === 'up' },
     ]"
     @click="toggleDropDown"
     v-click-outside="closeDropDown"
@@ -30,18 +30,18 @@ export default {
   props: {
     direction: {
       type: String,
-      default: "down"
+      default: "down",
     },
     multiLevel: {
       type: Boolean,
-      default: false
+      default: false,
     },
     title: String,
-    icon: String
+    icon: String,
   },
   data() {
     return {
-      isOpen: false
+      isOpen: false,
     };
   },
   methods: {
@@ -54,7 +54,7 @@ export default {
     },
     closeDropDown() {
       this.isOpen = false;
-    }
-  }
+    },
+  },
 };
 </script>

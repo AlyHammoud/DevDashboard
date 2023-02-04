@@ -91,11 +91,11 @@
             <h4 class="title">Products</h4>
           </md-card-header>
           <md-card-content>
-            <div class="text-right">
+            <div class="text-right ">
               <md-button
                 v-if="user.role == 'admin' || user.id == category.managed_by"
                 @click="showAddProductHandler(item.id)"
-                class="md-raised md-success"
+                class="md-raised md-success md-dense"
                 >Add Product
               </md-button>
             </div>

@@ -34,7 +34,7 @@
         />
 
         <label for="price" class="filter-price">
-          <p >Filter between two prices:</p>
+          <p>Filter between two prices:</p>
           <div>
             <input
               type="number"
@@ -64,9 +64,9 @@
         v-model="searchProduct"
         @input="searchProducts"
         placeholder="Type here"
-        style="margin-top: 0.7rem;  border-radius: 2rem; border-color: green;"
+        style="margin-top: 0.7rem;  "
       />
-      <div></div>
+      <div style="margin-top: -2px ;"></div>
     </div>
 
     <md-field>
@@ -579,7 +579,7 @@ body {
 
     p {
       margin-top: -1px;
-      margin-left:0px;
+      margin-left: 0px;
     }
 
     div {
@@ -617,24 +617,29 @@ body {
     border: none;
     height: 50px;
     width: 100%;
-    border-bottom: 1px solid rgb(223, 111, 223);
+    border-bottom: 1.5px solid green;
+    border-radius: 1.5rem;
     background-color: rgb(248, 247, 247);
     padding: 5px 10px;
     position: relative;
 
     &:focus {
-      border-bottom: none;
+      border-bottom: 1.5px solid red;
+      border-radius: 2rem;
+      transition: all 0.6s;
+      transform-origin: center center;
+      align-self: center;
     }
 
-    &:focus ~ div {
-      width: 100%;
-      height: 1px;
-      background-color: red;
-    }
-    &:not(:focus) ~ div {
-      width: 0;
-      height: 1px;
-    }
+    // &:focus ~ div {
+    //   width: 100%;
+    //   height: 1px;
+    //   background-color: red;
+    // }
+    // &:not(:focus) ~ div {
+    //   width: 0;
+    //   height: 1px;
+    // }
   }
   div {
     width: 0px;

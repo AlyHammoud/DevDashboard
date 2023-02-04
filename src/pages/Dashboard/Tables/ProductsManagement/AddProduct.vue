@@ -1,6 +1,6 @@
 <template>
   <div>
-    <md-dialog
+    <!-- <md-dialog
       :md-active.sync="mdShowDialog"
       style="margin-left: auto; margin-right: auto; overflow: auto; border-radius: 10px;"
     >
@@ -236,6 +236,213 @@
           </div>
         </div>
       </div>
+    </md-dialog> -->
+    <md-dialog
+      :md-active.sync="mdShowDialog"
+      :md-click-outside-to-close="false"
+    >
+      <md-dialog-title
+        class="dialog-title "
+        style="background-color: #4caf50 !important;"
+        ><div class="md-layout">
+          <div class="md-layout-item md-size-10"></div>
+          <div class="md-layout-item md-size-80">
+            Add product
+          </div>
+          <div
+            class="md-layout-item md-size-10 md-layout md-alignment-center"
+            style="padding-right: 0;"
+          >
+            <div
+              class="material-icons"
+              style="font-size: 25px; cursor: pointer;"
+              @click="() => this.$emit('closeShowDialog')"
+            >
+              close
+            </div>
+          </div>
+        </div></md-dialog-title
+      >
+      <div class="md-layout" style="overflow-y: scroll;">
+        <div class="md-layout-item md-layout md-size-100 md-alignment-center">
+          <label for="avatar" class="user-avatar">
+            Upload Image
+            <input
+              type="file"
+              name="browse"
+              id="avatar"
+              style="display: none;"
+              @change="onUploadItemImages($event)"
+              multiple
+            />
+          </label>
+          <validation-error
+            :errors="apiValidationErrors.image_url"
+            style="color: red; "
+          />
+        </div>
+        <div class="md-layout-item md-size-100">
+          <md-list v-if="tmpImages.length" >
+            <md-list-item md-expand>
+              <md-icon>images</md-icon>
+              <span
+                class="md-list-item-text"
+                style="margin-left: 40px; margin-top: 15px;"
+                >Images</span
+              >
+
+              <md-list slot="md-expand" v-if="tmpImages.length">
+                <md-list-item
+                  class="md-inset"
+                  v-for="(image, index) in tmpImages"
+                  :key="index"
+                  style="width: 100%;"
+                >
+                  <img
+                    :src="image"
+                    class="images"
+                  />
+                </md-list-item>
+              </md-list>
+            </md-list-item>
+          </md-list>
+        </div>
+        <div class="md-layout-item md-size-100">
+          <md-field>
+            <label>Name</label>
+            <md-input v-model="product.name"></md-input>
+            <span class="md-helper-text">Name</span>
+          </md-field>
+          <validation-error
+            :errors="apiValidationErrors['name_translation.en']"
+            style="color: red"
+          />
+        </div>
+        <div class="ma-layout-item md-layout md-size-100">
+          <div class="md-layout-item md-size-100">
+            <md-field>
+              <label>Description</label>
+              <md-textarea v-model="product.description"></md-textarea>
+              <md-icon>description</md-icon>
+              <validation-error
+                :errors="apiValidationErrors.description"
+                style="color: red"
+              />
+            </md-field>
+          </div>
+        </div>
+        <div
+          class="md-layout-item md-layout md-size-100"
+          style="margin-top: 10px;"
+        >
+          <div class="md-layout-item md-size-50">
+            <md-field>
+              <label>Price</label>
+              <span class="md-prefix">$</span>
+              <md-input
+                v-model="product.price"
+                min="0"
+                type="number"
+              ></md-input>
+            </md-field>
+            <validation-error
+              :errors="apiValidationErrors.price"
+              style="color: red"
+            />
+          </div>
+          <div class="md-layout-item md-size-50">
+            <md-field>
+              <label>Sale</label>
+              <span class="md-prefix">%</span>
+              <md-input
+                v-model="product.sale"
+                min="0"
+                max="100"
+                type="number"
+              ></md-input>
+            </md-field>
+            <validation-error
+              :errors="apiValidationErrors.price"
+              style="color: red"
+            />
+          </div>
+        </div>
+        <div class="md-layout-item md-layout md-size-100">
+          <div class="md-layout-item md-size-50">
+            <md-field>
+              <label>Quantity</label>
+              <md-input
+                v-model="product.quantity"
+                min="0"
+                type="number"
+              ></md-input>
+              <span class="md-prefix">#</span>
+            </md-field>
+            <validation-error
+              :errors="apiValidationErrors.quantity"
+              style="color: red"
+            />
+          </div>
+          <div class="md-layout-item md-size-50">
+            <md-field>
+              <label for="movie">No size selected</label>
+              <md-select
+                v-model="product.size"
+                multiple
+                name="movie"
+                id="movie"
+              >
+                <md-option
+                  v-for="(size, i) in sizeOptions"
+                  :key="i"
+                  :value="size"
+                  >{{ size }}</md-option
+                >
+              </md-select>
+            </md-field>
+          </div>
+        </div>
+        <div class="md-layout-item md-layout md-size-100">
+          <div class="md-layout-item md-size-50">
+            <input type="color" @change="colorHandler" />
+
+            <validation-error
+              :errors="apiValidationErrors.color"
+              style="color: red"
+            />
+          </div>
+          <div class="md-layout-item md-size-50">
+            <div v-if="!product.color.length" style="color: black">
+              No Colors Selected
+            </div>
+            <div v-else style="display: flex; gap: 4px;  flex-wrap: wrap;">
+              <div
+                v-for="(color, index) in product.color"
+                :key="index"
+                :style="{ 'background-color': color }"
+                @click="removeColorHandler(index)"
+                style="height: 20px; width: 20px;"
+              ></div>
+            </div>
+          </div>
+        </div>
+        <div class="md-layout-item md-layout md-size-100 md-alignment-center">
+          <md-switch v-model="product.is_available">Is available</md-switch>
+        </div>
+      </div>
+      <md-dialog-actions>
+        <md-button
+          class="md-dense md-success"
+          @click="addProduct()"
+          >Add</md-button
+        >
+        <md-button
+          @click="() => this.$emit('closeShowDialog')"
+          class="md-dense md-raised"
+          style="background-color: white !important; color: gray !important; "
+          >Cancel</md-button
+        >
+      </md-dialog-actions>
     </md-dialog>
     <LoaderFull v-if="isLoading"></LoaderFull>
   </div>
