@@ -318,7 +318,7 @@
           </div></md-dialog-title
         >
 
-        <div class="md-layout">
+        <div class="md-layout" style="overflow-y: scroll;">
           <div class="md-layout-item md-layout md-size-100 md-alignment-center">
             <label for="avatar" class="user-avatar">
               Upload Image
@@ -337,6 +337,10 @@
               :src="user.imageUserSrc"
               width="110"
             />
+            <validation-error
+                :errors="apiValidationErrors.image"
+                style="color: red"
+              />
           </div>
           <div class="md-layout-item md-layout md-size-100">
             <div class="md-layout-item md-size-50">
@@ -351,6 +355,19 @@
               />
             </div>
             <div class="md-layout-item md-size-50">
+              <md-field>
+                <label>Username</label>
+                <md-input v-model="user.username"></md-input>
+                <span class="md-helper-text">User Name</span>
+              </md-field>
+              <validation-error
+                :errors="apiValidationErrors.username"
+                style="color: red"
+              />
+            </div>
+          </div>
+          <div class="md-layout-item md-layout md-size-100">
+            <div class="md-layout-item md-size-100">
               <md-field>
                 <label>Email</label>
                 <md-input v-model="user.email"></md-input>
@@ -450,7 +467,7 @@ export default {
 
   data: () => ({
     user: {
-      name: null,
+      name: "",
       email: null,
       username: null,
       password: null,

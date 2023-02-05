@@ -208,11 +208,15 @@
                   :key="index"
                   style="width: 100%;"
                 >
-                  <img :src="image" class="images"/>
+                  <img :src="image" class="images" />
                 </md-list-item>
               </md-list>
             </md-list-item>
           </md-list>
+          <validation-error
+            :errors="apiValidationErrors['images.0']"
+            style="color: red; "
+          />
         </div>
         <div class="md-layout-item md-size-100">
           <md-field>
@@ -358,7 +362,7 @@ export default {
         await this.$store.dispatch("alerts/success", "Done!");
       } catch (error) {
         await this.$store.dispatch("alerts/error", "error, try again");
-
+        console.log(error)
         this.setApiValidation(error.data.errors);
         this.isLoading = false;
       }

@@ -278,7 +278,7 @@
             />
           </label>
           <validation-error
-            :errors="apiValidationErrors.image_url"
+            :errors="apiValidationErrors['images.0']"
             style="color: red; "
           />
         </div>

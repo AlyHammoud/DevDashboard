@@ -135,6 +135,7 @@ export default {
     },
 
     autoLoopCarousel() {
+      clearInterval(this.myInterval);
       this.myInterval = setInterval(this.intervalCarousel, 1500); //make the loop function execute
     },
 
