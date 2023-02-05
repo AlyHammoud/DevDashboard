@@ -16,7 +16,7 @@ const actions = {
     });
   },
 
-  error({ commit, dispatch }, message) {
+  warning({ commit, dispatch }, message) {
     this.$app.$notify({
       timeout: 2500,
       message: message,
@@ -26,7 +26,7 @@ const actions = {
       type: "warning",
     });
   },
-  warning({ commit, dispatch }, message) {
+  error({ commit, dispatch }, message) {
     this.$app.$notify({
       timeout: 2500,
       message: message,

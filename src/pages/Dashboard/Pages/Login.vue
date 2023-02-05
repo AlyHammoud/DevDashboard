@@ -15,7 +15,7 @@
       <form @submit.prevent="login">
         <login-card header-color="green">
           <h4 slot="title" class="title">Log in</h4>
-          <md-button
+          <!-- <md-button
             slot="buttons"
             ref="#facebook"
             class="md-just-icon md-simple md-white"
@@ -36,7 +36,7 @@
           >
             <i class="fab fa-google-plus-g"></i>
           </md-button>
-          <p slot="description" class="description">Or Be Classical</p>
+          <p slot="description" class="description">Or Be Classical</p> -->
           <md-field
             class="form-group md-invalid"
             slot="inputs"

@@ -122,7 +122,7 @@
               <md-table-empty-state
                 md-label="No Products Found"
                 :md-description="
-                  `No Product found for this '${search}' query. Try a different search term or create a new Product.`
+                  `No Product found. Try a different search term or create a new Product.`
                 "
               >
                 <md-button

@@ -674,6 +674,7 @@ export default {
         this.$emit("updateProductList");
         this.onClose();
         this.isLoading = false;
+        this.$store.dispatch("alerts/success", "Done!");
       } catch (error) {
         await this.$store.dispatch("alerts/error", "error, try again");
         this.setApiValidation(error.data.errors);

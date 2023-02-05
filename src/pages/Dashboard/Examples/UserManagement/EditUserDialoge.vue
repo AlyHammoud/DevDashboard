@@ -415,7 +415,7 @@ export default {
           user: formData,
         });
         this.isLoading = false;
-        await this.$store.dispatch("alerts/error", "User updated successfully");
+        await this.$store.dispatch("alerts/success", "User updated successfully");
         this.closeForm();
       } catch (e) {
         this.isLoading = false;

@@ -179,6 +179,7 @@
             <input
               type="file"
               name="browse"
+              accept=".jpg,.jpeg,.png"
               id="avatar"
               style="display: none;"
               @change="onUploadItemImages($event)"
@@ -238,7 +239,7 @@
         <div class="md-layout-item md-size-100" style="margin-top:10px ;">
           <md-field>
             <label>Price</label>
-            <md-input v-model="item.price" type="number"></md-input>
+            <md-input v-model="item.price" type="number" min="1"></md-input>
             <span class="md-helper-text">Price</span>
           </md-field>
           <validation-error
@@ -354,6 +355,7 @@ export default {
         this.$emit("updateItemList");
         this.onClose();
         this.isLoading = false;
+        await this.$store.dispatch("alerts/success", "Done!");
       } catch (error) {
         await this.$store.dispatch("alerts/error", "error, try again");
 

@@ -10,7 +10,7 @@
           class="searcable"
           name="By categories:"
           :selectOptions="categoryOptions"
-          :isEnabled="enableFilter"
+          :isEnabled="true"
           :resets="resetSearchableBox"
           style="max-width: 200px;"
           @filterItems="getAllItemsFiltered"
@@ -36,6 +36,8 @@
         <div v-for="item in items" :key="item.id">
           <ItemCard
             :item="item"
+            :userRole="user.role == 'admin' ? true : false"
+            :userId="user.id == item.managed_by ? true : false"
             @editCategory="editCategory"
             @deleteItem="deleteItem"
           />
@@ -90,6 +92,7 @@ export default {
       tmpCategoriesIdsInSearchable: [],
       resetSearchableBox: false,
       timer: null,
+      user: {},
     };
   },
   components: {
@@ -120,11 +123,15 @@ export default {
       this.isLoading = false;
     },
   },
-  mounted() {
+  async mounted() {
     this.getAllItems();
+
+    await this.$store.dispatch("myUser");
+    this.user = await this.$store.getters.myUser;
   },
 
   methods: {
+    
     async getAllItems(page = 1) {
       try {
         if (this.tmpCategoriesIdsInSearchable.length) {

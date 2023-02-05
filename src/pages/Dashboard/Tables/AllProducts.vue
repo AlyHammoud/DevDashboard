@@ -74,6 +74,8 @@
         <div v-for="product in products" :key="product.id">
           <ProductCard
             :product="product"
+            :userRole="user.role == 'admin' ? true : false"
+            :userId="user.id == product.managed_by ? true : false"
             @editProduct="editProduct"
             @deleteProduct="deleteProduct"
           />
@@ -117,6 +119,7 @@ export default {
   name: "all-products",
   data() {
     return {
+      user: {},
       products: [],
       productsMeta: {},
       categoryNames: [],
@@ -153,11 +156,14 @@ export default {
   },
 
   watch: {},
-  mounted() {
+  async mounted() {
     this.getAllProducts();
     this.getCategoriesNamesFunc();
     this.getItemsNamesFunc();
     this.getSales();
+
+    await this.$store.dispatch("myUser");
+    this.user = await this.$store.getters.myUser;
   },
 
   methods: {

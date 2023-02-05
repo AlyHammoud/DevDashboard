@@ -32,9 +32,12 @@
                   {{ item.name }}
                 </p></md-table-cell
               >
-              <md-table-cell md-label="Username" md-sort-by="username"
-                ><p class="pl-20">{{ item.username }}</p></md-table-cell
+              <md-table-cell md-label="Email" md-sort-by="email"
+                ><p class="pl-20">
+                  {{ item.email }}
+                </p></md-table-cell
               >
+
               <md-table-cell md-label="Avatar">
                 <img
                   v-if="item.image"
@@ -43,11 +46,7 @@
                 />
                 <p v-else class="pl-20">No Image</p>
               </md-table-cell>
-              <md-table-cell md-label="Email" md-sort-by="email"
-                ><p class="pl-20">
-                  {{ item.email }}
-                </p></md-table-cell
-              >
+
               <md-table-cell md-label="Created At" md-sort-by="created_at"
                 ><p style="padding-left: 30px;">
                   {{ new Date(item.created_at).toLocaleDateString() }}
@@ -325,6 +324,7 @@
               Upload Image
               <input
                 type="file"
+                accept=".png,.jpeg,.jpg"
                 name="browse"
                 id="avatar"
                 style="display: none;"
@@ -388,11 +388,17 @@
               />
             </div>
           </div>
-          <div class="md-layout-item md-layout md-size-100 md-alignment-center" style="margin-top: 10px;">
+          <div
+            class="md-layout-item md-layout md-size-100 md-alignment-center"
+            style="margin-top: 10px;"
+          >
             Role
           </div>
           <div class="md-layout-item md-layout md-size-100 md-alignment-center">
-            <div class="md-layout-item md-size-50" style="text-align: right; padding-right:0 ;">
+            <div
+              class="md-layout-item md-size-50"
+              style="text-align: right; padding-right:0 ;"
+            >
               <md-radio v-model="user.role_id" :value="1">admin</md-radio>
             </div>
             <div class="md-layout-item md-size-50">
@@ -515,8 +521,8 @@ export default {
         await this.$store.dispatch("createUser", formData); //this.user
         this.isLoading = false;
         await this.getList(1);
-        await this.$store.dispatch("alerts/error", "User added successfully");
         this.closeForm();
+        await this.$store.dispatch("alerts/success", "User added successfully");
       } catch (e) {
         // console.log(e);
         this.isLoading = false;
@@ -533,7 +539,7 @@ export default {
     async deleteUser(userId) {
       try {
         if (userId == 1) {
-          await this.$store.dispatch("alerts/error", "cant delete Super user");
+          await this.$store.dispatch("alerts/error", "can't delete Super user");
 
           return;
         }

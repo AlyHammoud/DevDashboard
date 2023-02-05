@@ -140,13 +140,13 @@
     </div>
     <div class="product-card-actions">
       <button
-        v-if="user.role == 'admin' || user.id == product.managed_by"
+        v-if="userRole || userId"
         @click="$emit('editProduct', product.id)"
       >
         Edit
       </button>
       <button
-        v-if="user.role == 'admin' || user.id == product.managed_by"
+        v-if="userRole || userId"
         @click="$emit('deleteProduct', product.id)"
       >
         Delete
@@ -174,12 +174,11 @@ export default {
     product: {
       type: Object,
     },
+    userRole: { type: Boolean, default: false },
+    userId: { type: Boolean, default: false },
   },
 
-  async mounted() {
-    await this.$store.dispatch("myUser");
-    this.user = await this.$store.getters.myUser;
-  }, //this is the method to get user data from db
+  async mounted() {},
 
   methods: {
     carouselImage(product_id, index) {
@@ -196,8 +195,7 @@ export default {
     },
 
     autoLoopCarousel() {
-      clearInterval(this.myInterval);
-      this.myInterval = setInterval(this.intervalCarousel, 1000); //make the loop function execute
+      this.myInterval = setInterval(this.intervalCarousel, 1500); //make the loop function execute
     },
 
     stopCarousel() {

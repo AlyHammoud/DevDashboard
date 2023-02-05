@@ -242,10 +242,7 @@
                   :key="image.id"
                   style="width: 100%;"
                 >
-                  <img
-                    :src="image.image_url"
-                    class="image"
-                  />
+                  <img :src="image.image_url" class="image" />
                   <md-button
                     class="md-icon-button delete-button"
                     @click="onDeleteImages(image.id)"
@@ -281,6 +278,17 @@
         </div>
         <div class="md-layout-item md-layout md-size-100 md-alignment-center">
           <md-switch v-model="item.is_available">Is available</md-switch>
+        </div>
+        <div class="md-layout-item md-size-100">
+            <md-field>
+              <label>Price</label>
+              <md-input v-model="item.price" type="number"></md-input>
+              <span class="md-helper-text">Price</span>
+            </md-field>
+            <validation-error
+              :errors="apiValidationErrors.price"
+              style="color: red"
+            />
         </div>
       </div>
       <md-dialog-actions>
@@ -418,6 +426,7 @@ export default {
         this.$emit("updateItemList");
         this.onClose();
         this.isLoading = false;
+        await this.$store.dispatch("alerts/success", "Done!");
       } catch (error) {
         await this.$store.dispatch("alerts/error", "error, try again");
         this.setApiValidation(error.data.errors);

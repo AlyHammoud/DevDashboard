@@ -57,6 +57,11 @@
                   {{ item.id }}
                 </p></md-table-cell
               >
+              <md-table-cell class="avatar" md-label="Avatar"
+                ><img
+                  :src="item.image_url"
+                  style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-left: 20px;"
+              /></md-table-cell>
               <md-table-cell md-label="Name" md-sort-by="name">
                 <p class="pl-20">
                   {{ item.name }}
@@ -68,11 +73,7 @@
                   <!-- I am hassan mohammad shalhoub 4th  year university LIU student i work in web development -->
                 </p>
               </md-table-cell>
-              <md-table-cell class="avatar" md-label="Avatar"
-                ><img
-                  :src="item.image_url"
-                  style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-left: 20px;"
-              /></md-table-cell>
+
               <md-table-cell md-label="Created At" md-sort-by="created_at">
                 <p class="pl-20">
                   {{ item.created_at }}
@@ -283,6 +284,7 @@
             Upload Image
             <input
               type="file"
+              accept=".png,.jpeg,.jpg"
               name="browse"
               id="avatar"
               style="display: none;"
@@ -454,7 +456,7 @@ export default {
     },
 
     resetInputs() {
-      this.categoryImage =null;
+      this.categoryImage = null;
       this.category_description = null;
       this.category_name = null;
       this.tmpCategoryImage = null;
@@ -475,12 +477,12 @@ export default {
         await this.$store.dispatch("storeCategory", formData);
         this.isLoading = false;
         this.closeCategoryDialog(this.showDialog_category);
-        await this.$store.dispatch("alerts/warning", "Done!");
+        await this.$store.dispatch("alerts/success", "Done!");
 
         await this.getAllPaginatedCategories(1);
       } catch (e) {
         this.isLoading = false;
-        await this.$store.dispatch("alerts/error", "Invalid input");
+        await this.$store.dispatch("alerts/error", "Error,Try Again");
         this.setApiValidation(e.data.errors);
       }
     },

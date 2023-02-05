@@ -78,7 +78,7 @@
           <md-table-empty-state
             md-label="No Items found"
             :md-description="
-              `No item found for this '${search}' query. Try a different search term or create a new Item.`
+              `No items Found. Try a different search term or create a new Item`
             "
           >
             <md-button
@@ -362,12 +362,12 @@ export default {
   padding-left: 20px;
 }
 
-.parent{
-  width: 50%; 
-  margin-left: auto; 
-  margin-right: auto; 
-  background-color: #00AEC5; 
-  padding:  5px 0; 
+.parent {
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #00aec5;
+  padding: 5px 0;
   border-radius: 10px;
 }
 </style>

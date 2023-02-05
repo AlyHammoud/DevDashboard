@@ -269,6 +269,7 @@
             Upload Image
             <input
               type="file"
+              accept=".jpg,.jpeg,.png"
               name="browse"
               id="avatar"
               style="display: none;"
@@ -341,7 +342,7 @@
               <span class="md-prefix">$</span>
               <md-input
                 v-model="product.price"
-                min="0"
+                min="1"
                 type="number"
               ></md-input>
             </md-field>
@@ -544,7 +545,7 @@ export default {
         formData.append("images", []);
       }
 
-      formData.append("name_translation[en]", this.product.name);
+      formData.append("name_translation[en]", this.product.name,);
       formData.append(
         "description_translation[en]",
         this.product.description || "-"
@@ -576,6 +577,7 @@ export default {
         this.$emit("updateProductList");
         this.onClose();
         this.isLoading = false;
+        await this.$store.dispatch("alerts/success","Done!")
       } catch (error) {
         await this.$store.dispatch("alerts/error", "error, try again");
 

@@ -69,17 +69,11 @@
       </div>
     </div>
     <div class="item-card-actions">
-      <button
-        v-if="user.role == 'admin' || user.id == item.managed_by"
-        @click="$emit('editCategory', item.id)"
-      >
+      <button v-if="userRole || userId" @click="$emit('editCategory', item.id)">
         Edit
       </button>
 
-      <button
-        v-if="user.role == 'admin' || user.id == item.managed_by"
-        @click="$emit('deleteItem', item.id)"
-      >
+      <button v-if="userRole || userId" @click="$emit('deleteItem', item.id)">
         Delete
       </button>
     </div>
@@ -106,6 +100,8 @@ export default {
     item: {
       type: Object,
     },
+    userId: { type: Boolean, default: false },
+    userRole: { type: Boolean, default: false },
   },
 
   // mounted() {
@@ -121,9 +117,8 @@ export default {
 
   async mounted() {
     // this.autoLoopCarousel();
-
-    await this.$store.dispatch("myUser");
-    this.user = await this.$store.getters.myUser;
+    // await this.$store.dispatch("myUser");
+    // this.user = await this.$store.getters.myUser;
   }, //this is the method to get user data from db
 
   methods: {
@@ -134,9 +129,9 @@ export default {
     intervalCarousel() {
       if (this.item.images.length - 1 > this.imageIndex) {
         this.imageIndex++;
-        return;
+      } else {
+        this.imageIndex = 0;
       }
-      this.imageIndex = 0;
     },
 
     autoLoopCarousel() {

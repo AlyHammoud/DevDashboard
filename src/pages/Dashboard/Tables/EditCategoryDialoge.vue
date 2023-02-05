@@ -315,6 +315,7 @@ export default {
         this.$emit("updateCategoryList");
         this.onClose();
         this.isLoading = false;
+        await this.$store.dispatch("alerts/success","Done!")
       } catch (error) {
         await this.$store.dispatch("alerts/error", "error, try again");
         this.setApiValidation(error.data.errors);

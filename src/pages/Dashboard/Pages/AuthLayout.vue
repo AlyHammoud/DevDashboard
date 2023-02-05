@@ -21,10 +21,10 @@
             :class="{ 'off-canvas-sidebar': responsive }"
           >
             <md-list>
-              <md-list-item href="/register" @click="linkClick">
+              <!-- <md-list-item href="/register" @click="linkClick">
                 <md-icon>person_add</md-icon>
                 Register
-              </md-list-item>
+              </md-list-item> -->
               <md-list-item href="/login" @click="linkClick">
                 <md-icon>fingerprint</md-icon>
                 Login
