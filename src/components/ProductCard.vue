@@ -1,7 +1,9 @@
 <template>
-  <div class="product-card"
-  @mouseover="autoLoopCarousel()"
-  @mouseleave="stopCarousel()">
+  <div
+    class="product-card"
+    @mouseover="autoLoopCarousel()"
+    @mouseleave="stopCarousel()"
+  >
     <div class="product-imgs">
       <div v-if="product.images.length" class="product-img">
         <img :src="product.images[imageIndex].image_url" />
@@ -174,32 +176,32 @@ export default {
     },
   },
 
-
   async mounted() {
-
     await this.$store.dispatch("myUser");
     this.user = await this.$store.getters.myUser;
   }, //this is the method to get user data from db
 
   methods: {
     carouselImage(product_id, index) {
+      clearInterval(this.myInterval);
       this.imageIndex = index;
     },
 
     intervalCarousel() {
       if (this.product.images.length - 1 > this.imageIndex) {
         this.imageIndex++;
-        return;
+      } else {
+        this.imageIndex = 0;
       }
-      this.imageIndex = 0;
     },
 
     autoLoopCarousel() {
-      this.myInterval = setInterval(this.intervalCarousel, 3000); //make the loop function execute
+      clearInterval(this.myInterval);
+      this.myInterval = setInterval(this.intervalCarousel, 1000); //make the loop function execute
     },
 
     stopCarousel() {
-      clearInterval(this.myInterval);//make the loop function stop
+      clearInterval(this.myInterval); //make the loop function stop
     },
   },
 };
