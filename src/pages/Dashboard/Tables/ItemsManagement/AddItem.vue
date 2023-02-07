@@ -209,6 +209,12 @@
                   style="width: 100%;"
                 >
                   <img :src="image" class="images" />
+                  <md-button
+                    class="md-icon-button delete-button"
+                    @click="onDeleteNewImages(image.id)"
+                  >
+                    <md-icon>delete</md-icon>
+                  </md-button>
                 </md-list-item>
               </md-list>
             </md-list-item>
@@ -332,6 +338,11 @@ export default {
       this.tmpImages.push(...y);
     },
 
+    onDeleteNewImages(id) {
+      // let imageIndex = this.tmpImages.findIndex((image) => image.id === id);
+      // this.tmpImages.splice(imageIndex, 1);
+    },
+
     async addItem() {
       this.isLoading = true;
       const formData = new FormData();
@@ -362,7 +373,7 @@ export default {
         await this.$store.dispatch("alerts/success", "Done!");
       } catch (error) {
         await this.$store.dispatch("alerts/error", "error, try again");
-        console.log(error)
+        console.log(error);
         this.setApiValidation(error.data.errors);
         this.isLoading = false;
       }

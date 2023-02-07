@@ -8,7 +8,7 @@
           </div>
           <p class="category uppercase">Website Visits</p>
           <h3 class="title">
-            75.521
+            {{ siteData.allSiteVisists }}
           </h3>
         </template>
 
@@ -30,15 +30,15 @@
               class="logo"
             />
           </div>
-          <p class="category uppercase">Cost of Items</p>
+          <p class="category uppercase">Cost of Products</p>
           <h3 class="title">
-            $ 34.245
+            {{ siteData.productPriceSum }}
           </h3>
         </template>
 
         <template slot="footer">
           <div class=" uppercase cost_of_items_color">
-            cost of items
+            cost of products
           </div>
         </template>
       </stats-card>
@@ -55,15 +55,13 @@
               class="logo"
             />
           </div>
-          <p class="category uppercase">Number of items</p>
-          <h3 class="title">
-            +245
-          </h3>
+          <p class="category uppercase">Number of products</p>
+          <h3 class="title">+{{ siteData.countOfProducts }}</h3>
         </template>
 
         <template slot="footer">
           <div class="uppercase nb_of_items_color">
-            Number of items
+            Number of products
           </div>
         </template>
       </stats-card>
@@ -80,7 +78,7 @@
           </div>
           <p class="category uppercase ">Number of users</p>
           <h3 class="title">
-            184
+            {{ siteData.countOfUsers }}
           </h3>
         </template>
 
@@ -93,15 +91,17 @@
     </div>
 
     <div
-      class="md-layout-item md-medium-size-100 md-xsmall-size-100 md-size-33"
+      class="md-layout-item md-medium-size-100 md-xsmall-size-100 chart-edit"
     >
       <chart-card
-        :chart-data="emailsSubscriptionChart.data"
-        :chart-options="emailsSubscriptionChart.options"
-        :chart-responsive-options="emailsSubscriptionChart.responsiveOptions"
+        v-if="showChartVists"
+        :chart-data="siteVisits.data"
+        :chart-options="siteVisits.options"
+        :chart-responsive-options="siteVisits.responsiveOptions"
         chart-type="Bar"
         chart-inside-header
         background-color="rose"
+        style="width: 100% !important; min-width: 100% !important"
       >
         <md-icon slot="fixed-button">build</md-icon>
         <md-button class="md-simple md-info md-just-icon" slot="first-button">
@@ -118,6 +118,19 @@
           <!-- <p class="category">
               Last Campaign Performance
             </p> -->
+          <!-- <div
+            v-if="siteData.years_of_visits.length"
+            style="width: 100%; display: flex; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap;"
+          >
+            <p
+              v-for="year in siteData.years_of_visits"
+              :key="year"
+              style="border-bottom: 1px solid crimson; cursor: pointer; color: crimson "
+              @click="chartVisitsYear(year.year)"
+            >
+              {{ year.year }}
+            </p>
+          </div> -->
         </template>
 
         <!-- <template slot="footer">
@@ -129,11 +142,21 @@
       </chart-card>
     </div>
     <div
-      class="md-layout-item md-medium-size-75 md-xsmall-size-100 md-size-33 "
+      style="width: 100%; display: flex; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap;"
     >
+      <p
+        v-for="year in siteData.years_of_visits"
+        :key="year.year"
+        style="border-bottom: 1px solid crimson; cursor: pointer; color: crimson "
+      >
+        <span @click="chartVisitsYear(year.year)"> {{ year.year }}</span>
+      </p>
+    </div>
+    <div class="md-layout-item md-medium-size-75 md-xsmall-size-100 chart-edit">
       <chart-card
-        :chart-data="dailySalesChart.data"
-        :chart-options="dailySalesChart.options"
+        v-if="showChartVists"
+        :chart-data="productsAddedPerMonth.data"
+        :chart-options="productsAddedPerMonth.options"
         chart-type="Line"
         chart-inside-header
         background-color="green"
@@ -167,15 +190,6 @@
       </chart-card>
     </div>
 
-    <!-- <div class="md-layout-item md-size-100 text-center">
-      <h1
-        class="uppercase md-layout-item"
-        style=" background-color: white; padding: 1rem 3rem; border-radius: 1rem; color: #808080;"
-      >
-        Most Viewed Items
-      </h1>
-    </div> -->
-
     <div class="md-layout-item md-size-100 text-center">
       <div class="md-layout md-alignment-center-space-around ">
         <div class="md-layout-item md-medium-size-85 md-large-size-66 ">
@@ -188,14 +202,6 @@
         </div>
       </div>
     </div>
-
-    <!-- <div
-      class="md-layout  md-alignment-center-space-around md-size-100 "
-      v-for="mvItem in mvItems"
-      :key="mvItem.id"
-    >
-      <mv-items-card :item="mvItem" />
-    </div> -->
 
     <div class="md-layout md-alignment-center-space-around ">
       <div
@@ -221,6 +227,8 @@ export default {
 
   data() {
     return {
+      showChartVists: false,
+      siteData: {},
       mvItems: [
         {
           id: 0,
@@ -238,87 +246,19 @@ export default {
           views: 500,
           purchases: 505,
         },
-        
       ],
 
-      product1: process.env.VUE_APP_BASE_URL + "/img/card-2.jpg",
-      product2: process.env.VUE_APP_BASE_URL + "/img/card-3.jpg",
-      product3: process.env.VUE_APP_BASE_URL + "/img/card-1.jpg",
-      seq2: 0,
-
-      selected: [],
-      firstTabs: [
-        {
-          tab: 'Sign contract for "What are conference organizers afraid of?"',
-        },
-        {
-          tab: "Lines From Great Russian Literature? Or E-mails From My Boss?",
-        },
-        {
-          tab:
-            "Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit",
-        },
-        { tab: "Create 4 Invisible User Experiences you Never Knew About" },
-      ],
-      secondTabs: [
-        {
-          tab:
-            "Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit",
-        },
-        {
-          tab: 'Sign contract for "What are conference organizers afraid of?"',
-        },
-      ],
-      thirdTabs: [
-        {
-          tab: "Lines From Great Russian Literature? Or E-mails From My Boss?",
-        },
-        {
-          tab:
-            "Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit",
-        },
-        {
-          tab: 'Sign contract for "What are conference organizers afraid of?"',
-        },
-      ],
-
-      users: [
-        {
-          id: 1,
-          name: "Noelia O'Kon",
-          salary: "13098.00",
-          country: "Niger",
-        },
-        {
-          id: 2,
-          name: "Mr. Enid Von PhD",
-          salary: "35978.00",
-          country: "Curaçao",
-        },
-        {
-          id: 3,
-          name: "Colton Koch",
-          salary: "26278.00",
-          country: "Netherlands",
-        },
-        {
-          id: 4,
-          name: "Gregory Vandervort",
-          salary: "25537.00",
-          country: "South Korea",
-        },
-      ],
-      dailySalesChart: {
+      productsAddedPerMonth: {
         data: {
-          labels: ["M", "T", "W", "T", "F", "S", "S"],
-          series: [[12, 17, 7, 17, 23, 18, 38]],
+          labels: [],
+          series: [],
         },
         options: {
           lineSmooth: this.$Chartist.Interpolation.cardinal({
             tension: 0,
           }),
           low: 0,
-          high: 50, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
+          high: 100, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
           chartPadding: {
             top: 0,
             right: 0,
@@ -327,52 +267,18 @@ export default {
           },
         },
       },
-      dataCompletedTasksChart: {
-        data: {
-          labels: ["12am", "3pm", "6pm", "9pm", "12pm", "3am", "6am", "9am"],
-          series: [[230, 750, 450, 300, 280, 240, 200, 190]],
-        },
 
-        options: {
-          lineSmooth: this.$Chartist.Interpolation.cardinal({
-            tension: 0,
-          }),
-          low: 0,
-          high: 1000, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
-          chartPadding: {
-            top: 0,
-            right: 0,
-            bottom: 0,
-            left: 0,
-          },
-        },
-      },
-      emailsSubscriptionChart: {
+      siteVisits: {
         data: {
-          labels: [
-            "Ja",
-            "Fe",
-            "Ma",
-            "Ap",
-            "Mai",
-            "Ju",
-            "Jul",
-            "Au",
-            "Se",
-            "Oc",
-            "No",
-            "De",
-          ],
-          series: [
-            [542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756, 895],
-          ],
+          labels: [],
+          series: [],
         },
         options: {
           axisX: {
-            showGrid: false,
+            showGrid: true,
           },
           low: 0,
-          high: 1000,
+          high: 500,
           chartPadding: {
             top: 0,
             right: 5,
@@ -397,14 +303,105 @@ export default {
     };
   },
 
-  // async mounted() {
-  //   await this.$store.dispatch("myUser");
-  //   this.user = await this.$store.getters.myUser;
-  // },
+  async mounted() {
+    await this.$store.dispatch("setSiteVisits");
+    await this.$store.dispatch("getAllSiteData");
+    this.siteData = await this.$store.getters.getAllsiteData;
+    const labels = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+
+    this.siteVisits.data.series[0] = [];
+    this.productsAddedPerMonth.data.series[0] = [];
+
+    for (let x = 0; x < 12; x++) {
+      this.siteVisits.data.labels[x] = labels[x];
+      this.productsAddedPerMonth.data.labels[x] = labels[x];
+
+      //site visits
+      if (this.siteData.siteVisitsPerMonth[labels[x]] == undefined) {
+        this.siteVisits.data.series[0][x] = 0;
+      } else {
+        this.siteVisits.data.series[0][x] = this.siteData.siteVisitsPerMonth[
+          labels[x]
+        ].length;
+      }
+
+      //products added per month
+      if (this.siteData.products_add_per_month[labels[x]] == undefined) {
+        this.productsAddedPerMonth.data.series[0][x] = 0;
+      } else {
+        this.productsAddedPerMonth.data.series[0][
+          x
+        ] = this.siteData.products_add_per_month[labels[x]].length;
+      }
+    }
+
+    this.showChartVists = !this.showChartVists;
+  },
 
   methods: {
     onSelect: function(items) {
       this.selected = items;
+    },
+
+    async chartVisitsYear(year) {
+      this.showChartVists = false;
+      await this.$store.dispatch("getAllSiteData", year);
+      this.siteData = await this.$store.getters.getAllsiteData;
+      const labels = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
+
+      this.siteVisits.data.series[0] = [];
+      this.productsAddedPerMonth.data.series[0] = [];
+
+      for (let x = 0; x < 12; x++) {
+        this.siteVisits.data.labels[x] = labels[x];
+        this.productsAddedPerMonth.data.labels[x] = labels[x];
+
+        //site visits
+        if (this.siteData.siteVisitsPerMonth[labels[x]] == undefined) {
+          this.siteVisits.data.series[0][x] = 0;
+        } else {
+          this.siteVisits.data.series[0][x] = this.siteData.siteVisitsPerMonth[
+            labels[x]
+          ].length;
+        }
+
+        //products added per month
+        if (this.siteData.products_add_per_month[labels[x]] == undefined) {
+          this.productsAddedPerMonth.data.series[0][x] = 0;
+        } else {
+          this.productsAddedPerMonth.data.series[0][
+            x
+          ] = this.siteData.products_add_per_month[labels[x]].length;
+        }
+      }
+
+      this.showChartVists = true;
     },
   },
 };
@@ -416,7 +413,7 @@ export default {
 // })
 </script>
 
-<style>
+<style lang="scss">
 @import "../Dashboard/css/logos.css";
 
 .most_view_products {
@@ -443,5 +440,18 @@ export default {
 .hoverElevate:hover {
   box-shadow: 0px 10px 20px 5px rgba(0, 0, 0, 0.1);
   transform: translateY(-5px);
+}
+
+.md-layout-item.md-medium-size-100 {
+  @media screen and (min-width: 1281px) {
+    min-width: 90%;
+    max-width: 90%;
+    margin-left: 0 !important;
+    flex: 1 1 100%;
+  }
+}
+
+.chart-edit {
+  max-width: 70% !important;
 }
 </style>

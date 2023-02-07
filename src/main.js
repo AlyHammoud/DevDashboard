@@ -6,12 +6,10 @@ import App from "./App.vue";
 import Chartist from "chartist";
 import VueAxios from "vue-axios";
 import DashboardPlugin from "./material-dashboard";
-import VueSimpleAlert from "vue-simple-alert";
 import "vue-search-select/dist/VueSearchSelect.css";
 
 // plugin setup
 Vue.use(DashboardPlugin);
-Vue.use(VueSimpleAlert);
 // Vue.use(VueAxios, axios);
 
 ////////////////////////////////

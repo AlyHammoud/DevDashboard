@@ -119,178 +119,7 @@
         @getList="getList(userMeta.current_page)"
       ></EditUserDialoge>
     </div>
-    <!-- <div>
-      <md-dialog
-        :md-active.sync="showDialog"
-        style="margin:0 auto; z-index: 9999;"
-        :md-click-outside-to-close="false"
-      >
-        <div class="dialog-content" style="margin-bottom: 10px ;">
-          <div style="margin: 0 auto; width: 550px;">
-            <div>
-              <div class="md-layout  " style="color: #fff;  ">
-                <div
-                  class="md-layout-item header "
-                  style="background-color: #9124A3 !important; padding: 8px 10px; text-align: center;"
-                >
-                  New User
-                </div>
-              </div>
-            </div>
-            <div>
-              <div class="md-layout text-center" style="color: white; ">
-                <div class="md-layout-item">
-                  <md-field>
-                    <label>Name</label>
-                    <md-input v-model="user.name"></md-input>
-                    <span class="md-helper-text">Name</span>
-                  </md-field>
-                  <validation-error
-                    :errors="apiValidationErrors.name"
-                    style="color: red"
-                  />
-                </div>
-              </div>
-            </div>
-            <div>
-              <div class="md-layout text-center " style="color: white; ">
-                <div class="md-layout-item">
-                  <md-field>
-                    <label>Email</label>
-                    <md-input v-model="user.email"></md-input>
-                    <span class="md-helper-text">User Email</span>
-                  </md-field>
-                  <validation-error
-                    :errors="apiValidationErrors.email"
-                    style="color: red"
-                  />
-                </div>
-              </div>
-            </div>
-            <div>
-              <div class="md-layout text-center " style="color: white; ">
-                <div class="md-layout-item">
-                  <md-field>
-                    <label>Username</label>
-                    <md-input v-model="user.username"></md-input>
-                    <span class="md-helper-text">User Name</span>
-                  </md-field>
-                  <validation-error
-                    :errors="apiValidationErrors.username"
-                    style="color: red"
-                  />
-                </div>
-              </div>
-            </div>
-            <div>
-              <div class="md-layout text-center " style="color: white; ">
-                <div class="md-layout-item">
-                  <md-field>
-                    <label>Password</label>
-                    <md-input v-model="user.password">Password</md-input>
-                    <span class="md-helper-text">User Password</span>
-                  </md-field>
-                  <validation-error
-                    :errors="apiValidationErrors.password"
-                    style="color: red"
-                  />
-                </div>
-              </div>
-            </div>
-            <div>
-              <div class="md-layout text-center " style="color: white; ">
-                <div class="md-layout-item">
-                  <md-field>
-                    <label>Confirm Password</label>
-                    <md-input v-model="user.password_confirmation"
-                      >Password</md-input
-                    >
-                    <span class="md-helper-text">Confirm Password</span>
-                  </md-field>
-                </div>
-              </div>
-            </div>
-            <div class="md-layout  " style="color: white; ">
-              <div
-                class="md-layout-item  "
-                style="color: black; text-align: center; font-weight: bold;"
-              >
-                Role
-              </div>
-            </div>
-            <div>
-              <div
-                class="md-layout text-center info-text"
-                style="color: white; "
-              >
-                <div class="md-layout-item">
-                  <md-radio v-model="user.role_id" :value="1">admin</md-radio>
-                </div>
-                <div class="md-layout-item">
-                  <md-radio v-model="user.role_id" :value="2" class="md-primary"
-                    >user</md-radio
-                  >
-                </div>
-              </div>
-              <validation-error
-                :errors="apiValidationErrors.role_id"
-                style="color: red"
-              />
-            </div>
 
-            <div>
-              <div
-                class="md-layout text-center info-text"
-                style="color: white; display: flex !important; gap: 50px; align-items: center; "
-              >
-                <label for="avatar" class="user-avatar">
-                  Upload Image
-                  <input
-                    type="file"
-                    name="browse"
-                    id="avatar"
-                    style="display: none;"
-                    @change="userImageHandler"
-                  />
-                </label>
-                <img
-                  v-if="user.imageUserSrc"
-                  style="position: relative !important; height: 110px; border-radius: 50%;"
-                  :src="user.imageUserSrc"
-                  width="110"
-                />
-              </div>
-            </div>
-
-            <div class="md-layout  md-right">
-              <div class="md-layout-item" style="margin-left: 5px;">
-                <div class="md-layout md-alignment-center-space-around">
-                  <div
-                    class="md-layout-item md-size-50"
-                    style="padding-right: 0; text-align: right;"
-                  >
-                    <md-button
-                      class="md-dense md-primary "
-                      style=" margin-right: 1em; "
-                      @click="createUser()"
-                      >Create User</md-button
-                    >
-                  </div>
-                  <div class="md-layout-item md-size-50">
-                    <md-button
-                      @click="closeForm()"
-                      class="md-dense md-raised "
-                      style="background-color: white !important; color: gray !important;"
-                      >Cancel</md-button
-                    >
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </md-dialog>
-    </div> -->
     <div>
       <md-dialog
         :md-active.sync="showDialog"
@@ -319,29 +148,38 @@
         >
 
         <div class="md-layout" style="overflow-y: scroll;">
-          <div class="md-layout-item md-layout md-size-100 md-alignment-center">
-            <label for="avatar" class="user-avatar">
-              Upload Image
-              <input
-                type="file"
-                accept=".png,.jpeg,.jpg"
-                name="browse"
-                id="avatar"
-                style="display: none;"
-                @change="userImageHandler"
+          <div class="image-uploaders">
+            <div class="image-uploaders-wrapper">
+              <img
+                :src="
+                  user.imageUserSrc ? user.imageUserSrc : imgUrl('no-image.jpg')
+                "
+                alt=""
               />
+              <label for="avatar" class="user-avatar">
+                Upload Image
+                <input
+                  type="file"
+                  accept=".png,.jpeg,.jpg"
+                  name="browse"
+                  id="avatar"
+                  style="display: none;"
+                  @change="userImageHandler"
+                />
+                <md-icon class="img-icon">add</md-icon>
+              </label>
+            </div>
+            <label for="" @click="removeTmpImage">
+              <md-icon v-if="user.imageUserSrc" class="img-icon-delete"
+                >delete</md-icon
+              >
             </label>
-            <img
-              v-if="user.imageUserSrc"
-              style="position: relative !important; height: 110px; border-radius: 50%; margin-left: 10px;"
-              :src="user.imageUserSrc"
-              width="110"
-            />
             <validation-error
-                :errors="apiValidationErrors.image"
-                style="color: red"
-              />
+              :errors="apiValidationErrors.image"
+              style="color: red"
+            />
           </div>
+
           <div class="md-layout-item md-layout md-size-100">
             <div class="md-layout-item md-size-50">
               <md-field>
@@ -367,7 +205,7 @@
             </div>
           </div>
           <div class="md-layout-item md-layout md-size-100">
-            <div class="md-layout-item md-size-100">
+            <div class="md-layout-item md-size-50">
               <md-field>
                 <label>Email</label>
                 <md-input v-model="user.email"></md-input>
@@ -375,6 +213,17 @@
               </md-field>
               <validation-error
                 :errors="apiValidationErrors.email"
+                style="color: red"
+              />
+            </div>
+            <div class="md-layout-item md-size-50">
+              <md-field>
+                <label>Phone</label>
+                <md-input v-model="user.mobileNumber">Phone number</md-input>
+                <span class="md-helper-text">phone number</span>
+              </md-field>
+              <validation-error
+                :errors="apiValidationErrors.moblie"
                 style="color: red"
               />
             </div>
@@ -455,6 +304,8 @@ import formMixin from "@/mixins/form-mixin";
 import EditUserDialoge from "./EditUserDialoge";
 import { LoaderFull } from "../../../../components";
 
+var images = require.context("../../../../assets/images/", false, /\.jpg$/);
+
 export default {
   name: "DialogCustom",
   components: {
@@ -469,6 +320,7 @@ export default {
     user: {
       name: "",
       email: null,
+      mobileNumber: null,
       username: null,
       password: null,
       password_confirmation: null,
@@ -509,6 +361,15 @@ export default {
   },
 
   methods: {
+    imgUrl: function(path) {
+      return images("./" + path);
+    },
+
+    removeTmpImage() {
+      this.user.image = "";
+      this.user.imageUserSrc = "";
+    },
+
     async getList(page = 1) {
       this.isLoading = true;
       await this.$store.dispatch("getAllUsers", page);
@@ -523,6 +384,7 @@ export default {
       formData.append("email", this.user.email);
       formData.append("name", this.user.name);
       formData.append("username", this.user.username);
+      formData.append("mobile", Number(this.user.mobileNumber));
       formData.append("password", this.user.password);
       formData.append("password_confirmation", this.user.password_confirmation);
       formData.append("role_id", Number(this.user.role_id));
@@ -536,6 +398,7 @@ export default {
       try {
         this.isLoading = true;
         await this.$store.dispatch("createUser", formData); //this.user
+
         this.isLoading = false;
         await this.getList(1);
         this.closeForm();
@@ -567,7 +430,7 @@ export default {
           await this.getList(this.userMeta.current_page);
 
           this.isLoading = false;
-          await this.$store.dispatch("alerts/warning", "User Deleted");
+          await this.$store.dispatch("alerts/success", "User Deleted");
         }
       } catch (e) {
         this.isLoading = false;
@@ -578,17 +441,20 @@ export default {
     userImageHandler(e) {
       this.user.image = e.target.files[0];
 
-      var fileReader = new FileReader();
+      if (this.user.image != undefined) {
+        var fileReader = new FileReader();
 
-      fileReader.onload = () => {
-        this.user.imageUserSrc = fileReader.result;
-      };
-      fileReader.readAsDataURL(e.target.files[0]);
+        fileReader.onload = () => {
+          this.user.imageUserSrc = fileReader.result;
+        };
+        fileReader.readAsDataURL(e.target.files[0]);
+      }
     },
 
     resetInputs() {
       this.user.name = null;
       this.user.email = null;
+      this.user.mobileNumber = null;
       this.user.username = null;
       this.user.password = null;
       this.user.password_confirmation = null;
@@ -689,5 +555,53 @@ export default {
   color: white;
   padding: 12px 8px 12px !important;
   text-align: center;
+}
+
+.image-uploaders {
+  margin: 0 auto;
+  height: 150px;
+  width: 150px;
+  position: relative;
+  &-wrapper {
+    width: 100% !important;
+    height: 100% !important;
+    overflow: hidden;
+    border-radius: 50%;
+    margin-bottom: 30px;
+    position: relative;
+
+    img {
+      width: 100% !important;
+      height: 100% !important;
+    }
+    .img-icon {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      cursor: pointer;
+      background-color: rgba(52, 216, 30, 0.6);
+      color: white !important;
+      transition: all 0.6s;
+
+      &:hover {
+        height: 40%;
+        background-color: rgba(52, 216, 30, 0.9);
+      }
+    }
+  }
+
+  .img-icon-delete {
+    position: absolute;
+    top: 10px;
+    right: 5px;
+    cursor: pointer;
+    // width: 100%;
+    color: red !important;
+    font-size: 2em !important;
+    z-index: 333;
+    pointer-events: all !important;
+  }
 }
 </style>

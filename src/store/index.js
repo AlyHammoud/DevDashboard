@@ -6,7 +6,7 @@ import alerts from "./modules/alerts-module";
 import categories from "./modules/categories-module";
 import items from "./modules/items-module";
 import products from "./modules/products-module";
-// import users from "./modules/users-module";
+import siteData from "./modules/site-data";
 
 Vue.use(Vuex);
 
@@ -17,6 +17,6 @@ export default new Vuex.Store({
     categories,
     items,
     products,
-    // users
+    siteData,
   },
 });
