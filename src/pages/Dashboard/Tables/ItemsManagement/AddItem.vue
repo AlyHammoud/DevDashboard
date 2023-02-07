@@ -373,7 +373,7 @@ export default {
         await this.$store.dispatch("alerts/success", "Done!");
       } catch (error) {
         await this.$store.dispatch("alerts/error", "error, try again");
-        console.log(error);
+        //console.log(error);
         this.setApiValidation(error.data.errors);
         this.isLoading = false;
       }
