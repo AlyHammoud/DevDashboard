@@ -102,6 +102,7 @@
     />
 
     <LoaderFull v-if="isLoading" />
+    <AlertDialoge ref="showAlertDialog"></AlertDialoge>
   </div>
 </template>
 
@@ -112,6 +113,7 @@ import EditProductDialoge from "./ProductsManagement/EditProductDialoge";
 import { Pagination } from "@/components";
 import { LoaderFull } from "@/components";
 import { SearchableCheckBox } from "@/components";
+import { AlertDialoge } from "@/components";
 // import { PriceRange } from "@/components";
 import { ProductCard } from "@/components";
 
@@ -153,6 +155,7 @@ export default {
     EditProductDialoge,
     Pagination,
     LoaderFull,
+    AlertDialoge,
   },
 
   watch: {},
@@ -390,11 +393,10 @@ export default {
 
     async deleteProduct(id) {
       try {
-        if (
-          confirm(
-            "are you sure want to delete this item? \n All products related to this item will be deleted too!"
-          )
-        ) {
+        const alert = await this.$refs.showAlertDialog.response(
+          "Are you sure want to delete this product? "
+        );
+        if (alert) {
           this.isLoading = true;
           await this.$store.dispatch("deleteProduct", id);
 
