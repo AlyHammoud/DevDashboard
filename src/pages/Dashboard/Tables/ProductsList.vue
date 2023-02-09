@@ -53,8 +53,11 @@
       </md-card-header>
     </md-card> -->
 
-    <div class="md-layout parent" >
-      <div class="md-layout-item md-size-33 md-small-size-50" style="text-align: center;">
+    <div class="md-layout parent">
+      <div
+        class="md-layout-item md-size-33 md-small-size-50"
+        style="text-align: center;"
+      >
         <div class="md-title" style="font-size: 1.3em; font-weight: bold;">
           {{ category.name }}
         </div>
@@ -62,7 +65,10 @@
           {{ category.description }}
         </div>
       </div>
-      <div class="md-layout-item md-size-33 md-small-size-50" style="text-align: center;">
+      <div
+        class="md-layout-item md-size-33 md-small-size-50"
+        style="text-align: center;"
+      >
         <div class="md-title" style="font-size: 1.3em; font-weight: bold;">
           {{ item.name }}
         </div>
@@ -70,7 +76,10 @@
           {{ item.description }}
         </div>
       </div>
-      <div class="md-layout-item md-size-33 md-small-hide " style="text-align: center;">
+      <div
+        class="md-layout-item md-size-33 md-small-hide "
+        style="text-align: center;"
+      >
         <img
           :src="category.image_url"
           style="height: 80px; width: 80px; border-radius: 50%; object-fit: cover;"
@@ -295,6 +304,7 @@
       </EditProductDialoge>
     </div>
     <LoaderFull v-if="isLoading"></LoaderFull>
+    <AlertDialoge ref="showAlertDialog"></AlertDialoge>
   </div>
 </template>
 
@@ -302,6 +312,7 @@
 import ShowImages from "./ShowImages";
 import AddProduct from "./ProductsManagement/AddProduct";
 import EditProductDialoge from "./ProductsManagement/EditProductDialoge";
+import { AlertDialoge } from "@/components";
 import { Pagination } from "@/components";
 import { LoaderFull } from "@/components";
 
@@ -313,6 +324,7 @@ export default {
     Pagination,
     LoaderFull,
     EditProductDialoge,
+    AlertDialoge,
   },
   data() {
     return {
@@ -396,11 +408,10 @@ export default {
 
     async deleteProduct(id) {
       try {
-        if (
-          confirm(
-            "are you sure want to delete this item? \n All products related to this item will be deleted too!"
-          )
-        ) {
+        const alert = await this.$refs.showAlertDialog.response(
+          "Are you sure want to delete?"
+        );
+        if (alert) {
           this.isLoading = true;
           await this.$store.dispatch("deleteProduct", id);
 
@@ -444,12 +455,12 @@ export default {
   padding-left: 20px;
 }
 
-.parent{
-  width: 50%; 
-  margin-left: auto; 
-  margin-right: auto; 
-  background-color: #00AEC5; 
-  padding:  5px 0; 
+.parent {
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #00aec5;
+  padding: 5px 0;
   border-radius: 10px;
 }
 </style>

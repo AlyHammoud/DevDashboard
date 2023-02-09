@@ -110,9 +110,9 @@ export default {
       router.push({ name: "Login" });
     },
 
-    async updateUser({ commit }, user) {
+    async updateUser({ commit }, { id, user }) {
       return await axios
-        .put(`/update/user/${user.id}`, user)
+        .post(`/update/user/${id}?_method=PUT`, user)
         .then(({ data }) => {
           commit("isUserVerified", data.data.verified);
           commit("myUser", data.data);

@@ -166,21 +166,28 @@
             </md-table-cell>
             <md-table-cell md-label="View Products">
               <div class="md-layout md-alignment-center">
-                <div class="md-layout-item md-size-65" style="padding: 0;">
-                  <md-button
-                    class="md-raised"
-                    style="width: 100%; padding: 0 !important;"
-                    @click="goToProducts(item.id)"
-                  >
-                    <span
+                <div class="md-layout-item md-size-75" style="padding: 0;">
+                  <md-badge :md-content=item.products_count>
+                    <md-button
+                      class="md-raised"
+                      style="width: 100%; padding: 0 5px 0 0 !important;"
+                      @click="goToProducts(item.id)"
+                    >
+                      <!-- <span
                       class="material-icons"
                       style="margin-right: 4px;
                       font-size: 21px;
                       margin-bottom: 2px;"
                       >visibility</span
-                    >
-                    products
-                  </md-button>
+                    > -->
+                      <md-icon
+                        style="margin-right: 2px; margin-top: 4px; font-size: 21px !important;"
+                        >visibility</md-icon
+                      >
+
+                      products
+                    </md-button>
+                  </md-badge>
                 </div>
               </div>
             </md-table-cell>
@@ -288,7 +295,7 @@ export default {
 
         this.items = this.$store.getters.getAllItems.data;
         this.itemsMeta = this.$store.getters["getAllItems"].meta;
-
+        // console.log(this.items)
         this.searched = this.items;
       } catch (error) {}
     },
@@ -369,5 +376,9 @@ export default {
   background-color: #00aec5;
   padding: 5px 0;
   border-radius: 10px;
+}
+
+.md-badge-content {
+  display: inline;
 }
 </style>

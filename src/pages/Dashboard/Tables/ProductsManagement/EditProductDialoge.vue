@@ -53,19 +53,22 @@
               >
 
               <md-list slot="md-expand">
-                <md-list-item
-                  class="md-inset"
-                  v-for="image in product.images"
-                  :key="image.id"
-                  style="width: 100%;"
-                >
-                  <img :src="image.image_url" class="images" />
-                  <md-button
-                    class="md-icon-button delete-button"
-                    @click="onDeleteImages(image.id)"
-                  >
-                    <md-icon>delete</md-icon>
-                  </md-button>
+                <md-list-item class="md-inset" style="width: 100%;">
+                  <div style="display:flex; flex-wrap: wrap; gap: 10px;">
+                    <div
+                      v-for="image in product.images"
+                      :key="image.id"
+                      class="new-upload-image"
+                    >
+                      <img :src="image.image_url" class="images" />
+                      <md-button
+                        class="md-icon-button delete-button delete-new-image"
+                        @click="onDeleteOldImages(image.id)"
+                      >
+                        <md-icon>delete</md-icon>
+                      </md-button>
+                    </div>
+                  </div>
                 </md-list-item>
               </md-list>
             </md-list-item>
@@ -113,18 +116,22 @@
               >
 
               <md-list slot="md-expand" v-if="tmpImages.length">
-                <md-list-item
-                  class="md-inset"
-                  v-for="(image, index) in tmpImages"
-                  :key="index"
-                >
-                  <img :src="image" class="images" />
-                  <md-button
-                    class="md-icon-button delete-button"
-                    @click="onDeleteNewImages(image.id)"
-                  >
-                    <md-icon>delete</md-icon>
-                  </md-button>
+                <md-list-item class="md-inset">
+                  <div style="display:flex; flex-wrap: wrap; gap: 10px;">
+                    <div
+                      v-for="(image, index) in tmpImages"
+                      :key="index"
+                      class="new-upload-image"
+                    >
+                      <img class="images" :src="image" />
+                      <md-button
+                        class="md-icon-button delete-button  delete-new-image"
+                        @click="onDeleteNewImages(index)"
+                      >
+                        <md-icon>delete</md-icon>
+                      </md-button>
+                    </div>
+                  </div>
                 </md-list-item>
               </md-list>
             </md-list-item>
@@ -351,7 +358,7 @@ export default {
       this.tmpImages.push(...y);
     },
 
-    onDeleteImages(id) {
+    onDeleteOldImages(id) {
       this.deleted_images.push(id);
       let imageIndex = this.product.images.findIndex(
         (image) => image.id === id
@@ -360,11 +367,9 @@ export default {
     },
 
     onDeleteNewImages(index) {
-      this.deleted_images.push(index);
-      let newImgIndex = this.tmpImages.findIndex(
-        (image) => image.index === index
-      );
-      this.tmpImages.splice(newImgIndex, 1);
+      this.tmpImages.splice(index, 1);
+      this.newImages = Array.from(this.newImages);
+      this.newImages.splice(index, 1);
     },
 
     async editProduct() {

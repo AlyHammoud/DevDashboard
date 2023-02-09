@@ -15,12 +15,12 @@
           <div class="md-layout-item md-size-100">
             <md-field class="md-invalid">
               <label>New Password</label>
-              <md-input v-model="password" type="password" />
+              <md-input v-model="user.password" type="password" />
               <validation-error :errors="apiValidationErrors.password" />
             </md-field>
             <md-field class="md-invalid">
               <label>Confirm New Password</label>
-              <md-input v-model="password_confirmation" type="password" />
+              <md-input v-model="user.password_confirmation" type="password" />
               <validation-error
                 :errors="apiValidationErrors.password_confirmation"
               />
@@ -75,7 +75,13 @@ export default {
       };
 
       try {
-        await this.$store.dispatch("updateUser", user);
+        await this.$store.dispatch("updateUser", {
+          id: this.user.id,
+          user: {
+            password: this.user.password,
+            password_confirmation: this.user.password_confirmation,
+          },
+        });
         await this.$store.dispatch(
           "alerts/error",
           "Password changed successfully."

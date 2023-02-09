@@ -85,19 +85,25 @@
                 </p>
               </md-table-cell>
               <md-table-cell md-label="Categroy Actions">
-                <div class="md-layout md-alignment-center">
+                <div
+                  class="md-layout md-alignment-center"
+                  v-if="user.role == 'admin' || user.id == item.managed_by"
+                >
                   <div
                     class="md-layout-item md-size-50"
-                    style="padding-right: 2px;"
-                    v-if="user.role == 'admin' || user.id == item.managed_by"
+                    style="margin: 0 !important; padding-right: 5px; text-align: right;"
                   >
                     <md-button
                       class="md-icon-button md-raised md-round md-info"
                       @click="editCategpory(item.id)"
-                      style="margin-right: 1px"
                     >
                       <md-icon>edit</md-icon>
                     </md-button>
+                  </div>
+                  <div
+                    class="md-layout-item md-size-50 md-layout md-alignment-left"
+                    style="margin: 0 !important; padding-left: 5px;"
+                  >
                     <md-button
                       class="md-icon-button md-raised md-round md-danger mr-2"
                       style="margin: 0 2px;"
@@ -106,26 +112,45 @@
                       <md-icon>delete</md-icon>
                     </md-button>
                   </div>
-                  <div
+
+                  <!-- <div
                     class="md-layout-item md-size-50"
                     style="padding-left: 0;"
                   >
-                    <md-button
-                      class="md-raised"
-                      style="width: 100%; padding: 3px;"
-                      @click="goToItems(item.id)"
-                    >
-                      <!-- <md-badge class="md-primary md-square" md-content="{}" /> -->
-
-                      <span
-                        class="material-icons"
-                        style="margin-right: 4px;
-                      font-size: 21px;
-                      margin-bottom: 2px;"
-                        >visibility</span
+                    <md-badge :md-content="12">
+                      <md-button
+                        class="md-raised"
+                        style="width: 100%; padding: 3px;"
+                        @click="goToItems(item.id)"
                       >
-                      items
-                    </md-button>
+
+                       
+                        <md-icon
+                          style="margin-right: 2px; margin-top: 4px; font-size: 21px !important;"
+                          >visibility</md-icon
+                        >
+                        items
+                      </md-button>
+                    </md-badge>
+                  </div> -->
+                </div>
+              </md-table-cell>
+              <md-table-cell md-label="View Items">
+                <div class=" md-layout md-alignment-center">
+                  <div class="md-layout-item md-size-65" style="padding: 0;">
+                    <md-badge :md-content="item.items_count">
+                      <md-button
+                        class="md-raised"
+                        style="width: 100%; padding: 0 15px 0 0 !important;"
+                        @click="goToItems(item.id)"
+                      >
+                        <md-icon
+                          style="margin-right: 2px; margin-top: 4px; font-size: 21px !important;"
+                          >visibility</md-icon
+                        >
+                        items
+                      </md-button>
+                    </md-badge>
                   </div>
                 </div>
               </md-table-cell>
@@ -145,114 +170,6 @@
         </md-card-actions>
       </md-card>
     </div>
-
-    <!-- dialog Category Start -->
-
-    <!-- <md-dialog
-      :md-active.sync="showDialog_category"
-      style="margin-left: auto; margin-right: auto; overflow: auto; border-radius: 10px;"
-    >
-      <div style="margin-left: auto; margin-right: auto; width: 400px ;">
-        <div>
-          <div class="md-layout " style="color: white; text-align: center; ">
-            <div
-              class="md-layout-item "
-              style="background-color: #5aaf45 !important; padding: 8px 10px; background-color: #5aaf45 ;
-                margin: 0 0 5px 0;
-                width: 100%;
-                text-align: center;
-                font-size: 20px;"
-            >
-              ADD CATEGORY
-            </div>
-          </div>
-        </div>
-        <div>
-          <div class="md-layout text-center " style="color: white; ">
-            <div class="md-layout-item">
-              <md-field>
-                <label>Name</label>
-                <md-input v-model="category_name"></md-input>
-                <span class="md-helper-text">Name</span>
-              </md-field>
-              <validation-error
-                :errors="apiValidationErrors['name_translation.en']"
-                style="color: red"
-              />
-            </div>
-          </div>
-        </div>
-        <div>
-          <div class="md-layout text-center " style="color: white; ">
-            <div class="md-layout-item">
-              <md-field>
-                <label>Description</label>
-                <md-textarea v-model="category_description"></md-textarea>
-                <md-icon>description</md-icon>
-                <validation-error
-                  :errors="apiValidationErrors.description"
-                  style="color: red"
-                />
-              </md-field>
-            </div>
-          </div>
-        </div>
-
-        <div
-          style="display: flex; flex-direction: column; align-items: center; justify-content: center;"
-        >
-          <div
-            class="md-layout text-center info-text"
-            style="color: white; display: flex !important; gap: 50px; align-items: center; margin-top: 10px;"
-          >
-            <label for="avatar" class="user-avatar">
-              Upload Image
-              <input
-                type="file"
-                name="browse"
-                id="avatar"
-                style="display: none;"
-                @change="onUploadCategoryImage($event)"
-              />
-            </label>
-            <img
-              v-if="tmpCategoryImage"
-              style="position: relative !important; height: 110px; object-fit: cover;"
-              :src="tmpCategoryImage"
-              width="110"
-            />
-          </div>
-          <validation-error
-            :errors="apiValidationErrors.image_url"
-            style="color: red; "
-          />
-        </div>
-
-        <div class="md-layout-item">
-          <div
-            class="md-layout md-gutter md-alignment-center-space-around"
-            style="padding: 10px 0; "
-          >
-            <div class="md-layout-item md-size-45 " style="text-align: right;">
-              <md-button
-                class="md-dense md-primary"
-                style="width: 40%; margin-right: 1em; background-color: #5aaf45 !important; "
-                @click="addCategory()"
-                >ADD</md-button
-              >
-            </div>
-            <div class="md-layout-item md-size-45" style="text-align: left;">
-              <md-button
-                @click="showDialog_category = false"
-                class="md-dense md-raised"
-                style="background-color: white !important; color: gray !important; "
-                >Cancel</md-button
-              >
-            </div>
-          </div>
-        </div>
-      </div>
-    </md-dialog> -->
 
     <md-dialog
       :md-active.sync="showDialog_category"
@@ -360,8 +277,9 @@
     ></EditCategoryDialoge>
     <!-- Edit Dialog For Category -->
     <!-- Category dialog ends -->
-
+    <!-- " -->
     <LoaderFull v-if="isLoading"></LoaderFull>
+    <AlertDialoge ref="showAlertDialog"></AlertDialoge>
   </div>
 </template>
 <script>
@@ -371,8 +289,8 @@ import { ValidationError } from "@/components";
 import formMixin from "@/mixins/form-mixin";
 import { LoaderFull } from "@/components";
 import { Pagination } from "@/components";
+import { AlertDialoge } from "@/components";
 import EditCategoryDialoge from "./EditCategoryDialoge.vue";
-import { resolve } from "path";
 
 const toLower = (text) => {
   return text.toString().toLowerCase();
@@ -416,6 +334,7 @@ export default {
     LoaderFull,
     Pagination,
     EditCategoryDialoge,
+    AlertDialoge,
     // Badge
   },
 
@@ -514,11 +433,11 @@ export default {
     },
 
     async deleteCategory(categoryId) {
-      if (
-        confirm(
-          "Are you sure want to delete?\n\nNote that all items belong to this category will be deleted too!!"
-        )
-      ) {
+      const alert = await this.$refs.showAlertDialog.response(
+        "Are you sure want to delete? Note that all items belong to this category will be deleted too!!"
+      );
+
+      if (alert) {
         await this.$store.dispatch("deleteCategory", categoryId);
         var goToPage = this.categories_page_meta.current_page;
         if (
@@ -632,5 +551,9 @@ export default {
   color: white;
   padding: 12px 8px 12px !important;
   text-align: center;
+}
+
+.md-badge-content {
+  display: inline !important;
 }
 </style>

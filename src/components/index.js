@@ -11,9 +11,9 @@ import LoaderFull from "./LoaderFull.vue";
 import SearchableCheckBox from "./SearchableCheckBox.vue";
 import ItemCard from "./ItemCard.vue";
 import ProductCard from "./ProductCard.vue";
-import mvItemsCard from "./mvItemsCard.vue"
+import mvItemsCard from "./mvItemsCard.vue";
 import PriceRange from "./PriceRange.vue";
-
+import AlertDialoge from "./AlertDialoge.vue";
 
 import Pagination from "./Pagination.vue";
 import SidebarPlugin from "./SidebarPlugin";
@@ -35,5 +35,5 @@ export {
   ProductCard,
   mvItemsCard,
   PriceRange,
-
+  AlertDialoge,
 };

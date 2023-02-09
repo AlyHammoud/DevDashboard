@@ -56,20 +56,22 @@
               >
 
               <md-list slot="md-expand" v-if="tmpImages.length">
-                <md-list-item
-                  class="md-inset"
-                  v-for="(image, index) in tmpImages"
-                  :key="index"
-                  style="width: 100%;"
-                >
-                  <img :src="image" class="images" />
-
-                  <md-button
-                    class="md-icon-button delete-button"
-                    @click="onDeleteNewImages(image.id)"
-                  >
-                    <md-icon>delete</md-icon>
-                  </md-button>
+                <md-list-item class="md-inset">
+                  <div style="display:flex; flex-wrap: wrap; gap: 10px;">
+                    <div
+                      v-for="(image, index) in tmpImages"
+                      :key="index"
+                      class="new-upload-image"
+                    >
+                      <img class="images" :src="image" />
+                      <md-button
+                        class="md-icon-button delete-button  delete-new-image"
+                        @click="onDeleteNewImages(index)"
+                      >
+                        <md-icon>delete</md-icon>
+                      </md-button>
+                    </div>
+                  </div>
                 </md-list-item>
               </md-list>
             </md-list-item>
@@ -291,7 +293,9 @@ export default {
     },
 
     onDeleteNewImages(id) {
-      //
+      this.tmpImages.splice(id, 1);
+      this.productImages = Array.from(this.productImages);
+      this.productImages.splice(id, 1);
     },
 
     colorHandler(e) {
@@ -402,6 +406,24 @@ export default {
   &:hover::before {
     opacity: 1;
     color: white !important;
+  }
+}
+
+.new-upload-image {
+  position: relative;
+
+  .delete-new-image {
+    position: absolute;
+    top: 0;
+    left: 120px !important;
+    font-size: 5px !important;
+    width: 5px !important;
+    // height: 10px;
+    transform: scale(0.8);
+    border-radius: 50%;
+    * {
+      font-size: 18px !important;
+    }
   }
 }
 </style>

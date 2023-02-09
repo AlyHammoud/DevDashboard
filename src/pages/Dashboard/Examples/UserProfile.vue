@@ -2,14 +2,15 @@
   <div v-if="user" class="md-layout md-gutter">
     <div class="md-layout-item md-size-66 md-small-size-100">
       <div class="md-layout-item md-size-100">
-        <user-edit-card :user="user" />
+        <user-edit-card :user="user" v-if="user" />
       </div>
       <div class="md-layout-item md-size-100">
         <user-password-card :user="user" />
       </div>
     </div>
+
     <div class="md-layout-item md-size-33 md-small-size-100">
-      <user-profile-card :user="user" />
+      <user-profile-card :user="user" @updateUser="updateUser" />
     </div>
   </div>
 </template>
@@ -32,7 +33,7 @@ export default {
     user: null,
   }),
 
-  created() {
+  mounted() {
     this.getProfile();
   },
 
@@ -40,6 +41,10 @@ export default {
     async getProfile() {
       await this.$store.dispatch("myUser");
       this.user = this.$store.getters.myUser;
+    },
+
+    updateUser(input) {
+      this.user = input;
     },
   },
 };

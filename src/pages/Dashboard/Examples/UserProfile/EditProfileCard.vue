@@ -85,7 +85,13 @@ export default {
             "make sure to verify your email!"
           );
         }
-        await this.$store.dispatch("updateUser", this.user);
+        await this.$store.dispatch("updateUser", {
+          id: this.user.id,
+          user: {
+            name: this.user.name,
+            email: this.user.email,
+          },
+        });
         await this.$store.dispatch(
           "alerts/success",
           "Profile updated successfully."
