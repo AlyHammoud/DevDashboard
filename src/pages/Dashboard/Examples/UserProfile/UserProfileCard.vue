@@ -114,7 +114,7 @@ export default {
 
         // this.closeForm();
       } catch (e) {
-        console.log(e);
+        //console.log(e);
         await this.$store.dispatch("alerts/error", "error uploading image");
         // this.setApiValidation(e.data.errors);
       }
