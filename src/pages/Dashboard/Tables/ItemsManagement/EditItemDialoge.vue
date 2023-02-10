@@ -40,7 +40,7 @@
             />
           </label>
         </div>
-        <div class="md-layout-item md-size-100">
+        <div class="md-layout-item md-size-100" v-if="item.images.length">
           <md-list>
             <md-list-item md-expand>
               <md-icon style="color: #00aec5;">images</md-icon>
@@ -49,21 +49,23 @@
                 style="margin-left: 40px; margin-top: 15px;"
                 >Old Images</span
               >
-
               <md-list slot="md-expand">
-                <md-list-item
-                  class="md-inset md-layout"
-                  v-for="image in item.images"
-                  :key="image.id"
-                  style="width: 100%;"
-                >
-                  <img :src="image.image_url" class="image" />
-                  <md-button
-                    class="md-icon-button delete-button"
-                    @click="onDeleteImages(image.id)"
-                  >
-                    <md-icon>delete</md-icon>
-                  </md-button>
+                <md-list-item class="md-inset" style="width: 100%;">
+                  <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                    <div
+                      v-for="image in item.images"
+                      :key="image.id"
+                      class="new-upload-image"
+                    >
+                      <img :src="image.image_url" class="images" />
+                      <md-button
+                        class="md-icon-button delete-button delete-new-image"
+                        @click="onDeleteImages(image.id)"
+                      >
+                        <md-icon>delete</md-icon>
+                      </md-button>
+                    </div>
+                  </div>
                 </md-list-item>
               </md-list>
             </md-list-item>
@@ -80,24 +82,23 @@
               >
                 New Images
               </span>
-              <md-list
-                slot="md-expand"
-                v-if="tmpImages.length"
-                style="text-align: center;"
-              >
-                <md-list-item
-                  class="md-inset"
-                  v-for="(image, index) in tmpImages"
-                  :key="index"
-                  style="width: 100%;"
-                >
-                  <img :src="image" class="images" />
-                  <md-button
-                    class="md-icon-button delete-button"
-                    @click="onDeleteNewImages(image.id)"
-                  >
-                    <md-icon>delete</md-icon>
-                  </md-button>
+              <md-list slot="md-expand" v-if="tmpImages.length">
+                <md-list-item class="md-inset">
+                  <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                    <div
+                      v-for="(image, index) in tmpImages"
+                      :key="index"
+                      class="new-upload-image"
+                    >
+                      <img :src="image" class="images" />
+                      <md-button
+                        class="md-icon-button delete-button delete-new-image"
+                        @click="onDeleteNewImages(image.id)"
+                      >
+                        <md-icon>delete</md-icon>
+                      </md-button>
+                    </div>
+                  </div>
                 </md-list-item>
               </md-list>
             </md-list-item>
@@ -237,13 +238,10 @@ export default {
       this.item.images.splice(imageIndex, 1);
     },
 
-    onDeleteNewImages(id) {
-      // this.deleted_images.push(id);
-      // let imageIndex = this.tmpImages.findIndex((image) => image.id === id);
-      // console.log(this.tmpImages.findIndex((image) => image.id === id);)
-      // this.tmpImages = this.tmpImages.splice(imageIndex, 1);
-      // console.log(this.tmpImages.splice(imageIndex, 1));
-      // this.item.images.splice(imageIndex, 1);
+    onDeleteNewImages(index) {
+      this.tmpImages.splice(index, 1);
+      this.newImages = Array.from(this.tmpImages);
+      this.newImages.splice(index, 1);
     },
 
     async editItem() {

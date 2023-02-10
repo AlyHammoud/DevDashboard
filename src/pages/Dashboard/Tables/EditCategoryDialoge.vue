@@ -1,134 +1,5 @@
 <template>
   <div>
-    <!-- <md-dialog
-      :md-active.sync="mdShowDialog"
-      style="margin-left: auto; margin-right: auto; overflow: auto; border-radius: 10px;"
-    >
-      <div style="margin-left: auto; margin-right: auto; width: 400px ;">
-        <div>
-          <div class="md-layout " style="color: white; text-align: center; ">
-            <div
-              class="md-layout-item "
-              style="background-color: #5aaf45 !important; padding: 8px 10px; background-color: #5aaf45 ;
-                margin: 0 0 5px 0;
-                width: 100%;
-                text-align: center;
-                font-size: 20px;"
-            >
-              Edit CATEGORY (<span
-                style="text-overflow: ellipsis;white-space: nowrap; overflow: hidden;"
-                >{{ category.name }}</span
-              >)
-            </div>
-          </div>
-        </div>
-        <div>
-          <div class="md-layout text-center " style="color: white; ">
-            <div class="md-layout-item">
-              <md-field>
-                <label>Name</label>
-                <md-input v-model="category.name"></md-input>
-                <span class="md-helper-text">Name</span>
-              </md-field>
-              <validation-error
-                :errors="apiValidationErrors['name_translation.en']"
-                style="color: red"
-              />
-            </div>
-          </div>
-        </div>
-        <div>
-          <div class="md-layout text-center " style="color: white; ">
-            <div class="md-layout-item">
-              <md-field>
-                <label>Description</label>
-                <md-textarea v-model="category.description"></md-textarea>
-                <md-icon>description</md-icon>
-                <validation-error
-                  :errors="apiValidationErrors.description"
-                  style="color: red"
-                />
-              </md-field>
-            </div>
-          </div>
-          <md-switch
-            v-model="category.is_available"
-            style="margin-left: 50%; translate: -25%;"
-            >Is available</md-switch
-          >
-          <div class="md-layout text-center " style="color: white; ">
-            <div class="md-layout-item">
-              <md-field>
-                <label>Image</label>
-
-                <md-file
-                  v-model="category.image_url"
-                  @md-change="onUploadCategoryImage($event)"
-                />
-              </md-field>
-              <validation-error
-                :errors="apiValidationErrors.image_url"
-                style="color: red"
-              />
-            </div>
-          </div>
-        </div>
-
-        <div
-          style="display: flex; flex-direction: column; align-items: center; justify-content: center;"
-        >
-          <div
-            class="md-layout text-center info-text"
-            style="color: white; display: flex !important; gap: 50px; align-items: center; margin-top: 10px;"
-          >
-            <label for="avatar" class="user-avatar">
-              Upload Image
-              <input
-                type="file"
-                name="browse"
-                id="avatar"
-                style="display: none;"
-                @change="onUploadCategoryImage($event)"
-              />
-            </label>
-            <img
-              v-if="category.image_url"
-              style="position: relative !important; height: 110px; object-fit: cover;"
-              :src="category.image_url"
-              width="110"
-            />
-          </div>
-          <validation-error
-            :errors="apiValidationErrors.image_url"
-            style="color: red; "
-          />
-        </div>
-
-        <div class="md-layout-item">
-          <div
-            class="md-layout md-gutter md-alignment-center-space-around"
-            style="padding: 10px 0; "
-          >
-            <div class="md-layout-item md-size-45 " style="text-align: right;">
-              <md-button
-                class="md-dense md-primary"
-                style="width: 40%; margin-right: 1em; background-color: #5aaf45 !important; "
-                @click="editCategory()"
-                >Edit</md-button
-              >
-            </div>
-            <div class="md-layout-item md-size-45" style="text-align: left;">
-              <md-button
-                @click="() => this.$emit('closeShowDialog')"
-                class="md-dense md-raised"
-                style="background-color: white !important; color: gray !important; "
-                >Cancel</md-button
-              >
-            </div>
-          </div>
-        </div>
-      </div>
-    </md-dialog>-->
     <md-dialog
       :md-active.sync="mdShowDialog"
       :md-click-outside-to-close="false"
@@ -154,7 +25,7 @@
         </div>
       </md-dialog-title>
       <div class="md-layout">
-        <div class="md-layout-item md-layout md-size-100 md-alignment-center">
+        <!-- <div class="md-layout-item md-layout md-size-100 md-alignment-center">
           <label for="avatar" class="user-avatar">
             Upload Image
             <input
@@ -170,11 +41,39 @@
             style="position: relative !important; height: 110px; width:110px; object-fit: cover; border-radius: 50%; margin-left: 1em;"
             :src="category.image_url"
           />
-          <validation-error
-            :errors="apiValidationErrors.image_url"
-            style="color: red; "
-          />
+        </div> -->
+        <div class="image-uploaders">
+          <div class="image-uploaders-wrapper">
+            <img
+              :src="
+                category.image_url
+                  ? category.image_url
+                  : imgUrl('defaultProfilePicture.jpg')
+              "
+              alt=""
+            />
+            <label for="avatar" class="user-avatar">
+              <input
+                type="file"
+                accept=".png,.jpg,.jpeg"
+                name="browse"
+                id="avatar"
+                style="display: none;"
+                @change="categoryImageHandler"
+              />
+              <md-icon class="img-icon">edit</md-icon>
+            </label>
+          </div>
+          <label for="" @click="removeTmpImage">
+            <md-icon v-if="categoryImage" class="img-icon-delete"
+              >delete</md-icon
+            ></label
+          >
         </div>
+        <validation-error
+          :errors="apiValidationErrors.image_url"
+          style="color: red; "
+        />
         <div class="md-layout-item md-size-100">
           <md-field>
             <label>Name</label>
@@ -225,6 +124,8 @@
 import { ValidationError, LoaderFull } from "@/components";
 import formMixin from "@/mixins/form-mixin";
 
+var images = require.context("../../../assets/images", false, /\.jpg$/);
+
 export default {
   name: "EditCategoryDialoge",
 
@@ -271,6 +172,32 @@ export default {
   },
 
   methods: {
+    imgUrl: function(path) {
+      return images("./" + path);
+    },
+
+    categoryImageHandler(e) {
+      this.categoryImage = e.target.files[0];
+      var fileReader = new FileReader();
+      fileReader.onload = () => {
+        this.category.image_url = fileReader.result;
+      };
+      fileReader.readAsDataURL(e.target.files[0]);
+    },
+    removeTmpImage() {
+      this.categoryImage = null;
+      this.category.image_url = null;
+    },
+    // onUploadCategoryImage(e) {
+    //   this.categoryImage = e.target.files[0];
+
+    //   const reader = new FileReader();
+
+    //   reader.readAsDataURL(e.target.files[0]);
+    //   reader.onload = () => {
+    //     this.category.image_url = reader.result;
+    //   };
+    // },
     async getCategory(id) {
       await this.$store.dispatch("getSingleCategory", id);
       this.category = this.$store.getters["getSingleCategory"];
@@ -280,17 +207,6 @@ export default {
       } else {
         this.category.is_available = false;
       }
-    },
-
-    onUploadCategoryImage(e) {
-      this.categoryImage = e.target.files[0];
-
-      const reader = new FileReader();
-
-      reader.readAsDataURL(e.target.files[0]);
-      reader.onload = () => {
-        this.category.image_url = reader.result;
-      };
     },
 
     async editCategory() {
@@ -315,7 +231,7 @@ export default {
         this.$emit("updateCategoryList");
         this.onClose();
         this.isLoading = false;
-        await this.$store.dispatch("alerts/success","Done!")
+        await this.$store.dispatch("alerts/success", "Done!");
       } catch (error) {
         await this.$store.dispatch("alerts/error", "error, try again");
         this.setApiValidation(error.data.errors);
@@ -330,11 +246,74 @@ export default {
   },
 };
 </script>
-<style>
+<style lang="scss" scoped>
 .dialog-title {
   background-color: #00aec5;
   color: white;
   padding: 12px 8px 12px !important;
   text-align: center;
+}
+
+.user-avatar {
+  width: 150px;
+  height: 40px;
+  border: 1px dashed rgb(97, 92, 92);
+  color: black;
+  padding: 4px 2px;
+  margin-block: 10px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.image-uploaders {
+  margin: 0 auto;
+  height: 150px;
+  width: 150px;
+  position: relative;
+  &-wrapper {
+    width: 100% !important;
+    height: 100% !important;
+    overflow: hidden;
+    border-radius: 50%;
+    margin-bottom: 30px;
+    position: relative;
+
+    img {
+      width: 100% !important;
+      height: 100% !important;
+    }
+    .img-icon {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      cursor: pointer;
+      // background-color: rgba(52, 216, 30, 0.6);
+      background-color: #00aec596;
+      color: white !important;
+      transition: all 0.6s;
+
+      &:hover {
+        height: 40%;
+        // background-color: rgba(52, 216, 30, 0.9);
+        background-color: #00aec5c9;
+      }
+    }
+  }
+
+  .img-icon-delete {
+    position: absolute;
+    top: 10px;
+    right: 5px;
+    cursor: pointer;
+    width: 24px !important;
+    height: 24px;
+    color: red;
+    font-size: 2em;
+    z-index: 333;
+    pointer-events: all;
+  }
 }
 </style>

@@ -45,7 +45,7 @@
         <div class="md-layout-item md-size-100" v-if="product.images.length">
           <md-list>
             <md-list-item md-expand>
-              <md-icon>images</md-icon>
+              <md-icon style="color: #00aec5;">images</md-icon>
               <span
                 class="md-list-item-text"
                 style="margin-left: 40px; margin-top: 15px;"
@@ -74,41 +74,10 @@
             </md-list-item>
           </md-list>
         </div>
-        <!-- <div class="md-layout-item md-size-100">
-          <div class="md-layout-item md-size-100" v-if="tmpImages.length">
-            <md-list>
-              <md-list-item md-expand>
-                <md-icon>images</md-icon>
-                <span
-                  class="md-list-item-text"
-                  style="margin-left: 40px; margin-top: 15px;"
-                  >New Images</span
-                >
-
-                <md-list slot="md-expand">
-                  <md-list-item
-                    class="md-inset"
-                    v-for="(image, index) in tmpImages"
-                    :key="index"
-                    style="width: 100%;"
-                  >
-                    <img :src="image" class="images" />
-                    <md-button
-                      class="md-icon-button delete-button"
-                      @click="onDeleteNewImages(index)"
-                    >
-                      <md-icon>delete</md-icon>
-                    </md-button>
-                  </md-list-item>
-                </md-list>
-              </md-list-item>
-            </md-list>
-          </div>
-        </div> -->
         <div class="md-layout-item md-size-100">
           <md-list v-if="tmpImages.length">
             <md-list-item md-expand>
-              <md-icon>images</md-icon>
+              <md-icon style="color: #00aec5;">images</md-icon>
               <span
                 class="md-list-item-text"
                 style="margin-left: 40px; margin-top: 15px;"
@@ -126,7 +95,7 @@
                       <img class="images" :src="image" />
                       <md-button
                         class="md-icon-button delete-button  delete-new-image"
-                        @click="onDeleteNewImages(index)"
+                        @click="onDeleteNewImages(image.id)"
                       >
                         <md-icon>delete</md-icon>
                       </md-button>

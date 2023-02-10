@@ -41,7 +41,7 @@
             <md-table-empty-state
               md-label="No categories found"
               :md-description="
-                `No category found for this '${search}' query. Try a different search term or create a new category.`
+                `No category found. Try a different search term or create a new category.`
               "
             >
               <md-button
@@ -195,8 +195,8 @@
           </div>
         </div></md-dialog-title
       >
-      <div class="md-layout">
-        <div class="md-layout-item md-layout md-size-100 md-alignment-center">
+      <div class="md-layout" style="overflow-y: scroll;">
+        <!-- <div class="md-layout-item md-layout md-size-100 md-alignment-center">
           <label for="avatar" class="user-avatar">
             Upload Image
             <input
@@ -217,7 +217,39 @@
             :errors="apiValidationErrors.image_url"
             style="color: red; "
           />
+        </div> -->
+        <div class="image-uploaders">
+          <div class="image-uploaders-wrapper">
+            <!-- <img :src="imgUrl('no-image.jpg')" alt="" /> -->
+            <img
+              :src="
+                tmpCategoryImage ? tmpCategoryImage : imgUrl('no-image.jpg')
+              "
+              alt=""
+            />
+            <label for="avatar" class="user-avatar">
+              Upload Image
+              <input
+                type="file"
+                name="browse"
+                id="avatar"
+                accept=".png,.jpeg,.jpg"
+                style="display: none;"
+                @change="onUploadCategoryImage"
+              />
+              <md-icon class="img-icon">add</md-icon>
+            </label>
+          </div>
+          <label for="" @click="removeTmpImage">
+            <md-icon v-if="this.tmpCategoryImage" class="img-icon-delete"
+              >delete</md-icon
+            >
+          </label>
         </div>
+        <validation-error
+          :errors="apiValidationErrors.image_url"
+          style="color: red; "
+        />
         <div class="md-layout-item md-size-100">
           <md-field>
             <label>Name</label>
@@ -292,6 +324,8 @@ import { Pagination } from "@/components";
 import { AlertDialoge } from "@/components";
 import EditCategoryDialoge from "./EditCategoryDialoge.vue";
 
+var images = require.context("../../../assets/images", false, /\.jpg$/);
+
 const toLower = (text) => {
   return text.toString().toLowerCase();
 };
@@ -307,6 +341,7 @@ export default {
   data() {
     return {
       // Category form Binding
+      image_url: "",
       category_name: "",
       category_description: "",
       category_is_available: true,
@@ -325,7 +360,6 @@ export default {
       isLoading: false,
       timer: null,
       user: {},
-      image_url: "",
     };
   },
 
@@ -352,20 +386,45 @@ export default {
     this.user = await this.$store.getters.myUser;
   },
   methods: {
+    imgUrl: function(path) {
+      return images("./" + path);
+    },
+
     goToItems(categoryId) {
       this.$router.push({
         name: "Items",
         params: { id: categoryId },
       });
     },
+
     onUploadCategoryImage(e) {
       this.categoryImage = e.target.files[0];
+      if (this.categoryImage != undefined) {
+        var fileReader = new FileReader();
 
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.tmpCategoryImage = reader.result;
-      };
-      reader.readAsDataURL(e.target.files[0]);
+        fileReader.onload = () => {
+          this.tmpCategoryImage = fileReader.result;
+        };
+        fileReader.readAsDataURL(e.target.files[0]);
+      }
+    },
+
+    // onUploadCategoryImage(e) {
+    //   //set the backend image
+    //   this.categoryImage = e.target.files[0];
+    //   //set the tmpImg to show the image in the form
+    //   var fileReader = new FileReader();
+    //   fileReader.onload = () => {
+    //     this.tmpCategoryImage = fileReader.result;
+    //   };
+    //   fileReader.readAsDataURL(e.target.files[0]);
+    //   console.log(e.target.files[0]);
+
+    // },
+
+    removeTmpImage() {
+      this.tmpCategoryImage = "";
+      this.categoryImage = null;
     },
 
     getClass: ({ id }) => ({
@@ -384,8 +443,9 @@ export default {
     resetInputs() {
       this.categoryImage = null;
       this.category_description = null;
-      this.category_name = null;
+      this.category_name = "";
       this.tmpCategoryImage = null;
+      // this.image_url = "";
     },
 
     async addCategory() {
@@ -398,6 +458,10 @@ export default {
         this.category_description || "-"
       );
 
+      // for (let x of formData.entries()) {
+      //   console.log(x);
+      // }
+      // return;
       try {
         this.isLoading = true;
         await this.$store.dispatch("storeCategory", formData);
@@ -471,7 +535,7 @@ export default {
   // },
 };
 </script>
-<style>
+<style lang="scss">
 .table-transparent {
   background-color: transparent !important;
 }
@@ -555,5 +619,62 @@ export default {
 
 .md-badge-content {
   display: inline !important;
+}
+
+.image-uploaders {
+  margin: 0 auto;
+  height: 150px;
+  width: 150px;
+  position: relative;
+  &-wrapper {
+    width: 100% !important;
+    height: 100% !important;
+    overflow: hidden;
+    border-radius: 50%;
+    margin-bottom: 30px;
+    position: relative;
+
+    img {
+      width: 100% !important;
+      height: 100% !important;
+    }
+    .img-icon {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      cursor: pointer;
+      background-color: rgba(52, 216, 30, 0.6);
+      color: white !important;
+      transition: all 0.6s;
+
+      &:hover {
+        height: 40%;
+        background-color: rgba(52, 216, 30, 0.9);
+      }
+    }
+  }
+
+  .img-icon-delete {
+    position: absolute;
+    top: 10px;
+    right: 5px;
+    cursor: pointer;
+    width: 100%;
+    color: red !important;
+    font-size: 2em !important;
+    z-index: 333;
+    pointer-events: all !important;
+  }
+}
+
+.md-table-row {
+  position: relative !important;
+
+  .Actions {
+    position: sticky !important;
+    top: 0 !important;
+  }
 }
 </style>

@@ -25,7 +25,7 @@
         </div>
       </md-dialog-title>
       <div class="md-layout">
-        <div
+        <!-- <div
           class="md-layout-item md-layout md-size-100 md-alignment-center"
           style="margin-bottom: 10px;"
         >
@@ -45,6 +45,32 @@
             :src="user.image"
             width="110"
           />
+        </div> -->
+        <div class="image-uploaders">
+          <div class="image-uploaders-wrapper">
+            <img
+              :src="
+                user.image ? user.image : imgUrl('defaultProfilePicture.jpg')
+              "
+              alt=""
+            />
+            <label for="avatar" class="user-avatar">
+              <input
+                type="file"
+                accept=".png,.jpg,.jpeg"
+                name="browse"
+                id="avatar"
+                style="display: none;"
+                @change="userImageHandler"
+              />
+              <md-icon class="img-icon">edit</md-icon>
+            </label>
+          </div>
+          <label for="" @click="removeTmpImage">
+            <md-icon v-if="tmpUploadImage" class="img-icon-delete"
+              >delete</md-icon
+            ></label
+          >
         </div>
         <div class="md-layout-item md-layout md-size-100">
           <div class="md-layout-item md-size-50">
@@ -92,7 +118,7 @@
               <span class="md-helper-text">phone number</span>
             </md-field>
             <validation-error
-              :errors="apiValidationErrors.moblie"
+              :errors="apiValidationErrors.mobile"
               style="color: red"
             />
           </div>
@@ -178,6 +204,8 @@
 import { ValidationError } from "@/components";
 import formMixin from "@/mixins/form-mixin";
 
+var images = require.context("../../../../assets/images/", false, /\.jpg$/);
+
 export default {
   name: "EditUserDialoge",
   components: {
@@ -195,13 +223,14 @@ export default {
       name: null,
       email: null,
       username: null,
-      mobile: null,
+      mobile: "",
       password: "",
       password_confirmation: "",
       role_id: null,
       image: null,
     },
     tmpUploadImage: null,
+    defaultImage:null,
     isLoading: false,
   }),
 
@@ -219,6 +248,40 @@ export default {
   },
 
   methods: {
+    imgUrl: function(path) {
+      return images("./" + path);
+    },
+
+    userImageHandler(e) {
+      this.tmpUploadImage = e.target.files[0];
+      var fileReader = new FileReader();
+      fileReader.onload = () => {
+        this.user.image = fileReader.result;
+      };
+      fileReader.readAsDataURL(e.target.files[0]);
+      
+    },
+
+    removeTmpImage(e) {
+      this.user.image = null;
+      this.tmpUploadImage = null;
+      // this.defaultImage=e.target.files[0]
+    },
+
+    // defaultImageUpload(){
+    //   this.defaultImage
+    // },
+
+    // userImageHandler(e) {
+    //   this.tmpUploadImage = e.target.files[0];
+
+    //   var fileReader = new FileReader();
+
+    //   fileReader.onload = () => {
+    //     this.user.image = fileReader.result;
+    //   };
+    //   fileReader.readAsDataURL(e.target.files[0]);
+    // },
     async updateUser() {
       const formData = new FormData();
 
@@ -239,7 +302,10 @@ export default {
 
       if (this.tmpUploadImage) {
         formData.append("image", this.tmpUploadImage);
-      }
+      } 
+      // else {
+      //   formData.append("image", "../../../../assets/images/defaultProfilePicture.jpg");
+      // }
 
       try {
         this.isLoading = true;
@@ -258,17 +324,6 @@ export default {
         await this.$store.dispatch("alerts/error", "error, try again");
         this.setApiValidation(e.data.errors);
       }
-    },
-
-    userImageHandler(e) {
-      this.tmpUploadImage = e.target.files[0];
-
-      var fileReader = new FileReader();
-
-      fileReader.onload = () => {
-        this.user.image = fileReader.result;
-      };
-      fileReader.readAsDataURL(e.target.files[0]);
     },
 
     closeForm(cancel = false) {
@@ -298,5 +353,56 @@ export default {
   color: white;
   padding: 12px 8px 12px !important;
   text-align: center;
+}
+
+.image-uploaders {
+  margin: 0 auto;
+  height: 150px;
+  width: 150px;
+  position: relative;
+  &-wrapper {
+    width: 100% !important;
+    height: 100% !important;
+    overflow: hidden;
+    border-radius: 50%;
+    margin-bottom: 30px;
+    position: relative;
+
+    img {
+      width: 100% !important;
+      height: 100% !important;
+    }
+    .img-icon {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      cursor: pointer;
+      // background-color: rgba(52, 216, 30, 0.6);
+      background-color: #00aec596;
+      color: white !important;
+      transition: all 0.6s;
+
+      &:hover {
+        height: 40%;
+        // background-color: rgba(52, 216, 30, 0.9);
+        background-color: #00aec5c9;
+      }
+    }
+  }
+
+  .img-icon-delete {
+    position: absolute;
+    top: 10px;
+    right: 5px;
+    cursor: pointer;
+    width: 24px !important;
+    height: 24px;
+    color: red;
+    font-size: 2em;
+    z-index: 333;
+    pointer-events: all;
+  }
 }
 </style>

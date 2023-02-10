@@ -44,9 +44,9 @@
               <span
                 class="md-list-item-text"
                 style="margin-left: 40px; margin-top: 15px;"
-                >Images</span
+                >New Images</span
               >
-
+              <!-- 
               <md-list
                 slot="md-expand"
                 v-if="tmpImages.length"
@@ -65,6 +65,25 @@
                   >
                     <md-icon>delete</md-icon>
                   </md-button>
+                </md-list-item>
+              </md-list> -->
+              <md-list slot="md-expand" v-if="tmpImages.length">
+                <md-list-item class="md-inset">
+                  <div style="display:flex; flex-wrap: wrap; gap: 10px;">
+                    <div
+                      v-for="(image, index) in tmpImages"
+                      :key="index"
+                      class="new-upload-image"
+                    >
+                      <img class="images" :src="image" />
+                      <md-button
+                        class="md-icon-button delete-button  delete-new-image"
+                        @click="onDeleteNewImages(index)"
+                      >
+                        <md-icon>delete</md-icon>
+                      </md-button>
+                    </div>
+                  </div>
                 </md-list-item>
               </md-list>
             </md-list-item>
@@ -191,6 +210,9 @@ export default {
     onDeleteNewImages(id) {
       // let imageIndex = this.tmpImages.findIndex((image) => image.id === id);
       // this.tmpImages.splice(imageIndex, 1);
+      this.tmpImages.splice(id,1);
+      this.itemImages=Array.from(this.itemImages);
+      this.itemImages.splice(id,1)
     },
 
     async addItem() {

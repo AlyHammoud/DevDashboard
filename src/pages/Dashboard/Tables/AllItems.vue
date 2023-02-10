@@ -64,6 +64,7 @@
     />
 
     <LoaderFull v-if="isLoading" />
+    <AlertDialoge ref="showAlertDialog"></AlertDialoge>
   </div>
 </template>
 
@@ -75,6 +76,7 @@ import { Pagination } from "@/components";
 import { LoaderFull } from "@/components";
 import { SearchableCheckBox } from "@/components";
 import { ItemCard } from "@/components";
+import { AlertDialoge } from "@/components";
 
 export default {
   name: "all-items",
@@ -101,6 +103,7 @@ export default {
     EditItemDialoge,
     LoaderFull,
     Pagination,
+    AlertDialoge,
   },
 
   watch: {
@@ -131,7 +134,6 @@ export default {
   },
 
   methods: {
-    
     async getAllItems(page = 1) {
       try {
         if (this.tmpCategoriesIdsInSearchable.length) {
@@ -218,11 +220,10 @@ export default {
 
     async deleteItem(id) {
       try {
-        if (
-          confirm(
-            "are you sure want to delete this item? \n All products related to this item will be deleted too!"
-          )
-        ) {
+        const alert = await this.$refs.showAlertDialog.response(
+          "Are you sure want to delete? Note that all products belong to this item will be deleted too!!"
+        );
+        if (alert) {
           this.isLoading = true;
           await this.$store.dispatch("deleteItem", id);
 

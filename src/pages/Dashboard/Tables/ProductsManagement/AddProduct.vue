@@ -48,7 +48,7 @@
         <div class="md-layout-item md-size-100">
           <md-list v-if="tmpImages.length">
             <md-list-item md-expand>
-              <md-icon>images</md-icon>
+              <md-icon style="color: #4caf50;">images</md-icon>
               <span
                 class="md-list-item-text"
                 style="margin-left: 40px; margin-top: 15px;"

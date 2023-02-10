@@ -28,12 +28,14 @@
     <div class="md-layout parent">
       <div class="md-layout-item md-size-50">
         <div class="md-title">{{ category.name }}</div>
-        <div class="md-subhead">{{ category.description }}</div>
+        <div class="md-subhead" style="font-size: 0.9rem; padding: 1px 2px ;">
+          {{ category.description }}
+        </div>
       </div>
-      <div class="md-layout-item md-size-50" style="text-align: right ;">
+      <div class="md-layout-item md-size-50 md-layout md-alignment-center-right" style="text-align: right ;">
         <img
           :src="category.image_url"
-          style="height: 80px; width: 80px; border-radius: 50%; object-fit: cover;"
+          style="height: 80px; width: 80px; border-radius: 50%; object-fit: cover; margin: 5px 0;"
           alt="Avatar"
         />
       </div>
@@ -167,7 +169,7 @@
             <md-table-cell md-label="View Products">
               <div class="md-layout md-alignment-center">
                 <div class="md-layout-item md-size-75" style="padding: 0;">
-                  <md-badge :md-content=item.products_count>
+                  <md-badge :md-content="item.products_count">
                     <md-button
                       class="md-raised"
                       style="width: 100%; padding: 0 5px 0 0 !important;"
@@ -233,6 +235,7 @@
       </EditItemDialoge>
     </div>
     <LoaderFull v-if="isLoading"></LoaderFull>
+    <AlertDialoge ref="showAlertDialog"></AlertDialoge>
   </div>
 </template>
 
@@ -242,10 +245,18 @@ import AddItem from "./ItemsManagement/AddItem";
 import EditItemDialoge from "./ItemsManagement/EditItemDialoge";
 import { Pagination } from "@/components";
 import { LoaderFull } from "@/components";
+import { AlertDialoge } from "@/components";
 
 export default {
   name: "items",
-  components: { ShowImages, AddItem, Pagination, LoaderFull, EditItemDialoge },
+  components: {
+    ShowImages,
+    AddItem,
+    Pagination,
+    LoaderFull,
+    EditItemDialoge,
+    AlertDialoge,
+  },
   data() {
     return {
       category: {},
@@ -317,11 +328,10 @@ export default {
 
     async deleteItem(id) {
       try {
-        if (
-          confirm(
-            "are you sure want to delete this item? \n All products related to this item will be deleted too!"
-          )
-        ) {
+        const alert = await this.$refs.showAlertDialog.response(
+          "Are you sure want to delete? Note that all products belong to this item will be deleted too!!"
+        );
+        if (alert) {
           this.isLoading = true;
           await this.$store.dispatch("deleteItem", id);
 
@@ -380,5 +390,16 @@ export default {
 
 .md-badge-content {
   display: inline;
+}
+
+.md-title {
+  color: white !important;
+  padding: 2px !important;
+}
+
+.md-subhead {
+  font-size: 0.9rem;
+  padding: 1px 2px;
+  color: white;
 }
 </style>

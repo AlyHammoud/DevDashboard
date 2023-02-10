@@ -55,8 +55,7 @@
 
     <div class="md-layout parent">
       <div
-        class="md-layout-item md-size-33 md-small-size-50"
-        style="text-align: center;"
+        class="md-layout-item md-size-33 md-xsmall-size-50"
       >
         <div class="md-title" style="font-size: 1.3em; font-weight: bold;">
           {{ category.name }}
@@ -66,25 +65,27 @@
         </div>
       </div>
       <div
-        class="md-layout-item md-size-33 md-small-size-50"
+        class="md-layout-item md-size-33 "
         style="text-align: center;"
       >
         <div class="md-title" style="font-size: 1.3em; font-weight: bold;">
           {{ item.name }}
         </div>
         <div class="md-subhead" style="color: white; font-weight: 300;">
-          {{ item.description }}
+          <!-- {{ item.description }} -->
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Explicabo sequi, placeat qui blanditiis ut earum illo excepturi? Asperiores voluptates nostrum facere, doloremque fugit amet ipsa explicabo necessitatibus, dolorem illo eum!
         </div>
       </div>
       <div
-        class="md-layout-item md-size-33 md-small-hide "
+        class="md-layout-item md-size-33 md-xsmall-hide md-xsmall-size-50 md-layout md-alignment-center-center"
         style="text-align: center;"
       >
         <img
-          :src="category.image_url"
+          :src="this.category.image_url"
           style="height: 80px; width: 80px; border-radius: 50%; object-fit: cover;"
           alt="Avatar"
         />
+      
       </div>
     </div>
 
@@ -462,5 +463,15 @@ export default {
   background-color: #00aec5;
   padding: 5px 0;
   border-radius: 10px;
+}
+.md-title {
+  color: white !important;
+  padding: 2px !important;
+}
+
+.md-subhead {
+  font-size: 0.9rem;
+  padding: 1px 2px;
+  color: white;
 }
 </style>

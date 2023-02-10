@@ -31,7 +31,7 @@
             style="display: none;"
             @change="userImageHandler"
           />
-          <md-icon class="img-icon">add</md-icon>
+          <md-icon class="img-icon">edit</md-icon>
         </label>
       </div>
     </div>

@@ -10,7 +10,7 @@
         </md-card-header>
         <md-card-content>
           <div class="text-right">
-            <md-button class="md-success md-dense" @click="showDialog = true">
+            <md-button class="md-success md-dense" @click="showAddDialog">
               Add User
             </md-button>
           </div>
@@ -44,7 +44,23 @@
                   :src="item.image"
                   style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-left: 20px;  "
                 />
-                <p v-else class="pl-20">No Image</p>
+
+                <div
+                  v-else
+                  style="width: 50px; height: 50px; border-radius: 50%;margin-left: 20px; background-color: pink; display: grid; place-items: center; color: #fff; font-size: 1.8em; font-weight: 700;"
+                  :style="{
+                    'background-color':
+                      '#' + Math.floor(Math.random() * 16777215).toString(16),
+                  }"
+                >
+                  {{
+                    item.name.split(" ").length > 1
+                      ? item.name.split(" ")[0][0] +
+                        " " +
+                        item.name.split(" ")[1][0]
+                      : item.name[0] + " " + item.name[1]
+                  }}
+                </div>
               </md-table-cell>
 
               <md-table-cell md-label="Created At" md-sort-by="created_at"
@@ -74,26 +90,6 @@
               </md-table-cell>
             </md-table-row>
           </md-table>
-
-          <!-- <div class="footer-table md-table">
-            <table>
-              <tfoot>
-                <tr>
-                  <th
-                    v-for="item in footerTable"
-                    :key="item.name"
-                    class="md-table-head"
-                  >
-                    <div class="md-table-head-container md-ripple md-disabled">
-                      <div class="md-table-head-label">
-                        {{ item }}
-                      </div>
-                    </div>
-                  </th>
-                </tr>
-              </tfoot>
-            </table>
-          </div> -->
         </md-card-content>
 
         <md-card-actions md-alignment="space-between">
@@ -163,6 +159,7 @@
                   accept=".png,.jpeg,.jpg"
                   name="browse"
                   id="avatar"
+                  ref="userImageRef"
                   style="display: none;"
                   @change="userImageHandler"
                 />
@@ -223,7 +220,7 @@
                 <span class="md-helper-text">phone number</span>
               </md-field>
               <validation-error
-                :errors="apiValidationErrors.moblie"
+                :errors="apiValidationErrors.mobile"
                 style="color: red"
               />
             </div>
@@ -294,6 +291,7 @@
         </md-dialog-actions>
       </md-dialog>
     </div>
+    <AlertDialoge ref="showAlertDialog"></AlertDialoge>
   </div>
 </template>
 
@@ -303,6 +301,7 @@ import { ValidationError } from "@/components";
 import formMixin from "@/mixins/form-mixin";
 import EditUserDialoge from "./EditUserDialoge";
 import { LoaderFull } from "../../../../components";
+import { AlertDialoge } from "@/components";
 
 var images = require.context("../../../../assets/images/", false, /\.jpg$/);
 
@@ -313,6 +312,7 @@ export default {
     ValidationError,
     EditUserDialoge,
     LoaderFull,
+    AlertDialoge,
   },
   mixins: [formMixin],
 
@@ -320,7 +320,7 @@ export default {
     user: {
       name: "",
       email: null,
-      mobileNumber: null,
+      mobileNumber: "",
       username: null,
       password: null,
       password_confirmation: null,
@@ -328,6 +328,7 @@ export default {
       image: null,
       imageUserSrc: "",
     },
+
     userMeta: null,
     showDialog: false,
     table: [],
@@ -337,12 +338,10 @@ export default {
     isLoading: false,
 
     query: null,
-
     sortation: {
       field: "created_at",
       order: "asc",
     },
-
     total: 1,
   }),
 
@@ -361,6 +360,8 @@ export default {
   },
 
   methods: {
+    avatarName() {},
+
     imgUrl: function(path) {
       return images("./" + path);
     },
@@ -384,7 +385,7 @@ export default {
       formData.append("email", this.user.email);
       formData.append("name", this.user.name);
       formData.append("username", this.user.username);
-      formData.append("mobile", Number(this.user.mobileNumber));
+      formData.append("mobile", this.user.mobileNumber);
       formData.append("password", this.user.password);
       formData.append("password_confirmation", this.user.password_confirmation);
       formData.append("role_id", Number(this.user.role_id));
@@ -423,7 +424,10 @@ export default {
 
           return;
         }
-        if (confirm("are you sure want to delete this user")) {
+        const alert = await this.$refs.showAlertDialog.response(
+          "Are you sure want to delete? "
+        );
+        if (alert) {
           this.isLoading = true;
           let deleteRes = await this.$store.dispatch("deleteUser", userId);
 
@@ -454,7 +458,7 @@ export default {
     resetInputs() {
       this.user.name = null;
       this.user.email = null;
-      this.user.mobileNumber = null;
+      this.user.mobileNumber = "";
       this.user.username = null;
       this.user.password = null;
       this.user.password_confirmation = null;
@@ -486,10 +490,18 @@ export default {
       );
     },
 
+    showAddDialog() {
+      this.showDialog = true;
+    },
+
     closeForm() {
       this.resetInputs();
       this.showDialog = false;
       this.resetApiValidation();
+    },
+
+    randomColorGenerator() {
+      return "#" + Math.floor(Math.random() * 16777215).toString(16);
     },
   },
 };
@@ -597,11 +609,12 @@ export default {
     top: 10px;
     right: 5px;
     cursor: pointer;
-    // width: 100%;
-    color: red !important;
-    font-size: 2em !important;
+    width: 24px !important;
+    height: 24px;
+    color: red;
+    font-size: 2em;
     z-index: 333;
-    pointer-events: all !important;
+    pointer-events: all;
   }
 }
 </style>
