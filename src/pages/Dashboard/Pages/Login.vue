@@ -92,13 +92,9 @@ export default {
       try {
         await this.$store.dispatch("login", user);
       } catch (e) {
-        if ((e.status = 403)) {
-          await this.$store.dispatch("alerts/error", "Email not verified");
-          this.setApiValidation({ email: "Email not verified" });
-        } else {
-          await this.$store.dispatch("alerts/error", "Invalid credentials!");
-          this.setApiValidation(e.data.errors);
-        }
+        //console.log(e);
+        await this.$store.dispatch("alerts/error", "Invalid credentials!");
+        this.setApiValidation({ email: e.data.message });
       }
     },
   },

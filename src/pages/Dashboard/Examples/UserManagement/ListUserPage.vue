@@ -55,10 +55,12 @@
                 >
                   {{
                     item.name.split(" ").length > 1
-                      ? item.name.split(" ")[0][0] +
+                      ? item.name.split(" ")[0][0].toUpperCase() +
                         " " +
-                        item.name.split(" ")[1][0]
-                      : item.name[0] + " " + item.name[1]
+                        item.name.split(" ")[1][0].toUpperCase()
+                      : item.name[0].toUpperCase() +
+                        " " +
+                        item.name[1].toUpperCase()
                   }}
                 </div>
               </md-table-cell>
@@ -424,7 +426,7 @@ export default {
 
           return;
         }
-        const alert = await this.$refs.showAlertDialog.response(
+        const alert = await this.$refs.showAlertDialog.response("Delete User",
           "Are you sure want to delete? "
         );
         if (alert) {

@@ -409,7 +409,7 @@ export default {
 
     async deleteProduct(id) {
       try {
-        const alert = await this.$refs.showAlertDialog.response(
+        const alert = await this.$refs.showAlertDialog.response("Delete Product",
           "Are you sure want to delete?"
         );
         if (alert) {

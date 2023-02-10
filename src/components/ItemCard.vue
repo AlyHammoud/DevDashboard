@@ -4,7 +4,7 @@
     @mouseover="autoLoopCarousel()"
     @mouseleave="stopCarousel()"
   >
-    <div class="item-imgs">
+    <div class="item-imgs" style="position: relative;">
       <div v-if="item.images.length" class="item-img">
         <img :src="item.images[imageIndex].image_url" />
         <div class="item-carousel">
@@ -19,6 +19,48 @@
       </div>
       <div v-else>
         <img src="../assets/images/no-image.jpg" alt="" />
+      </div>
+      <!-- <div class="edit-container">
+        <md-button
+          class="md-icon-button md-raised md-round md-info"
+          v-if="userRole || userId"
+          @click="$emit('editCategory', item.id)"
+        >
+          <md-icon class="edit">edit</md-icon>
+        </md-button>
+      </div> -->
+      <!-- <md-button
+          class="md-icon-button md-raised md-round md-info "
+          v-if="userRole || userId"
+          @click="$emit('editCategory', item.id)"
+        >
+          <md-icon>edit</md-icon>
+        </md-button> -->
+      <button
+        v-if="userRole || userId"
+        @click="$emit('editCategory', item.id)"
+        class="edit-container"
+      >
+        <md-icon class="edit">edit</md-icon>
+      </button>
+
+      <!-- <div class="delete-container">
+        <md-icon class="delete">delete</md-icon>
+      </div> -->
+      <button
+        v-if="userRole || userId"
+        @click="$emit('deleteItem', item.id)"
+        class="delete-container"
+      >
+        <md-icon class="delete">delete</md-icon>
+      </button>
+    </div>
+    <div class="md-layout" style="padding: 0;">
+      <div
+        class="md-layout-item md-size-100"
+        style="font-size: 20px; font-weight: bold; padding-left: 10px;"
+      >
+        {{ item.name }}
       </div>
     </div>
     <div class="item-card-category">
@@ -35,7 +77,7 @@
             : item.category.name
         }}</md-chip
       >
-
+        <div style="align-self: end; padding: 0 2px;">></div>
       <md-chip
         class="md-accent item-card-chip"
         style="background-color: green !important;"
@@ -49,11 +91,54 @@
         >{{ item.products_count }} Products</md-chip
       >
     </div>
+    <!-- <div class="md-layout" style="padding: 0;">
+      <div
+        class="md-layout-item md-size-45 md-layout md-alignment-center"
+        style="padding-left: 10px; margin: 0;"
+      >
+        <md-chip
+          style="background-color: red !important;"
+          class="md-accent item-card-chip md-layout-item"
+          md-clickable
+          @click="
+            $router.push({ name: 'Items', params: { id: item.category.id } })
+          "
+          >{{
+            item.category.name.length > 8
+              ? item.category.name.substring(8, 0) + ".."
+              : item.category.name
+          }}</md-chip
+        >
+      </div>
+      <div
+        class="md-layout-item md-size-10 md-layout md-alignment-center-center"
+        style="padding: 0;"
+      >
+        >
+      </div>
+      <div
+        class="md-layout-item md-size-45 md-layout md-alignment-center"
+        style="padding-left: 0; margin: 0;"
+      >
+        <md-chip
+          class="md-accent item-card-chip md-layout-item"
+          style="background-color: green !important;"
+          md-clickable
+          @click="
+            $router.push({
+              name: 'Products',
+              params: { id: item.category.id, item_id: item.id },
+            })
+          "
+          >{{ item.products_count }} Products</md-chip
+        >
+      </div>
+    </div> -->
     <div class="item-card-contents">
-      <div class="item-name">
+      <!-- <div class="item-name">
         Name:
         <span>{{ item.name }}</span>
-      </div>
+      </div> -->
       <div class="item-description">
         {{
           item.description.length > 80
@@ -61,14 +146,34 @@
             : item.description
         }}...
       </div>
-      <div class="item-avaialbility">
+      <!-- <div class="item-avaialbility">
         Availability:
         <span :style="{ color: item.is_available == '1' ? 'green' : 'red' }">{{
           item.is_available ? "yes" : "no"
         }}</span>
+      </div> -->
+      <div
+        class="md-layout md-alignment-center-center
+      "
+        style="margin-top: 30px; text-align: center; "
+      >
+        <div
+          v-if="item.is_available"
+          class="md-layout-item md-size-70"
+          style="padding: 5px 10px; text-align: center; color: white;background-color:#59C89D;
+          border-radius: 10px; font-weight: 400;"
+        >
+          AVAILABLE
+        </div>
+        <div
+          v-else
+          class="md-layout-item md-size-70"
+          style="padding: 5px 10px; text-align: center; color: white; background-color:red;
+          border-radius: 10px; font-weight: 400;"
+        >UNAVAILABLE</div>
       </div>
     </div>
-    <div class="item-card-actions">
+    <!-- <div class="item-card-actions">
       <button v-if="userRole || userId" @click="$emit('editCategory', item.id)">
         Edit
       </button>
@@ -76,7 +181,7 @@
       <button v-if="userRole || userId" @click="$emit('deleteItem', item.id)">
         Delete
       </button>
-    </div>
+    </div> -->
     <div class="item-card-created">
       <span>{{ item.created_at }}</span>
     </div>
@@ -147,6 +252,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.md-ripple {
+  width: 30px !important;
+  height: 30px !important;
+}
 .item-card {
   display: flex;
   flex-direction: column;
@@ -206,12 +315,46 @@ export default {
         }
       }
     }
+    .edit-container {
+      position: absolute;
+      top: 40px;
+      right: 7px;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: grid;
+      background-color: #00aec5;
+      border-color: transparent;
+      border: 0;
+      padding: 0;
+      .edit {
+        color: white;
+      }
+    }
+
+    .delete-container {
+      position: absolute;
+      top: 5px;
+      right: 7px;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: grid;
+      background-color: red;
+      border: 0 transparent;
+      padding: 0;
+
+      .delete {
+        color: white;
+      }
+    }
   }
 
   .item-card-category {
     display: flex;
     width: 100%;
-    justify-content: center;
+    // justify-content: center;
+    margin-left: 10px;
     margin-bottom: 10px;
   }
 
@@ -219,6 +362,7 @@ export default {
     display: flex;
     flex-direction: column;
     flex: 1;
+    padding: 10px;
 
     .item-name {
       font-weight: 700;
@@ -231,10 +375,11 @@ export default {
     }
 
     .item-description {
-      font-size: 10px;
       // margin-inline: 4px;
-      margin-top: -2px;
+      margin-top: 10px;
       line-height: 10px;
+      font-size: 11px;
+      font-weight: normal;
     }
 
     .item-avaialbility {

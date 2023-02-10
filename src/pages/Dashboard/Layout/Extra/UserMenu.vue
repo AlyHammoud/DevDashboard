@@ -9,6 +9,12 @@
       />
       <div
         v-else
+        :style="{
+          'background-color':
+            '#' +
+            Math.floor(Math.random() * 16777215).toString(16) +
+            ' !important',
+        }"
         style="display: grid; place-items: center; color: #fff; width: 100%; height: 100%;"
       >
         {{ imageAvatar }}

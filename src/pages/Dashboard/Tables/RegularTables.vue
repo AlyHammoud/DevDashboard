@@ -497,8 +497,8 @@ export default {
     },
 
     async deleteCategory(categoryId) {
-      const alert = await this.$refs.showAlertDialog.response(
-        "Are you sure want to delete? Note that all items belong to this category will be deleted too!!"
+      const alert = await this.$refs.showAlertDialog.response("Delete Category",
+        "Are you sure want to delete? Note that all items belong to this category will be deleted too!!",
       );
 
       if (alert) {

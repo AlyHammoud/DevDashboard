@@ -328,7 +328,7 @@ export default {
 
     async deleteItem(id) {
       try {
-        const alert = await this.$refs.showAlertDialog.response(
+        const alert = await this.$refs.showAlertDialog.response("Delete Item",
           "Are you sure want to delete? Note that all products belong to this item will be deleted too!!"
         );
         if (alert) {

@@ -13,7 +13,7 @@
       <md-card-content>
         <div class="md-layout">
           <div class="md-layout-item md-size-100">
-            <md-field class="md-invalid">
+            <md-field class="md-invalid" style="margin-bottom: 40px;">
               <label>New Password</label>
               <md-input v-model="user.password" type="password" />
               <validation-error :errors="apiValidationErrors.password" />
@@ -92,7 +92,7 @@ export default {
           "alerts/error",
           "Oops, something went wrong!"
         );
-        this.setApiValidation(e.response.data.errors);
+        this.setApiValidation(e.data.errors);
       }
     },
   },

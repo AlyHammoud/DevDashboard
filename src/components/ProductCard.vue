@@ -21,140 +21,153 @@
         <img src="../assets/images/no-image.jpg" alt="" />
       </div>
     </div>
-    <!-- <div class="all-infos">
-      <div class="product-name-description">
-        <p class="product-name">
-          Name: <span>{{ product.name }}</span>
-        </p>
-        <p class="product-desc">
-          {{
-            product.description.length > 80
-              ? product.description.substring(79, 0) + "..."
-              : product.description
-          }}
-        </p>
-      </div>
 
-      <div class="product-availability">
-        <p>
-          Availability:
-          <span
-            :style="{ color: product.is_available == '1' ? 'green' : 'red' }"
-            >{{ product.is_available ? "yes" : "no" }}</span
+    <div class="product-card-main-details">
+      <div class="name-category-item">
+        <p class="product-name">{{ product.name }}</p>
+        <div class="category-item">
+          <p
+            class="category-name"
+            @click="
+              $router.push({
+                name: 'Items',
+                params: { id: product.item.category.id },
+              })
+            "
           >
-        </p>
+            <!-- {{
+              product.item.category.name.length > 8
+                ? product.item.category.name.substring(8, 0) + ".."
+                : product.item.category.name
+            }} -->
+            {{ product.item.category.name }}
+          </p>
+          <span>></span>
+          <p
+            class="item-name"
+            @click="
+              $router.push({
+                name: 'Products',
+                params: {
+                  id: product.item.category.id,
+                  item_id: product.item.id,
+                },
+              })
+            "
+          >
+            {{ product.item.name }}
+            <!-- {{
+              product.item.name.length > 8
+                ? product.item.name.substring(8, 0) + ".."
+                : product.item.name
+            }} -->
+          </p>
+        </div>
       </div>
-    </div> -->
+      <div class="styled-price">
+        <p>{{ product.final_price }}$</p>
+        <p>{{ product.price }}$</p>
+      </div>
+    </div>
 
-    <!-- <div class="product-card-actions">
-      <button @click="$emit('editCategory', product.id)">Edit</button>
-      <button @click="$emit('deleteItem', product.id)">Delete</button>
-    </div> -->
-    <div class="product-card-category">
-      <md-chip
-        style="background-color: red !important;"
-        class="md-accent product-card-chip"
-        md-clickable
-        @click="
-          $router.push({
-            name: 'Items',
-            params: { id: product.item.category.id },
-          })
-        "
-      >
+    <div class="product-description">
+      <p>
         {{
-          product.item.category.name.length > 8
-            ? product.item.category.name.substring(8, 0) + ".."
-            : product.item.category.name
-        }}</md-chip
-      >
-
-      <md-chip
-        class="md-accent product-card-chip"
-        style="background-color: green !important;"
-        @click="
-          $router.push({
-            name: 'Products',
-            params: { id: product.item.category.id, item_id: product.item.id },
-          })
-        "
-        md-clickable
-      >
-        {{ product.item.name }}</md-chip
+          descriptionShow
+            ? descriptionShow
+            : product.description.length > 150
+            ? this.product.description.substring(70, 0) + "..."
+            : this.product.description
+        }}
+      </p>
+      <span
+        v-if="product.description.length > 90"
+        @click="descriptionCrop((viewMoreLess = !viewMoreLess))"
+        >{{ !viewMoreLess ? "view more" : "view less" }}</span
       >
     </div>
-    <div class="product-card-contents">
-      <div class="product-name">
-        Name:
-        <span>{{ product.name }}</span>
-      </div>
-      <div class="product-description">
-        {{
-          product.description.length > 111
-            ? product.description.substring(110, 0) + "..."
-            : product.description
-        }}
-      </div>
-      <div class="product-avaialbility">
-        Availability:
-        <span
-          :style="{ color: product.is_available == '1' ? 'green' : 'red' }"
-          >{{ product.is_available ? "yes" : "no" }}</span
-        >
-      </div>
 
-      <div class="product-infos">
-        <div class="quantity">
-          <p>Qty:</p>
-          <p>{{ product.quantity }}</p>
-        </div>
-        <div class="price">
-          <p>price</p>
-          <p>{{ product.price }}$</p>
-        </div>
-        <div class="sale">
-          <p>sale</p>
-          <p>{{ product.sale }}%</p>
-        </div>
-        <div class="final price">
-          <p>final price</p>
-          <p>{{ (Math.round(product.final_price * 100) / 100).toFixed(2) }}$</p>
-        </div>
-      </div>
-      <div class="product-colors" v-if="product.color">
-        <p>Colors:</p>
+    <div class="colors-sizes">
+      <div class="colors" v-if="product.color">
         <div
-          class=""
           v-for="(color, i) in product.color"
+          class="color"
           :key="i"
-          style="width: 15px; height: 15px;"
           :style="{ 'background-color': color }"
         ></div>
       </div>
-      <div class="product-sizes" v-if="product.size">
-        <p>Sizes:</p>
-        <div class="" v-for="(size, i) in product.size" :key="i">
-          {{ size }},
+      <div class="colors" v-else>
+        <div
+          class="color"
+          style="width: 100%; font-size: 14px; text-align: center; border-bottom: 1px solid rgb(218, 210, 218);"
+        >
+          No colors added
+        </div>
+      </div>
+      <div class="sizes" v-if="product.size">
+        <div class="size" v-for="(size, i) in product.size" :key="i">
+          {{ size }}
+        </div>
+      </div>
+      <div class="sizes" v-else>
+        <div
+          class="color"
+          style="width: 100%; font-size: 14px; text-align: center; border-bottom: 1px solid rgb(218, 210, 218);"
+        >
+          No Sizes added
         </div>
       </div>
     </div>
-    <div class="product-card-actions">
-      <button
-        v-if="userRole || userId"
-        @click="$emit('editProduct', product.id)"
-      >
-        Edit
-      </button>
-      <button
-        v-if="userRole || userId"
-        @click="$emit('deleteProduct', product.id)"
-      >
-        Delete
-      </button>
+
+    <div
+      class="product-infos"
+      style="align-self: flex-start; justify-self: space-between"
+    >
+      <div class="quantity">
+        <p>Qty:</p>
+        <p>{{ product.quantity }}</p>
+      </div>
+      <div class="price">
+        <p>price:</p>
+        <p>{{ product.price }}$</p>
+      </div>
+      <div class="sale">
+        <p>sale:</p>
+        <p>{{ product.sale }}%</p>
+      </div>
+      <div class="final price">
+        <p>final price:</p>
+        <p>{{ (Math.round(product.final_price * 100) / 100).toFixed(2) }}$</p>
+      </div>
+
+      <div class="product-card-created">
+        <span>{{ product.created_at }}</span>
+      </div>
     </div>
 
-    <div class="product-card-created">
-      <span>{{ product.created_at }}</span>
+    <div class="product-card-actions">
+      <md-button
+        v-if="userRole || userId"
+        @click="$emit('deleteProduct', product.id)"
+        class="md-icon-button md-danger product-action"
+      >
+        <md-icon>delete</md-icon>
+      </md-button>
+
+      <md-button
+        v-if="userRole || userId"
+        @click="$emit('editProduct', product.id)"
+        class="md-icon-button md-primary product-action"
+      >
+        <md-icon>edit</md-icon>
+      </md-button>
+
+      <div class="product-avaialbility">
+        <span
+          :style="{ color: product.is_available == '1' ? 'green' : 'red' }"
+          >{{ product.is_available ? "available" : "not available" }}</span
+        >
+      </div>
     </div>
   </div>
 </template>
@@ -167,6 +180,8 @@ export default {
       imageIndex: 0,
       user: {}, //object to fill user data in it,
       myInterval: null,
+      descriptionShow: "",
+      viewMoreLess: false,
     };
   },
 
@@ -195,18 +210,31 @@ export default {
     },
 
     autoLoopCarousel() {
-      clearInterval(this.myInterval)
+      clearInterval(this.myInterval);
       this.myInterval = setInterval(this.intervalCarousel, 1500); //make the loop function execute
     },
 
     stopCarousel() {
       clearInterval(this.myInterval); //make the loop function stop
     },
+
+    descriptionCrop(viewAll = false) {
+      if (!viewAll) {
+        return (this.descriptionShow =
+          this.product.description.length > 150
+            ? this.product.description.substring(149, 0) + "..."
+            : this.product.description);
+      } else {
+        return (this.descriptionShow = this.product.description);
+      }
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+$colorOffBlack: rgb(36, 32, 32);
+
 * {
   margin: 0;
   padding: 0;
@@ -217,25 +245,26 @@ export default {
   display: flex;
   flex-direction: column;
   width: 300px;
-  border-bottom-left-radius: 14px;
-  border-bottom-right-radius: 14px;
+  height: 100%;
+  border-radius: 14px;
   box-shadow: 0px 1px 10px black;
   background-color: #fff;
   transition: all 0.3s;
-  padding-bottom: 10px;
+  // padding-bottom: 10px;
   overflow-x: hidden;
+  position: relative;
 
   &:hover {
-    scale: 1.05;
+    transform: scale(1.01);
   }
 
-  & > :not(.product-imgs, .product-card-category) {
+  & > :not(.product-imgs, .colors-sizes) {
     padding-inline: 15px;
   }
 
   .product-imgs {
     width: 100%;
-    height: 200px;
+    height: 250px;
 
     .product-img {
       position: relative;
@@ -266,8 +295,8 @@ export default {
         padding-inline: 5px;
 
         .dot {
-          width: 5px;
-          height: 5px;
+          width: 6px;
+          height: 6px;
           background-color: #fff;
           border-radius: 50%;
           cursor: pointer;
@@ -276,139 +305,212 @@ export default {
     }
   }
 
-  // .all-infos {
-  //   display: flex;
-  //   flex-direction: column;
-  //   gap: 0;
-
-  //   .product-name-description {
-  //     display: block;
-
-  //     .product-name {
-  //       font-size: 15px;
-  //       font-weight: 900;
-  //       margin-bottom: -14px;
-  //       span {
-  //         font-weight: 300;
-  //       }
-  //     }
-
-  //     .product-desc {
-  //       font-size: 12px;
-  //       padding-inline: 10px;
-  //     }
-  //   }
-  // }
-
-  .product-card-actions {
+  .product-card-main-details {
+    background: linear-gradient(to bottom, rgb(236, 232, 232) 20%, #fcfcfc 80%);
+    border-top-left-radius: 18px !important;
+    border-top-right-radius: 18px;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    gap: 12px;
-    justify-self: flex-end;
-    align-self: flex-end;
-    margin-top: 10px;
+    justify-content: space-between;
+    margin-top: -14px;
+    z-index: 1;
+    padding-top: 20px;
 
-    button {
-      cursor: pointer;
-      border: none;
-      box-shadow: 0px 1px 14px red;
-      border-radius: 50px;
-      padding: 2px 8px;
-    }
-
-    button:first-child {
-      box-shadow: 0px 1px 14px green;
-    }
-  }
-
-  .product-card-created {
-    justify-self: flex-end;
-    margin-top: 10px;
-    align-self: flex-end;
-    font-size: 10px;
-  }
-
-  .product-card-category {
-    display: flex;
-    width: 100%;
-    justify-content: center;
-    margin: 10px 0;
-  }
-
-  .product-card-contents {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-
-    .product-name {
-      font-weight: 700;
-      line-height: 18px;
-
-      span {
-        font-weight: 300;
-        font-size: 14px;
-      }
-    }
-
-    .product-description {
-      font-size: 10px;
-      // margin-inline: 4px;
-      margin-top: -2px;
-      line-height: 10px;
-    }
-
-    .product-avaialbility {
-      margin-block: 8px;
-      font-weight: 700;
-
-      span {
-        color: green;
-        font-weight: 300;
-      }
-    }
-
-    .product-infos {
+    .name-category-item {
       display: flex;
-      gap: 20px;
-      margin: 0 auto;
+      // flex: 1;
+      flex-direction: column;
 
-      * {
+      .product-name {
+        color: $colorOffBlack;
+        font-size: 1.7rem;
+        font-weight: 700;
+        word-spacing: 1px;
+      }
+
+      .category-item {
+        margin-left: 5px;
         display: flex;
-        flex-direction: column;
-        justify-content: center;
         align-items: center;
+        flex-direction: row;
+        gap: 7px;
 
-        p:first-child {
-          font-weight: 900;
+        * {
+          font-size: 14px;
+        }
+
+        span {
+          font-size: 1.7rem;
+        }
+
+        .category-name {
+          color: aqua;
+          font-weight: 300;
+          cursor: pointer;
+        }
+
+        .item-name {
+          color: crimson;
+          font-weight: 300;
+          cursor: pointer;
         }
       }
     }
 
-    .product-colors {
+    .styled-price {
       display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      margin-top: 10px;
-      gap: 5px;
+      height: 100%;
+      flex-direction: column;
+      // justify-content: center;
+      align-items: flex-end;
 
-      p {
-        font-size: 15px;
-        font-weight: 900;
+      p:first-child {
+        font-size: 1.2rem;
+        color: rgb(190, 25, 53);
+        font-weight: 500;
+      }
+
+      p:last-child {
+        font-size: 1.01rem;
+        color: $colorOffBlack;
+        text-decoration: line-through;
+        font-weight: 500;
       }
     }
-    .product-sizes {
+  }
+
+  .product-description {
+    display: flex;
+    flex-direction: column;
+
+    p {
+      font-size: 13px;
+      overflow: auto;
+      // height: 100%;
+      max-height: 90px;
+    }
+    span {
+      cursor: pointer;
+      font-size: 14px;
+      color: blue;
+      z-index: inherit;
+      align-self: flex-end;
+      margin: 0px 10px 0 0;
+    }
+  }
+
+  .colors-sizes {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(2, 1fr);
+    // gap: 7px;
+    margin-block: 10px;
+
+    .colors,
+    .sizes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3px;
+      border: 0.5px solid rgb(228, 217, 217);
+      padding: 5px;
+    }
+
+    .colors {
       display: flex;
       align-items: center;
-      flex-wrap: wrap;
-      margin-top: 10px;
-      gap: 5px;
-
-      p {
-        font-size: 15px;
-        font-weight: 900;
+      // justify-content: center;
+      .color {
+        height: 20px;
+        width: 20px;
       }
+    }
+
+    .sizes {
+      gap: 5px;
+      .size {
+        clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+        background-color: black;
+        width: 30px;
+        height: 30px;
+        color: #fff;
+        font-size: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+  }
+
+  .product-infos {
+    display: flex;
+  }
+  .product-card-actions {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    // width: 50px;
+    display: flex;
+    flex-direction: column;
+
+    .product-action {
+      width: 40px !important;
+      height: 40px !important;
+      border-radius: 50%;
+      align-self: flex-end;
+
+      &:nth-child(2) {
+        background-color: rgb(70, 143, 238) !important;
+      }
+    }
+
+    .product-avaialbility {
+      background-color: purple;
+      width: 100% !important;
+      // height: 40px;
+      padding: 10px;
+      // display: grid;
+      // place-items: center;
+      // border-radius: 50%;
+
+      span {
+        color: #fff !important;
+      }
+    }
+  }
+
+  .product-infos {
+    background-color: rgb(26, 24, 24);
+    margin-top: auto;
+    justify-self: flex-end !important;
+    position: relative;
+
+    align-self: flex-end;
+    width: 100%;
+    color: #fff;
+    height: 100px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    position: relative;
+
+    div {
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
+      flex-direction: column;
+      font-weight: 700;
+
+      p:last-child {
+        margin-right: 5px;
+      }
+    }
+
+    .product-card-created {
+      position: absolute;
+      bottom: 4px;
+      right: 10px;
+      font-weight: 300;
+      font-size: 14px;
     }
   }
 }

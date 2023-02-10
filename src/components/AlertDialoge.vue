@@ -1,10 +1,49 @@
 <template>
-  <div class="alert-dialoge" v-if="showAlert">
+  <!-- <div class="alert-dialoge" v-if="showAlert">
     <div class="the-alert">
       <p>{{ message }}</p>
       <div class="actions">
         <button @click="successPromiseFunc">yes</button>
         <button @click="rejectPromiseFunc">no</button>
+      </div>
+    </div>
+  </div> -->
+  <div class="alert-dialoge" v-if="showAlert">
+    <div class="md-layout the-alert">
+      <div
+        class="md-layout-item md-size-100 md-layout md-alignment-center-center top-section"
+      >
+        <div class="md-layout md-alignment-center-center top-section-child">
+          ?
+        </div>
+      </div>
+      <div
+        class="md-layout-item md-size-100 md-layout md-alignment-center-center second-section"
+      >
+        {{ title }}
+      </div>
+      <div
+        class="md-layout-item md-size-100 md-layout md-alignment-center-center third-section"
+      >
+        {{ message }}
+      </div>
+      <div class="md-layout-item md-layout md-size-100 fourth-section">
+        <div class="md-layout-item md-layout md-alignment-center md-size-50">
+          <md-button
+            class=" md-dense"
+            style="background-color: #ff8200 !important; border-radius: 20px;"
+            @click="successPromiseFunc"
+            >Okay</md-button
+          >
+        </div>
+        <div class="md-layout-item md-layout md-alignment-center md-size-50">
+          <md-button
+            class="md-dense md-default "
+            @click="rejectPromiseFunc"
+            style="border-radius: 20px; background-color: none !important; color: gray;"
+            >Cancel</md-button
+          >
+        </div>
       </div>
     </div>
   </div>
@@ -14,6 +53,7 @@
 export default {
   data() {
     return {
+      title: "",
       message: "Are your sure",
       res: false,
       showAlert: false,
@@ -23,10 +63,12 @@ export default {
   },
 
   methods: {
-    async response(message) {
+    async response(title, message) {
+      this.title = title;
       this.message = message;
       this.isVisible();
       return new Promise((res, rej) => {
+        //assign the promise resolve into successPromise so the function if ok then true not is false
         this.successPromise = res;
         this.rejectPromise = rej;
       });
@@ -72,43 +114,41 @@ export default {
   }
 
   .the-alert {
-    min-height: 300px;
-    width: 400px;
-    border-radius: 8px;
-    background-color: antiquewhite;
-    padding: 40px 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    max-width: 300px;
+    background-color: white;
+    border-radius: 1.5rem;
 
-    .actions {
-      margin-top: 100px;
-      display: flex;
-      gap: 80px;
+    .top-section {
+      height: 200px;
+      background-color: #ff8200;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
 
-      button {
-        border: none;
-        outline-color: transparent;
-        color: #fff;
-        width: 80px;
-        height: 40px;
-        cursor: pointer;
-        border-radius: 4px;
-        font-size: 17px;
-        font-weight: 900;
-
-        &:hover {
-          opacity: 0.9;
-        }
-
-        &:first-child {
-          background-color: rgb(33, 241, 33);
-        }
-
-        &:last-child {
-          background-color: rgb(241, 36, 36);
-        }
+      .top-section-child {
+        max-width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        border: 4px solid white;
+        font-size: 50px;
+        color: white;
       }
+    }
+
+    .second-section {
+      font-size: 20px;
+      font-weight: bold;
+      padding-top: 20px;
+      padding-bottom: 10px;
+    }
+
+    .third-section {
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+
+    .fourth-section {
+      padding-top: 10px;
+      padding-bottom: 10px;
     }
   }
 }
