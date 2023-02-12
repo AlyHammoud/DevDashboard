@@ -1,17 +1,9 @@
 <template>
-  <!-- <div class="alert-dialoge" v-if="showAlert">
-    <div class="the-alert">
-      <p>{{ message }}</p>
-      <div class="actions">
-        <button @click="successPromiseFunc">yes</button>
-        <button @click="rejectPromiseFunc">no</button>
-      </div>
-    </div>
-  </div> -->
   <div class="alert-dialoge" v-if="showAlert">
     <div class="md-layout the-alert">
       <div
         class="md-layout-item md-size-100 md-layout md-alignment-center-center top-section"
+        :style="{ 'background-color': topColors[alertDialogType] }"
       >
         <div class="md-layout md-alignment-center-center top-section-child">
           ?
@@ -27,11 +19,18 @@
       >
         {{ message }}
       </div>
-      <div class="md-layout-item md-layout md-size-100 fourth-section">
+
+      <div
+        class="md-layout-item md-layout md-size-100 fourth-section"
+        v-if="alertDialogType == 'delete'"
+      >
         <div class="md-layout-item md-layout md-alignment-center md-size-50">
           <md-button
             class=" md-dense"
             style="background-color: #ff8200 !important; border-radius: 20px;"
+            :style="{
+              'background-color': topColors[alertDialogType] + '!important',
+            }"
             @click="successPromiseFunc"
             >Okay</md-button
           >
@@ -42,6 +41,22 @@
             @click="rejectPromiseFunc"
             style="border-radius: 20px; background-color: none !important; color: gray;"
             >Cancel</md-button
+          >
+        </div>
+      </div>
+      <div
+        class="md-layout-item md-layout md-size-100 fourth-section md-alignment-center"
+        v-else-if="alertDialogType == 'inform'"
+      >
+        <div class="md-layout-item md-layout md-alignment-center md-size-50">
+          <md-button
+            class=" md-dense"
+            style="background-color: #ff8200 !important; border-radius: 20px;"
+            :style="{
+              'background-color': topColors[alertDialogType] + '!important',
+            }"
+            @click="successPromiseFunc"
+            >Okay</md-button
           >
         </div>
       </div>
@@ -59,13 +74,21 @@ export default {
       showAlert: false,
       successPromise: undefined,
       rejectPromise: undefined,
+      alertDialogType: "delete",
+      topColors: {
+        delete: "#ff8200",
+        inform: "red",
+      },
     };
   },
 
   methods: {
-    async response(title, message) {
+    async response(title, message, type = "delete") {
       this.title = title;
       this.message = message;
+      this.alertDialogType =
+        this.topColors[type] != undefined ? type : "delete";
+
       this.isVisible();
       return new Promise((res, rej) => {
         //assign the promise resolve into successPromise so the function if ok then true not is false
@@ -120,7 +143,6 @@ export default {
 
     .top-section {
       height: 200px;
-      background-color: #ff8200;
       border-top-left-radius: 20px;
       border-top-right-radius: 20px;
 

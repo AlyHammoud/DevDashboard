@@ -24,7 +24,7 @@
           </div>
         </div>
       </md-dialog-title>
-      <div class="md-layout">
+      <div class="md-layout" style="overflow-y: scroll;">
         <!-- <div class="md-layout-item md-layout md-size-100 md-alignment-center">
           <label for="avatar" class="user-avatar">
             Upload Image
@@ -42,7 +42,7 @@
             :src="category.image_url"
           />
         </div> -->
-        <div class="image-uploaders">
+        <div class="image-uploaders" style="position: relative;">
           <div class="image-uploaders-wrapper">
             <img
               :src="
@@ -64,16 +64,12 @@
               <md-icon class="img-icon">edit</md-icon>
             </label>
           </div>
-          <label for="" @click="removeTmpImage">
-            <md-icon v-if="categoryImage" class="img-icon-delete"
-              >delete</md-icon
-            ></label
-          >
+          <validation-error
+            :errors="apiValidationErrors.image_url"
+            style="color: red; "
+          />
         </div>
-        <validation-error
-          :errors="apiValidationErrors.image_url"
-          style="color: red; "
-        />
+
         <div class="md-layout-item md-size-100">
           <md-field>
             <label>Name</label>

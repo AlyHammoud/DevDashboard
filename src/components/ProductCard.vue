@@ -24,7 +24,9 @@
 
     <div class="product-card-main-details">
       <div class="name-category-item">
-        <p class="product-name">{{ product.name }}</p>
+        <p class="product-name" style="word-break: break-all; max-width: 80%;">
+          {{ product.name }}
+        </p>
         <div class="category-item">
           <p
             class="category-name"
@@ -75,13 +77,15 @@
         {{
           descriptionShow
             ? descriptionShow
-            : product.description.length > 150
-            ? this.product.description.substring(70, 0) + "..."
-            : this.product.description
+            : product.description && product.description.length > 150
+            ? product.description.substring(149, 0) + "..."
+            : product.description == "-"
+            ? "no description added"
+            : product.description
         }}
       </p>
       <span
-        v-if="product.description.length > 90"
+        v-if="descriptionShow && product.description.length > 90"
         @click="descriptionCrop((viewMoreLess = !viewMoreLess))"
         >{{ !viewMoreLess ? "view more" : "view less" }}</span
       >
@@ -162,11 +166,13 @@
         <md-icon>edit</md-icon>
       </md-button>
 
-      <div class="product-avaialbility">
-        <span
-          :style="{ color: product.is_available == '1' ? 'green' : 'red' }"
-          >{{ product.is_available ? "available" : "not available" }}</span
-        >
+      <div
+        class="product-avaialbility"
+        :style="{
+          'background-color': product.is_available == '1' ? 'green' : 'red',
+        }"
+      >
+        <span>{{ product.is_available ? "available" : "not available" }}</span>
       </div>
     </div>
   </div>
@@ -220,12 +226,15 @@ export default {
 
     descriptionCrop(viewAll = false) {
       if (!viewAll) {
-        return (this.descriptionShow =
-          this.product.description.length > 150
+        this.descriptionShow =
+          this.product.description && this.product.description.length > 150
             ? this.product.description.substring(149, 0) + "..."
-            : this.product.description);
+            : this.product.description;
       } else {
-        return (this.descriptionShow = this.product.description);
+        this.descriptionShow =
+          this.product.description == "-"
+            ? "no description added"
+            : this.product.description;
       }
     },
   },
@@ -247,7 +256,7 @@ $colorOffBlack: rgb(36, 32, 32);
   width: 300px;
   height: 100%;
   border-radius: 14px;
-  box-shadow: 0px 1px 10px black;
+  box-shadow: 0px 1px 10px #00000059;
   background-color: #fff;
   transition: all 0.3s;
   // padding-bottom: 10px;
@@ -322,7 +331,8 @@ $colorOffBlack: rgb(36, 32, 32);
 
       .product-name {
         color: $colorOffBlack;
-        font-size: 1.7rem;
+        font-size: 1.4rem;
+        color: rgb(39, 37, 37);
         font-weight: 700;
         word-spacing: 1px;
       }
@@ -404,6 +414,8 @@ $colorOffBlack: rgb(36, 32, 32);
     grid-template-columns: repeat(2, 1fr);
     // gap: 7px;
     margin-block: 10px;
+    margin-top: auto;
+    align-self: flex-end;
 
     .colors,
     .sizes {
@@ -447,9 +459,9 @@ $colorOffBlack: rgb(36, 32, 32);
     position: absolute;
     right: 10px;
     top: 10px;
-    // width: 50px;
     display: flex;
     flex-direction: column;
+    width: 100%;
 
     .product-action {
       width: 40px !important;
@@ -463,13 +475,11 @@ $colorOffBlack: rgb(36, 32, 32);
     }
 
     .product-avaialbility {
-      background-color: purple;
-      width: 100% !important;
-      // height: 40px;
+      // background-color: purple;
+      width: fit-content;
       padding: 10px;
-      // display: grid;
-      // place-items: center;
-      // border-radius: 50%;
+      border-radius: 8px;
+      position: absolute;
 
       span {
         color: #fff !important;

@@ -54,9 +54,7 @@
     </md-card> -->
 
     <div class="md-layout parent">
-      <div
-        class="md-layout-item md-size-33 md-xsmall-size-50"
-      >
+      <div class="md-layout-item md-size-33 md-xsmall-size-50">
         <div class="md-title" style="font-size: 1.3em; font-weight: bold;">
           {{ category.name }}
         </div>
@@ -64,16 +62,16 @@
           {{ category.description }}
         </div>
       </div>
-      <div
-        class="md-layout-item md-size-33 "
-        style="text-align: center;"
-      >
+      <div class="md-layout-item md-size-33 " style="text-align: center;">
         <div class="md-title" style="font-size: 1.3em; font-weight: bold;">
           {{ item.name }}
         </div>
         <div class="md-subhead" style="color: white; font-weight: 300;">
-          <!-- {{ item.description }} -->
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Explicabo sequi, placeat qui blanditiis ut earum illo excepturi? Asperiores voluptates nostrum facere, doloremque fugit amet ipsa explicabo necessitatibus, dolorem illo eum!
+          {{ item.description }}
+          <!-- Lorem ipsum dolor sit amet consectetur adipisicing elit. Explicabo
+          sequi, placeat qui blanditiis ut earum illo excepturi? Asperiores
+          voluptates nostrum facere, doloremque fugit amet ipsa explicabo
+          necessitatibus, dolorem illo eum! -->
         </div>
       </div>
       <div
@@ -82,10 +80,9 @@
       >
         <img
           :src="this.category.image_url"
-          style="height: 80px; width: 80px; border-radius: 50%; object-fit: cover;"
+          style="height: 100px; width: 100px; border-radius: 50%; object-fit: cover;"
           alt="Avatar"
         />
-      
       </div>
     </div>
 
@@ -158,9 +155,19 @@
                     {{ item.quantity }}
                   </p></md-table-cell
                 >
-                <md-table-cell md-label="Description" md-sort-by="description"
-                  ><p class="pl-20">
-                    {{ item.description }}
+                <md-table-cell
+                  md-label="Description"
+                  md-sort-by="description"
+                  style="max-width: auto !important;"
+                  ><p
+                    class="pl-20"
+                    style="min-width: auto !important; max-width: 200px; width:auto !important;"
+                  >
+                    {{
+                      item.description && item.description.length > 150
+                        ? item.description.substring(149, 0) + "..."
+                        : item.description
+                    }}
                   </p></md-table-cell
                 >
                 <md-table-cell md-label="Available"
@@ -409,7 +416,8 @@ export default {
 
     async deleteProduct(id) {
       try {
-        const alert = await this.$refs.showAlertDialog.response("Delete Product",
+        const alert = await this.$refs.showAlertDialog.response(
+          "Delete Product",
           "Are you sure want to delete?"
         );
         if (alert) {
@@ -457,7 +465,7 @@ export default {
 }
 
 .parent {
-  width: 50%;
+  width: 70%;
   margin-left: auto;
   margin-right: auto;
   background-color: #00aec5;

@@ -7,7 +7,19 @@
             <md-icon>equalizer</md-icon>
           </div>
           <p class="category uppercase">Website Visits</p>
-          <h3 class="title">
+
+          <div
+            class="my-spinner"
+            style=" display: flex; align-items: center; justify-content: center;"
+            v-if="isLoading"
+          >
+            <md-progress-spinner
+              class="md-accent"
+              :md-diameter="30"
+              md-mode="indeterminate"
+            ></md-progress-spinner>
+          </div>
+          <h3 class="title" v-else>
             {{ siteData.allSiteVisists }}
           </h3>
         </template>
@@ -31,9 +43,18 @@
             />
           </div>
           <p class="category uppercase">Cost of Products</p>
-          <h3 class="title">
-            {{ siteData.productPriceSum }}
-          </h3>
+          <div
+            class="my-spinner"
+            style=" display: flex; align-items: center; justify-content: center;"
+            v-if="isLoading"
+          >
+            <md-progress-spinner
+              class="md-accent"
+              :md-diameter="30"
+              md-mode="indeterminate"
+            ></md-progress-spinner>
+          </div>
+          <h3 v-else class="title">{{ siteData.productPriceSum }}$</h3>
         </template>
 
         <template slot="footer">
@@ -56,7 +77,18 @@
             />
           </div>
           <p class="category uppercase">Number of products</p>
-          <h3 class="title">+{{ siteData.countOfProducts }}</h3>
+          <div
+            class="my-spinner"
+            style=" display: flex; align-items: center; justify-content: center;"
+            v-if="isLoading"
+          >
+            <md-progress-spinner
+              class="md-accent"
+              :md-diameter="30"
+              md-mode="indeterminate"
+            ></md-progress-spinner>
+          </div>
+          <h3 v-else class="title">+{{ siteData.countOfProducts }}</h3>
         </template>
 
         <template slot="footer">
@@ -77,7 +109,18 @@
             />
           </div>
           <p class="category uppercase ">Number of users</p>
-          <h3 class="title">
+          <div
+            class="my-spinner"
+            style=" display: flex; align-items: center; justify-content: center;"
+            v-if="isLoading"
+          >
+            <md-progress-spinner
+              class="md-accent"
+              :md-diameter="30"
+              md-mode="indeterminate"
+            ></md-progress-spinner>
+          </div>
+          <h3 v-else class="title">
             {{ siteData.countOfUsers }}
           </h3>
         </template>
@@ -93,6 +136,17 @@
     <div
       class="md-layout-item md-medium-size-100 md-xsmall-size-100 chart-edit"
     >
+      <div
+        class="my-spinner"
+        style=" display: flex; background-color: #fff; height: 120px; align-items: center; justify-content: center;"
+        v-if="!showChartVists"
+      >
+        <md-progress-spinner
+          class="md-accent"
+          :md-diameter="30"
+          md-mode="indeterminate"
+        ></md-progress-spinner>
+      </div>
       <chart-card
         v-if="showChartVists"
         :chart-data="siteVisits.data"
@@ -152,7 +206,20 @@
         <span @click="chartVisitsYear(year.year)"> {{ year.year }}</span>
       </p>
     </div>
-    <div class="md-layout-item md-medium-size-75 md-xsmall-size-100 chart-edit">
+    <div
+      class="md-layout-item md-medium-size-100 md-xsmall-size-100 chart-edit"
+    >
+      <div
+        class="my-spinner"
+        style=" display: flex; background-color: #fff;margin-top: 50px; height: 120px; align-items: center; justify-content: center;"
+        v-if="!showChartVists"
+      >
+        <md-progress-spinner
+          class="md-accent"
+          :md-diameter="30"
+          md-mode="indeterminate"
+        ></md-progress-spinner>
+      </div>
       <chart-card
         v-if="showChartVists"
         :chart-data="productsAddedPerMonth.data"
@@ -227,6 +294,7 @@ export default {
 
   data() {
     return {
+      isLoading: false,
       showChartVists: false,
       siteData: {},
       mvItems: [
@@ -304,6 +372,7 @@ export default {
   },
 
   async mounted() {
+    this.isLoading = true;
     await this.$store.dispatch("setSiteVisits");
     await this.$store.dispatch("getAllSiteData");
     this.siteData = await this.$store.getters.getAllsiteData;
@@ -349,6 +418,7 @@ export default {
     }
 
     this.showChartVists = !this.showChartVists;
+    this.isLoading = false;
   },
 
   methods: {
@@ -405,12 +475,6 @@ export default {
     },
   },
 };
-
-// Vue.directive("uppercase",{
-//   update: function (el) {
-//     el.value = el.value.toUpperCase()
-//   }
-// })
 </script>
 
 <style lang="scss">

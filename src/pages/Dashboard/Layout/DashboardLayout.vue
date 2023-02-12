@@ -245,7 +245,7 @@ function reinitScrollbar() {
     initScrollbar("sidebar-wrapper");
     initScrollbar("main-panel");
 
-    docClasses.add("perfect-scrollbar-on");
+    docClasses.add("perfect-scrollbar-off");
   } else {
     docClasses.add("perfect-scrollbar-off");
   }
@@ -297,10 +297,10 @@ export default {
     },
   },
   updated() {
-    reinitScrollbar();
+    // reinitScrollbar();
   },
   mounted() {
-    reinitScrollbar();
+    // reinitScrollbar();
   },
   watch: {
     sidebarMini() {

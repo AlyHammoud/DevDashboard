@@ -82,6 +82,7 @@
               >
                 New Images
               </span>
+
               <md-list slot="md-expand" v-if="tmpImages.length">
                 <md-list-item class="md-inset">
                   <div style="display: flex; flex-wrap: wrap; gap: 10px;">
@@ -102,6 +103,10 @@
                 </md-list-item>
               </md-list>
             </md-list-item>
+            <validation-error
+              :errors="apiValidationErrors['images.0']"
+              style="color: red"
+            />
           </md-list>
         </div>
         <div class="md-layout-item  md-size-100">

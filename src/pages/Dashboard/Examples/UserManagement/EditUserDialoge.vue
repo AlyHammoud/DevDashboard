@@ -9,7 +9,9 @@
       <md-dialog-title class="dialog-title">
         <div class="md-layout">
           <div class="md-layout-item md-size-10"></div>
-          <div class="md-layout-item md-size-80">Update User</div>
+          <div class="md-layout-item md-size-80">
+            Update User
+          </div>
           <div
             class="md-layout-item md-size-10 md-layout md-alignment-center"
             style="padding-right: 0;"
@@ -24,7 +26,7 @@
           </div>
         </div>
       </md-dialog-title>
-      <div class="md-layout">
+      <div class="md-layout" style="overflow-y: scroll;">
         <!-- <div
           class="md-layout-item md-layout md-size-100 md-alignment-center"
           style="margin-bottom: 10px;"
@@ -46,14 +48,21 @@
             width="110"
           />
         </div> -->
-        <div class="image-uploaders">
+        <div class="image-uploaders" style="position: relative;">
+          <label for="" @click="removeOldImage">
+            <md-icon v-if="user.image" class="img-icon-delete"
+              >delete</md-icon
+            ></label
+          >
           <div class="image-uploaders-wrapper">
             <img
+              ref="showImageUser"
               :src="
                 user.image ? user.image : imgUrl('defaultProfilePicture.jpg')
               "
               alt=""
             />
+
             <label for="avatar" class="user-avatar">
               <input
                 type="file"
@@ -71,6 +80,10 @@
               >delete</md-icon
             ></label
           >
+          <validation-error
+            :errors="apiValidationErrors.image"
+            style="color: red; position: absolute; top: 50%; right: -115%; transform: translateY(-50%);"
+          />
         </div>
         <div class="md-layout-item md-layout md-size-100">
           <div class="md-layout-item md-size-50">
@@ -79,6 +92,7 @@
               <md-input v-model="user.name"></md-input>
               <span class="md-helper-text">Name</span>
             </md-field>
+
             <validation-error
               :errors="apiValidationErrors.name"
               style="color: red"
@@ -229,8 +243,9 @@ export default {
       role_id: null,
       image: null,
     },
+    deleteImage: 0,
     tmpUploadImage: null,
-    defaultImage:null,
+    defaultImage: null,
     isLoading: false,
   }),
 
@@ -254,34 +269,22 @@ export default {
 
     userImageHandler(e) {
       this.tmpUploadImage = e.target.files[0];
+      this.deleteImage = 0;
+
       var fileReader = new FileReader();
       fileReader.onload = () => {
         this.user.image = fileReader.result;
       };
       fileReader.readAsDataURL(e.target.files[0]);
-      
     },
 
     removeTmpImage(e) {
       this.user.image = null;
       this.tmpUploadImage = null;
+      this.deleteImage = 1;
       // this.defaultImage=e.target.files[0]
     },
 
-    // defaultImageUpload(){
-    //   this.defaultImage
-    // },
-
-    // userImageHandler(e) {
-    //   this.tmpUploadImage = e.target.files[0];
-
-    //   var fileReader = new FileReader();
-
-    //   fileReader.onload = () => {
-    //     this.user.image = fileReader.result;
-    //   };
-    //   fileReader.readAsDataURL(e.target.files[0]);
-    // },
     async updateUser() {
       const formData = new FormData();
 
@@ -302,11 +305,9 @@ export default {
 
       if (this.tmpUploadImage) {
         formData.append("image", this.tmpUploadImage);
-      } 
-      // else {
-      //   formData.append("image", "../../../../assets/images/defaultProfilePicture.jpg");
-      // }
+      }
 
+      formData.append("deleteImage", this.deleteImage);
       try {
         this.isLoading = true;
         await this.$store.dispatch("updateOtherUser", {
@@ -324,6 +325,11 @@ export default {
         await this.$store.dispatch("alerts/error", "error, try again");
         this.setApiValidation(e.data.errors);
       }
+    },
+
+    removeOldImage() {
+      this.$refs.showImageUser.src = this.imgUrl("defaultProfilePicture.jpg");
+      this.deleteImage = 1;
     },
 
     closeForm(cancel = false) {
@@ -367,6 +373,18 @@ export default {
     border-radius: 50%;
     margin-bottom: 30px;
     position: relative;
+    .img-icon-delete {
+      position: absolute;
+      top: 10px;
+      right: 5px;
+      cursor: pointer;
+      width: 24px !important;
+      height: 24px;
+      color: red;
+      font-size: 2em;
+      z-index: 333;
+      pointer-events: all;
+    }
 
     img {
       width: 100% !important;

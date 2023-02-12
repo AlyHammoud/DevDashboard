@@ -69,7 +69,7 @@
               </md-table-cell>
               <md-table-cell md-label="Description" md-sort-by="description">
                 <p class="pl-20">
-                  {{ item.description }}
+                  {{ item.description.substring(120, 0) }}
                   <!-- I am hassan mohammad shalhoub 4th  year university LIU student i work in web development -->
                 </p>
               </md-table-cell>
@@ -245,11 +245,12 @@
               >delete</md-icon
             >
           </label>
+          <validation-error
+            :errors="apiValidationErrors.image_url"
+            style=" "
+            class="img-validation"
+          />
         </div>
-        <validation-error
-          :errors="apiValidationErrors.image_url"
-          style="color: red; "
-        />
         <div class="md-layout-item md-size-100">
           <md-field>
             <label>Name</label>
@@ -497,8 +498,9 @@ export default {
     },
 
     async deleteCategory(categoryId) {
-      const alert = await this.$refs.showAlertDialog.response("Delete Category",
-        "Are you sure want to delete? Note that all items belong to this category will be deleted too!!",
+      const alert = await this.$refs.showAlertDialog.response(
+        "Delete Category",
+        "Are you sure want to delete? Note that all items belong to this category will be deleted too!!"
       );
 
       if (alert) {
@@ -676,5 +678,15 @@ export default {
     position: sticky !important;
     top: 0 !important;
   }
+}
+
+.img-validation {
+  color: red;
+  width: 200px;
+  display: block;
+  position: absolute;
+  top: 42%;
+  left: 100%;
+  margin-left: 10px;
 }
 </style>

@@ -9,7 +9,14 @@
       type="range"
       @change="loggg"
     />
-    <input value="50000" min="1000" max="50000" step="500" type="range" />
+    <input
+      @change="loggg"
+      :value="value2"
+      min="1000"
+      max="50000"
+      step="500"
+      type="range"
+    />
   </div>
 </template>
 
@@ -18,13 +25,13 @@ export default {
   data() {
     return {
       value1: 0,
-      value2: 2,
+      value2: 50000,
     };
   },
 
   methods: {
     loggg(e) {
-      // console.log(e.target.value);
+      //console.log(e.target.value);
     },
   },
 };

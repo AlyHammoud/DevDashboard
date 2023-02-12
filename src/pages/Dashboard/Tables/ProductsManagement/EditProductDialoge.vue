@@ -38,8 +38,8 @@
             />
           </label>
           <validation-error
-            :errors="apiValidationErrors.image_url"
-            style="color: red; "
+            :errors="apiValidationErrors['images.0']"
+            style="color: red; margin-left: 5px; "
           />
         </div>
         <div class="md-layout-item md-size-100" v-if="product.images.length">
@@ -156,7 +156,7 @@
               ></md-input>
             </md-field>
             <validation-error
-              :errors="apiValidationErrors.price"
+              :errors="apiValidationErrors.sale"
               style="color: red"
             />
           </div>
@@ -238,12 +238,14 @@
       </md-dialog-actions>
     </md-dialog>
     <LoaderFull v-if="isLoading"></LoaderFull>
+    <AlertDialoge ref="showAlertDialog"></AlertDialoge>
   </div>
 </template>
 
 <script>
 import { ValidationError, LoaderFull } from "@/components";
 import formMixin from "@/mixins/form-mixin";
+import { AlertDialoge } from "@/components";
 
 export default {
   name: "EditProductDialoge",
@@ -251,6 +253,7 @@ export default {
   components: {
     ValidationError,
     LoaderFull,
+    AlertDialoge,
   },
   mixins: [formMixin],
 
@@ -342,14 +345,18 @@ export default {
     },
 
     async editProduct() {
-      if (
-        this.product.price < 0 ||
-        this.product.quantity < 0 ||
-        this.product.sale < 0
-      ) {
-        alert("Price, quantity or sale must be greater than zero!");
-        return;
-      }
+      // if (
+      //   this.product.price < 0 ||
+      //   this.product.quantity < 0 ||
+      //   this.product.sale < 0
+      // ) {
+      //   await this.$refs.showAlertDialog.response(
+      //     "Note",
+      //     "Price, quantity or sale must be greater than zero!",
+      //     "inform"
+      //   );
+      //   return;
+      // }
 
       this.isLoading = true;
       const formData = new FormData();

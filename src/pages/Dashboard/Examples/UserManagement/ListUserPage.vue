@@ -175,7 +175,7 @@
             </label>
             <validation-error
               :errors="apiValidationErrors.image"
-              style="color: red"
+              class="img-validation"
             />
           </div>
 
@@ -324,8 +324,8 @@ export default {
       email: null,
       mobileNumber: "",
       username: null,
-      password: null,
-      password_confirmation: null,
+      password: "",
+      password_confirmation: "",
       role_id: 2,
       image: null,
       imageUserSrc: "",
@@ -426,7 +426,8 @@ export default {
 
           return;
         }
-        const alert = await this.$refs.showAlertDialog.response("Delete User",
+        const alert = await this.$refs.showAlertDialog.response(
+          "Delete User",
           "Are you sure want to delete? "
         );
         if (alert) {
@@ -462,8 +463,8 @@ export default {
       this.user.email = null;
       this.user.mobileNumber = "";
       this.user.username = null;
-      this.user.password = null;
-      this.user.password_confirmation = null;
+      this.user.password = "";
+      this.user.password_confirmation = "";
       this.user.role_id = 2;
       this.user.image = null;
       this.user.imageUserSrc = "";
@@ -618,5 +619,15 @@ export default {
     z-index: 333;
     pointer-events: all;
   }
+}
+
+.img-validation {
+  width: 200px;
+  display: block;
+  position: absolute;
+  top: 43%;
+  left: 100%;
+  color: red;
+  margin-left: 10px;
 }
 </style>

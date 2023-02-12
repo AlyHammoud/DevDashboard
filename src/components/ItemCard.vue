@@ -77,7 +77,7 @@
             : item.category.name
         }}</md-chip
       >
-        <div style="align-self: end; padding: 0 2px;">></div>
+      <div style="align-self: end; padding: 0 2px;">></div>
       <md-chip
         class="md-accent item-card-chip"
         style="background-color: green !important;"
@@ -170,7 +170,9 @@
           class="md-layout-item md-size-70"
           style="padding: 5px 10px; text-align: center; color: white; background-color:red;
           border-radius: 10px; font-weight: 400;"
-        >UNAVAILABLE</div>
+        >
+          UNAVAILABLE
+        </div>
       </div>
     </div>
     <!-- <div class="item-card-actions">
@@ -260,9 +262,8 @@ export default {
   display: flex;
   flex-direction: column;
   width: 200px;
-  border-bottom-left-radius: 14px;
-  border-bottom-right-radius: 14px;
-  box-shadow: 0px 1px 10px black;
+  border-radius: 14px;
+  box-shadow: 0px 1px 10px #00000059;
   background-color: #fff;
   transition: all 0.3s;
 
@@ -277,6 +278,8 @@ export default {
   .item-imgs {
     width: 100%;
     height: 150px;
+    border-top-left-radius: 14px;
+    border-top-right-radius: 14px;
 
     .item-img {
       position: relative;
@@ -291,6 +294,8 @@ export default {
         top: 0;
         left: 0;
         object-fit: cover;
+        border-top-left-radius: 14px;
+    border-top-right-radius: 14px;
       }
 
       .item-carousel {
@@ -327,6 +332,7 @@ export default {
       border-color: transparent;
       border: 0;
       padding: 0;
+      cursor: pointer;
       .edit {
         color: white;
       }
@@ -343,7 +349,7 @@ export default {
       background-color: red;
       border: 0 transparent;
       padding: 0;
-
+      cursor: pointer;
       .delete {
         color: white;
       }

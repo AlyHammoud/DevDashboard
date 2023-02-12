@@ -1,10 +1,6 @@
 <template>
   <div style="display: flex; flex-direction: column;" class="all_items">
     <div>
-      <md-checkbox v-model="enableFilter" class="md-primary"
-        ><span class="filtering">Enable filters</span></md-checkbox
-      >
-
       <div class="searchable">
         <SearchableCheckBox
           class="searcable"
@@ -106,28 +102,38 @@ export default {
     AlertDialoge,
   },
 
-  watch: {
-    async enableFilter(newV) {
-      this.isLoading = true;
-      if (newV) {
-        if (!Object.keys(this.categoryOptions).length) {
-          await this.$store.dispatch("getCategoriesNames");
-          this.$store.getters.getCategoryNames.forEach((name) => {
-            this.categoryOptions.push({
-              value: name.id,
-              text: name.name,
-            });
-          });
-        }
-      } else {
-        this.categoryOptions = [];
-        this.getAllItems(1);
-      }
-      this.isLoading = false;
-    },
-  },
+  // watch: {
+  //   async enableFilter(newV) {
+  //     this.isLoading = true;
+  //     if (newV) {
+  //       if (!Object.keys(this.categoryOptions).length) {
+  //         await this.$store.dispatch("getCategoriesNames");
+  //         this.$store.getters.getCategoryNames.forEach((name) => {
+  //           this.categoryOptions.push({
+  //             value: name.id,
+  //             text: name.name,
+  //           });
+  //         });
+  //       }
+  //     } else {
+  //       this.categoryOptions = [];
+  //       this.getAllItems(1);
+  //     }
+  //     this.isLoading = false;
+  //   },
+  // },
   async mounted() {
     this.getAllItems();
+
+    if (!Object.keys(this.categoryOptions).length) {
+      await this.$store.dispatch("getCategoriesNames");
+      this.$store.getters.getCategoryNames.forEach((name) => {
+        this.categoryOptions.push({
+          value: name.id,
+          text: name.name,
+        });
+      });
+    }
 
     await this.$store.dispatch("myUser");
     this.user = await this.$store.getters.myUser;
@@ -220,7 +226,8 @@ export default {
 
     async deleteItem(id) {
       try {
-        const alert = await this.$refs.showAlertDialog.response("Delete Item",
+        const alert = await this.$refs.showAlertDialog.response(
+          "Delete Item",
           "Are you sure want to delete? Note that all products belong to this item will be deleted too!!"
         );
         if (alert) {

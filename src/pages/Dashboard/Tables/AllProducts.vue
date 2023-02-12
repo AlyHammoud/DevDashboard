@@ -35,7 +35,7 @@
 
         <label for="price" class="filter-price">
           <p>Filter between two prices:</p>
-          <div>
+          <!-- <div>
             <input
               type="number"
               min="0"
@@ -51,7 +51,8 @@
               style="margin-left: 1px !important;"
             />
             <button @click="resetPrice">reset</button>
-          </div>
+          </div> -->
+          <PriceRange></PriceRange>
         </label>
       </div>
     </div>
@@ -114,7 +115,7 @@ import { Pagination } from "@/components";
 import { LoaderFull } from "@/components";
 import { SearchableCheckBox } from "@/components";
 import { AlertDialoge } from "@/components";
-// import { PriceRange } from "@/components";
+import { PriceRange } from "@/components";
 import { ProductCard } from "@/components";
 
 export default {
@@ -156,6 +157,7 @@ export default {
     Pagination,
     LoaderFull,
     AlertDialoge,
+    PriceRange,
   },
 
   watch: {},
@@ -393,7 +395,8 @@ export default {
 
     async deleteProduct(id) {
       try {
-        const alert = await this.$refs.showAlertDialog.response("Delete Product",
+        const alert = await this.$refs.showAlertDialog.response(
+          "Delete Product",
           "Are you sure want to delete this product? "
         );
         if (alert) {
