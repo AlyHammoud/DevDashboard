@@ -58,9 +58,7 @@
                       ? item.name.split(" ")[0][0].toUpperCase() +
                         " " +
                         item.name.split(" ")[1][0].toUpperCase()
-                      : item.name[0].toUpperCase() +
-                        " " +
-                        item.name[1].toUpperCase()
+                      : item.name[0].toUpperCase()
                   }}
                 </div>
               </md-table-cell>
