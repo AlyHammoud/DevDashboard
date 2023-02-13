@@ -21,7 +21,7 @@
           style="max-width: 200px;"
           @filterItems="setItemFilterOption"
         />
-
+        <br /><br />
         <SearchableCheckBox
           class="searcable"
           name="By Sales:"
@@ -33,8 +33,7 @@
           @filterItems="setSaleFilterOption"
         />
 
-        <label for="price" class="filter-price">
-          <p>Filter between two prices:</p>
+        <label for="price" class="filter-price" style="width: 100%;">
           <!-- <div>
             <input
               type="number"
@@ -52,8 +51,11 @@
             />
             <button @click="resetPrice">reset</button>
           </div> -->
-          <PriceRange></PriceRange>
+          <!-- <PriceRange @price="setPriceFilterOption"></PriceRange> -->
         </label>
+        <div class="filter-price">
+          <PriceRange @price="setPriceFilterOption"></PriceRange>
+        </div>
       </div>
     </div>
 
@@ -300,7 +302,9 @@ export default {
       });
     },
 
-    setPriceFilterOption(number) {
+    setPriceFilterOption(lowerPrice, higherPrice) {
+      this.lowerPrice = lowerPrice;
+      this.higherPrice = higherPrice;
       this.searchProduct = "";
 
       clearTimeout(this.timer);

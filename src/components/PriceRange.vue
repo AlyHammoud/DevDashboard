@@ -1,149 +1,89 @@
 <template>
   <div class="range-slider">
-    <span class="rangeValues"></span>
-    <input
-      :value="value1"
-      min="0"
-      max="50"
-      step="0.5"
-      type="range"
-      @change="loggg"
-    />
-    <input
-      @change="loggg"
-      :value="value2"
-      min="1000"
-      max="50000"
-      step="500"
-      type="range"
-    />
+    <div style="width: auto; margin: auto; text-align: left; padding: 20px">
+      <div
+        style="display: flex; justify-content: space-between; text-align: center"
+      >
+        <!-- <span
+          style="
+          display: inline-block;
+          padding: 10px;
+          border: solid 1px;
+          border-radius: 5px;
+          width: 50px;
+          margin: 3px;
+        "
+          >{{ oBarMinValue }}</span
+        > -->
+        <input type="number" :value="oBarMinValue" />
+        <span style="margin-right: 40px;">Min</span>
+
+        <span>Max</span>
+        <input
+          type="number"
+          :value="oBarMaxValue"
+          @input="(e) => $emit('price', e.target.vale)"
+        />
+      </div>
+
+      <MultiRangeSlider
+        baseClassName="multi-range-slider-bar-only"
+        :minValue="oBarMinValue"
+        :maxValue="oBarMaxValue"
+        :max="1000"
+        :min="0"
+        :step="0.1"
+        :rangeMargin="0"
+        @input="update_oBarValues"
+      />
+    </div>
   </div>
 </template>
 
 <script>
+import MultiRangeSlider from "multi-range-slider-vue";
+import "../../node_modules/multi-range-slider-vue/MultiRangeSliderBlack.css";
+import "../../node_modules/multi-range-slider-vue/MultiRangeSliderBarOnly.css";
 export default {
+  name: "App",
+  components: { MultiRangeSlider },
   data() {
     return {
-      value1: 0,
-      value2: 50000,
+      oBarMinValue: 0,
+      oBarMaxValue: 100,
     };
   },
-
   methods: {
-    loggg(e) {
-      //console.log(e.target.value);
+    UpdateValues(e) {
+      this.barMinValue = e.minValue;
+      this.barMaxValue = e.maxValue;
+    },
+
+    update_oBarValues(e) {
+      this.oBarMinValue = e.minValue;
+      this.oBarMaxValue = e.maxValue;
+      this.$emit("price", e.minValue, e.maxValue);
     },
   },
 };
 </script>
 
-<style scoped>
-/* .range-slider .rangeValues {
-  display: block;
-  box-shadow: 0 0 20px rgba(0, 139, 253, 0.25);
-  padding: 20px;
-  font-size: 22px;
-  margin-bottom: 35px;
+<style lang="scss">
+/* #app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #000305;
+  margin-top: 60px;
 } */
 
-input[type="range"] {
-  -webkit-appearance: none;
-  appearance: none;
-  border: 1px solid white;
-  width: 300px;
-  position: absolute;
-  left: 0;
-}
-
-input[type="range"]::-webkit-slider-runnable-track {
-  width: 300px;
-  height: 5px;
-  background: #ddd;
+.multi-range-slider-bar-only .bar-inner {
+  background-color: rgb(27, 238, 55) !important;
   border: none;
-  border-radius: 3px;
 }
 
-input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  border: none;
-  height: 18px;
-  width: 18px;
-  border-radius: 50%;
-  background: #21c1ff;
-  margin-top: -6px;
-  cursor: pointer;
-  position: relative;
-  z-index: 1;
-}
-
-input[type="range"]:focus {
-  outline: none;
-}
-
-input[type="range"]:focus::-webkit-slider-runnable-track {
-  background: #ccc;
-}
-
-/*The following CSS code is not necessary for everyone*/
-
-input[type="range"]::-moz-range-track {
-  width: 300px;
-  height: 5px;
-  background: #ddd;
-  border: none;
-  border-radius: 3px;
-}
-
-input[type="range"]::-moz-range-thumb {
-  border: none;
-  height: 16px;
-  width: 16px;
-  border-radius: 50%;
-  background: #21c1ff;
-}
-
-/*hide the outline behind the border*/
-input[type="range"]:-moz-focusring {
-  outline: 1px solid white;
-  outline-offset: -1px;
-}
-
-input[type="range"]::-ms-track {
-  width: 300px;
-  height: 5px;
-  /*remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead */
-  background: transparent;
-  /*leave room for the larger thumb to overflow with a transparent border */
-  border-color: transparent;
-  border-width: 6px 0;
-  /*remove default tick marks*/
-  color: transparent;
-  z-index: -4;
-}
-
-input[type="range"]::-ms-fill-lower {
-  background: #777;
-  border-radius: 10px;
-}
-
-input[type="range"]::-ms-fill-upper {
-  background: #ddd;
-  border-radius: 10px;
-}
-
-input[type="range"]::-ms-thumb {
-  border: none;
-  height: 16px;
-  width: 16px;
-  border-radius: 50%;
-  background: #21c1ff;
-}
-
-input[type="range"]:focus::-ms-fill-lower {
-  background: #888;
-}
-
-input[type="range"]:focus::-ms-fill-upper {
-  background: #ccc;
+.multi-range-slider-bar-only .thumb .caption * {
+  background-color: rgb(27, 238, 55) !important;
 }
 </style>

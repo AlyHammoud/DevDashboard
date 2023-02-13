@@ -1,6 +1,9 @@
 <template>
   <div class="md-layout">
-    <div class="md-layout-item md-size-100">
+    <div
+      class="md-layout-item md-size-100"
+      :style="{ opacity: isLoading ? 0.6 : 1 }"
+    >
       <md-card>
         <md-card-header class="md-card-header-icon md-card-header-green">
           <div class="card-icon">
@@ -37,6 +40,13 @@
                   {{ item.email }}
                 </p></md-table-cell
               >
+              <!-- <md-table-cell md-label="Mobile" md-sort-by="mobile"
+                >
+                <p class="pl-20">
+                  {{ item.mobile }}
+                </p>
+                </md-table-cell
+              > -->
 
               <md-table-cell md-label="Avatar">
                 <img
@@ -105,7 +115,18 @@
         </md-card-actions>
       </md-card>
     </div>
-    <LoaderFull v-if="isLoading"></LoaderFull>
+    <div
+      class="my-spinner"
+      style="margin-top: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden; height: 100%; width: 100%; position: fixed !important; top:0; left:0; z-index: 1100000000;"
+      v-if="isLoading"
+    >
+      <md-progress-spinner
+        class="md-accent"
+        :md-diameter="30"
+        md-mode="indeterminate"
+      ></md-progress-spinner>
+    </div>
+    <!-- <LoaderFull v-if="isLoading"></LoaderFull> -->
     <div>
       <EditUserDialoge
         v-if="showEditDialog"
@@ -143,7 +164,11 @@
           </div></md-dialog-title
         >
 
-        <div class="md-layout" style="overflow-y: scroll;">
+        <div
+          class="md-layout"
+          style="overflow-y: scroll;"
+          :style="{ opacity: isLoading ? 0.6 : 1 }"
+        >
           <div class="image-uploaders">
             <div class="image-uploaders-wrapper">
               <img
@@ -311,7 +336,7 @@ export default {
     pagination: Pagination,
     ValidationError,
     EditUserDialoge,
-    LoaderFull,
+    // LoaderFull,
     AlertDialoge,
   },
   mixins: [formMixin],

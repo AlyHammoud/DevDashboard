@@ -1,6 +1,16 @@
 <template>
   <div>
-    <LoaderFull v-if="isLoading"></LoaderFull>
+    <div
+      class="my-spinner"
+      style="margin-top: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden; height: 100%; width: 100%; position: fixed !important; top:0; left:0; z-index: 1100000000;"
+      v-if="isLoading"
+    >
+      <md-progress-spinner
+        class="md-accent"
+        :md-diameter="30"
+        md-mode="indeterminate"
+      ></md-progress-spinner>
+    </div>
 
     <md-dialog
       :md-active.sync="showEditDialog"
@@ -26,7 +36,11 @@
           </div>
         </div>
       </md-dialog-title>
-      <div class="md-layout" style="overflow-y: scroll;">
+      <div
+        class="md-layout"
+        style="overflow-y: scroll;"
+        :style="{ opacity: isLoading ? 0.6 : 1 }"
+      >
         <!-- <div
           class="md-layout-item md-layout md-size-100 md-alignment-center"
           style="margin-bottom: 10px;"

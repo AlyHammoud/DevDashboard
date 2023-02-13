@@ -88,7 +88,7 @@
 
     <!-- Product list Table -->
 
-    <div class="md-layout">
+    <div class="md-layout" :style="{ opacity: isLoading ? 0.6 : 1 }">
       <div class="md-layout-item md-size-100">
         <md-card>
           <md-card-header class="md-card-header-icon md-card-header-green">
@@ -127,6 +127,7 @@
               </md-table-toolbar>
 
               <md-table-empty-state
+                v-if="!isLoading"
                 md-label="No Products Found"
                 :md-description="
                   `No Product found. Try a different search term or create a new Product.`
@@ -311,7 +312,17 @@
       >
       </EditProductDialoge>
     </div>
-    <LoaderFull v-if="isLoading"></LoaderFull>
+    <div
+      class="my-spinner"
+      style="margin-top: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden; height: 100%; width: 100%; position: fixed !important; top:0; left:0; z-index: 1100000000;"
+      v-if="isLoading"
+    >
+      <md-progress-spinner
+        class="md-accent"
+        :md-diameter="30"
+        md-mode="indeterminate"
+      ></md-progress-spinner>
+    </div>
     <AlertDialoge ref="showAlertDialog"></AlertDialoge>
   </div>
 </template>
@@ -322,7 +333,6 @@ import AddProduct from "./ProductsManagement/AddProduct";
 import EditProductDialoge from "./ProductsManagement/EditProductDialoge";
 import { AlertDialoge } from "@/components";
 import { Pagination } from "@/components";
-import { LoaderFull } from "@/components";
 
 export default {
   name: "products",
@@ -330,7 +340,6 @@ export default {
     ShowImages,
     AddProduct,
     Pagination,
-    LoaderFull,
     EditProductDialoge,
     AlertDialoge,
   },
@@ -386,6 +395,7 @@ export default {
 
     async getProducts(page = 1, search = "") {
       try {
+        this.isLoading = true;
         await this.$store.dispatch("getAllIProductsByItem", {
           page: page,
           itemId: this.$route.params.item_id,
@@ -396,6 +406,7 @@ export default {
         this.productsMeta = this.$store.getters["getAllProducts"].meta;
 
         this.searched = this.products;
+        this.isLoading = false;
       } catch (error) {}
     },
 
@@ -433,7 +444,7 @@ export default {
           }
 
           this.getProducts(goToPage);
-          this.isLoading = false;
+          // this.isLoading = false;
         }
       } catch (error) {
         this.isLoading = false;
@@ -449,9 +460,9 @@ export default {
 
       try {
         this.timer = setTimeout(() => {
-          this.isLoading = true;
+          // this.isLoading = true;
           this.getProducts(1, this.search);
-          this.isLoading = false;
+          // this.isLoading = false;
         }, 500);
       } catch (error) {}
     },

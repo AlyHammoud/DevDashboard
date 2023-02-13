@@ -1,6 +1,20 @@
 <template>
   <div class="md-layout">
-    <div class="md-layout-item md-size-100">
+    <div
+      class="my-spinner"
+      style="margin-top: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden; height: 100%; width: 100%; position: fixed !important; top:0; left:0; z-index: 11;"
+      v-if="isLoading"
+    >
+      <md-progress-spinner
+        class="md-accent"
+        :md-diameter="30"
+        md-mode="indeterminate"
+      ></md-progress-spinner>
+    </div>
+    <div
+      class="md-layout-item md-size-100"
+      :style="{ opacity: isLoading ? 0.6 : 1 }"
+    >
       <!-- Table -->
       <md-card>
         <md-card-header class="md-card-header-icon md-card-header-green">
@@ -39,6 +53,7 @@
             </md-table-toolbar>
 
             <md-table-empty-state
+              v-if="!isLoading"
               md-label="No categories found"
               :md-description="
                 `No category found. Try a different search term or create a new category.`
@@ -51,7 +66,11 @@
               >
             </md-table-empty-state>
 
-            <md-table-row slot="md-table-row" slot-scope="{ item }">
+            <md-table-row
+              slot="md-table-row"
+              :style="{ visibility: isLoading ? 'none' : 'visible' }"
+              slot-scope="{ item }"
+            >
               <md-table-cell md-label="ID" md-sort-by="id"
                 ><p class="pl-20">
                   {{ item.id }}
@@ -67,10 +86,24 @@
                   {{ item.name }}
                 </p>
               </md-table-cell>
-              <md-table-cell md-label="Description" md-sort-by="description">
+              <!-- <md-table-cell md-label="Description" md-sort-by="description">
                 <p class="pl-20">
-                  {{ item.description.substring(120, 0) }}
-                  <!-- I am hassan mohammad shalhoub 4th  year university LIU student i work in web development -->
+                  {{ item.description.substring(0, 50) }}
+                </p>
+              </md-table-cell> -->
+              <md-table-cell md-label="Description" md-sort-by="description">
+                <!-- <p class="pl-20" title="open edit dialog to see full description">
+                  {{ item.description.length > 50 ? item.description.substring(0,50)+"..." : item.description }}
+                </p> -->
+                <p
+                  class="pl-20"
+                  v-if="item.description.length > 50"
+                  title="open edit dialog to see full description"
+                >
+                  {{ item.description.substring(0, 50) + "..." }}
+                </p>
+                <p class="pl-20" v-else>
+                  {{ item.description }}
                 </p>
               </md-table-cell>
 
@@ -154,6 +187,14 @@
                   </div>
                 </div>
               </md-table-cell>
+              <!-- <md-table-cell
+                md-label="Description"
+                md-sort-by="description"
+              >
+                <p class="pl-20">
+                  {{ item.description.length > 50 ? item.description.substring(0,50)+"..." : item.description }}
+                </p>
+              </md-table-cell> -->
             </md-table-row>
           </md-table>
         </md-card-content>
@@ -195,7 +236,23 @@
           </div>
         </div></md-dialog-title
       >
-      <div class="md-layout" style="overflow-y: scroll;">
+
+      <div
+        class="my-spinner"
+        style="background-color:transparent; z-index: 99; width: 100% ;margin-top: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden; height: 100%; position: absolute; "
+        v-if="isAdding"
+      >
+        <md-progress-spinner
+          class="md-accent"
+          :md-diameter="30"
+          md-mode="indeterminate"
+        ></md-progress-spinner>
+      </div>
+      <div
+        class="md-layout"
+        style="overflow-y: scroll;"
+        :style="{ opacity: isAdding ? '0.6' : '1' }"
+      >
         <!-- <div class="md-layout-item md-layout md-size-100 md-alignment-center">
           <label for="avatar" class="user-avatar">
             Upload Image
@@ -311,7 +368,7 @@
     <!-- Edit Dialog For Category -->
     <!-- Category dialog ends -->
     <!-- " -->
-    <LoaderFull v-if="isLoading"></LoaderFull>
+    <!-- <LoaderFull v-if="isLoading"></LoaderFull> -->
     <AlertDialoge ref="showAlertDialog"></AlertDialoge>
   </div>
 </template>
@@ -359,6 +416,7 @@ export default {
       editCategoryId: 1,
       showEditDialog: false,
       isLoading: false,
+      isAdding: false,
       timer: null,
       user: {},
     };
@@ -366,7 +424,7 @@ export default {
 
   components: {
     ValidationError,
-    LoaderFull,
+    // LoaderFull,
     Pagination,
     EditCategoryDialoge,
     AlertDialoge,
@@ -383,8 +441,10 @@ export default {
   },
 
   async mounted() {
+    // this.isLoading = true;
     await this.$store.dispatch("myUser");
     this.user = await this.$store.getters.myUser;
+    // this.isLoading = false;
   },
   methods: {
     imgUrl: function(path) {
@@ -459,20 +519,17 @@ export default {
         this.category_description || "-"
       );
 
-      // for (let x of formData.entries()) {
-      //   console.log(x);
-      // }
-      // return;
       try {
-        this.isLoading = true;
+        this.isAdding = true;
         await this.$store.dispatch("storeCategory", formData);
-        this.isLoading = false;
+        // this.isAdding = false;
         this.closeCategoryDialog(this.showDialog_category);
         await this.$store.dispatch("alerts/success", "Done!");
 
         await this.getAllPaginatedCategories(1);
+        this.isAdding = false;
       } catch (e) {
-        this.isLoading = false;
+        this.isAdding = false;
         await this.$store.dispatch("alerts/error", "Error,Try Again");
         this.setApiValidation(e.data.errors);
       }
@@ -480,21 +537,28 @@ export default {
 
     async searchOnTable() {
       clearTimeout(this.timer);
-
       try {
         this.timer = setTimeout(() => {
-          this.isLoading = true;
           this.getAllPaginatedCategories(1, this.search);
-          this.isLoading = false;
         }, 500);
-      } catch (error) {}
+      } catch (error) {
+        this.isLoading = false;
+      }
     },
 
     async getAllPaginatedCategories(page, search = "") {
+      this.isLoading = true;
+      // this.categories = [];
+      // this.searched = [];
       await this.$store.dispatch("getAllCategories", { page, search });
       this.categories = this.$store.getters["getAllCategories"].data;
       this.categories_page_meta = this.$store.getters["getAllCategories"].meta;
       this.searched = this.categories;
+      try {
+        setTimeout(async () => {}, 3000);
+        this.isLoading = false;
+      } catch (error) {}
+      this.isLoading = false;
     },
 
     async deleteCategory(categoryId) {
@@ -504,6 +568,7 @@ export default {
       );
 
       if (alert) {
+        this.isLoading = true;
         await this.$store.dispatch("deleteCategory", categoryId);
         var goToPage = this.categories_page_meta.current_page;
         if (
@@ -514,6 +579,8 @@ export default {
         }
 
         await this.getAllPaginatedCategories(goToPage);
+
+        this.isLoading = false;
       }
     },
 

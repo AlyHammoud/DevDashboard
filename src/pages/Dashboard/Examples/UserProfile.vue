@@ -1,16 +1,31 @@
 <template>
-  <div v-if="user" class="md-layout md-gutter">
+  <div class="md-layout md-gutter">
     <div class="md-layout-item md-size-66 md-small-size-100">
       <div class="md-layout-item md-size-100">
-        <user-edit-card :user="user" v-if="user" />
+        <user-edit-card :user="user" v-if="!isLoading && user" />
+        <div
+          class="my-spinner"
+          style=" display: flex; align-items: center; justify-content: center;"
+          v-if="isLoading"
+        >
+          <md-progress-spinner
+            class="md-accent"
+            :md-diameter="30"
+            md-mode="indeterminate"
+          ></md-progress-spinner>
+        </div>
       </div>
       <div class="md-layout-item md-size-100">
-        <user-password-card :user="user" />
+        <user-password-card :user="user" v-if="!isLoading && user" />
       </div>
     </div>
 
     <div class="md-layout-item md-size-33 md-small-size-100">
-      <user-profile-card :user="user" @updateUser="updateUser" />
+      <user-profile-card
+        :user="user"
+        v-if="!isLoading && user"
+        @updateUser="updateUser"
+      />
     </div>
   </div>
 </template>
@@ -31,6 +46,7 @@ export default {
 
   data: () => ({
     user: null,
+    isLoading: false,
   }),
 
   mounted() {
@@ -39,8 +55,10 @@ export default {
 
   methods: {
     async getProfile() {
+      this.isLoading = true;
       await this.$store.dispatch("myUser");
       this.user = this.$store.getters.myUser;
+      this.isLoading = false;
     },
 
     updateUser(input) {

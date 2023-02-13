@@ -24,7 +24,22 @@
           </div>
         </div>
       </md-dialog-title>
-      <div class="md-layout" style="overflow-y: scroll;">
+      <div
+        class="my-spinner"
+        style="background-color:transparent; z-index: 99; width: 100% ;margin-top: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden; height: 100%; position: absolute; "
+        v-if="isLoading"
+      >
+        <md-progress-spinner
+          class="md-accent"
+          :md-diameter="30"
+          md-mode="indeterminate"
+        ></md-progress-spinner>
+      </div>
+      <div
+        class="md-layout"
+        style="overflow-y: scroll;"
+        :style="{ opacity: isLoading ? '0.6' : '1' }"
+      >
         <div class="md-layout-item md-size-100 md-layout md-alignment-center">
           <label for="avatar" class="user-avatar">
             Upload Image
@@ -237,13 +252,12 @@
         >
       </md-dialog-actions>
     </md-dialog>
-    <LoaderFull v-if="isLoading"></LoaderFull>
     <AlertDialoge ref="showAlertDialog"></AlertDialoge>
   </div>
 </template>
 
 <script>
-import { ValidationError, LoaderFull } from "@/components";
+import { ValidationError } from "@/components";
 import formMixin from "@/mixins/form-mixin";
 import { AlertDialoge } from "@/components";
 
@@ -252,7 +266,6 @@ export default {
 
   components: {
     ValidationError,
-    LoaderFull,
     AlertDialoge,
   },
   mixins: [formMixin],
@@ -302,6 +315,7 @@ export default {
 
   methods: {
     async getProduct(id) {
+      this.isLoading = true;
       await this.$store.dispatch("getSingleProduct", id);
       this.product = this.$store.getters["getSingleProduct"];
 
@@ -314,6 +328,8 @@ export default {
       if (this.product.color == null) {
         this.product.color = [];
       }
+
+      this.isLoading = false;
     },
 
     onUploadProductImages(e) {

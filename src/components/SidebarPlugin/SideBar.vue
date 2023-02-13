@@ -32,7 +32,11 @@
         </md-button>
       </div>
     </div>
-    <div class="sidebar-wrapper" ref="sidebarScrollArea">
+    <div
+      class="sidebar-wrapper"
+      style="overflow-x: hidden !important;"
+      ref="sidebarScrollArea"
+    >
       <slot></slot>
       <md-list class="nav">
         <slot name="links">

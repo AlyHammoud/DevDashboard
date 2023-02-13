@@ -98,6 +98,8 @@ export default {
         return;
       }
 
+      formData.append("deleteImage", 0);
+
       try {
         this.isLoading = true;
         await this.$store.dispatch("updateUser", {

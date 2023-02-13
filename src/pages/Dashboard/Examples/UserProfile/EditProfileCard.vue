@@ -90,6 +90,7 @@ export default {
           user: {
             name: this.user.name,
             email: this.user.email,
+            deleteImage: 0,
           },
         });
         await this.$store.dispatch(

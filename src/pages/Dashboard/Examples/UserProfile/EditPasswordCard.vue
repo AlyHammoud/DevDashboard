@@ -72,6 +72,7 @@ export default {
         type: "users",
         password: this.password,
         password_confirmation: this.password_confirmation,
+        deleteImage: 0,
       };
 
       try {
@@ -80,6 +81,7 @@ export default {
           user: {
             password: this.user.password,
             password_confirmation: this.user.password_confirmation,
+            deleteImage: 0,
           },
         });
         await this.$store.dispatch(

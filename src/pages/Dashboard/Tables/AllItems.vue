@@ -6,7 +6,7 @@
           class="searcable"
           name="By categories:"
           :selectOptions="categoryOptions"
-          :isEnabled="true"
+          :isEnabled="searchabEnabled"
           :resets="resetSearchableBox"
           style="max-width: 200px;"
           @filterItems="getAllItemsFiltered"
@@ -29,7 +29,33 @@
 
     <md-field>
       <div class="items-cards">
-        <div v-for="item in items" :key="item.id">
+        <div
+          class="my-spinner"
+          style="display: flex; align-items: center; justify-content: center; overflow: hidden; height: 50px; width: 50px; position: absolute !important; top:0; left:50%; z-index: 1100000000;"
+          v-if="isLoading"
+        >
+          <md-progress-spinner
+            class="md-accent"
+            :md-diameter="30"
+            md-mode="indeterminate"
+          ></md-progress-spinner>
+        </div>
+        <div
+          v-for="item in items"
+          :key="item.id"
+          :style="{ opacity: isLoading ? 0.3 : 1 }"
+        >
+          <!-- <div
+            class="my-spinner"
+            style="display: flex; align-items: center; justify-content: center; overflow: hidden; height: 50px; width: 50px; position: absolute !important; top:0; left:50%; z-index: 1100000000;"
+            v-if="isLoading"
+          >
+            <md-progress-spinner
+              class="md-accent"
+              :md-diameter="30"
+              md-mode="indeterminate"
+            ></md-progress-spinner>
+          </div> -->
           <ItemCard
             :item="item"
             :userRole="user.role == 'admin' ? true : false"
@@ -59,17 +85,13 @@
       type="success"
     />
 
-    <LoaderFull v-if="isLoading" />
     <AlertDialoge ref="showAlertDialog"></AlertDialoge>
   </div>
 </template>
 
 <script>
-// import ShowImages from "../ShowImages";
-// import AddItem from "../ItemsManagement/AddItem";
 import EditItemDialoge from "./ItemsManagement/EditItemDialoge";
 import { Pagination } from "@/components";
-import { LoaderFull } from "@/components";
 import { SearchableCheckBox } from "@/components";
 import { ItemCard } from "@/components";
 import { AlertDialoge } from "@/components";
@@ -91,13 +113,13 @@ export default {
       resetSearchableBox: false,
       timer: null,
       user: {},
+      searchabEnabled: false,
     };
   },
   components: {
     SearchableCheckBox,
     ItemCard,
     EditItemDialoge,
-    LoaderFull,
     Pagination,
     AlertDialoge,
   },
@@ -142,6 +164,7 @@ export default {
   methods: {
     async getAllItems(page = 1) {
       try {
+        this.searchabEnabled = false;
         if (this.tmpCategoriesIdsInSearchable.length) {
           this.getAllItemsFiltered(this.tmpCategoriesIdsInSearchable, page);
           return;
@@ -150,6 +173,8 @@ export default {
         this.isLoading = true;
 
         if (this.searchItem != "") {
+          this.searchabEnabled = false;
+
           await this.$store.dispatch("getAllItems", {
             page: page,
             search: this.searchItem,
@@ -158,6 +183,8 @@ export default {
           this.itemsMeta = await this.$store.getters.getAllItems.meta;
 
           this.isLoading = false;
+          this.searchabEnabled = true;
+
           return;
         }
 
@@ -165,6 +192,8 @@ export default {
         this.items = await this.$store.getters.getAllItems.data;
         this.itemsMeta = await this.$store.getters.getAllItems.meta;
         this.isLoading = false;
+        this.searchabEnabled = true;
+
         // console.log(this.items);
       } catch (error) {
         this.isLoading = false;
@@ -174,9 +203,12 @@ export default {
     async getAllItemsFiltered(categoriesId, page = 1) {
       this.tmpCategoriesIdsInSearchable = categoriesId;
       this.searchItem = "";
+      this.searchabEnabled = false;
 
       if (!categoriesId.length) {
         this.getAllItems();
+        this.searchabEnabled = true;
+
         return;
       }
       try {
@@ -190,6 +222,7 @@ export default {
         this.items = await this.$store.getters.getAllItems.data;
         this.itemsMeta = await this.$store.getters.getAllItems.meta;
         this.isLoading = false;
+        this.searchabEnabled = true;
       } catch (error) {
         this.isLoading = false;
         // console.log(error);
@@ -197,6 +230,8 @@ export default {
     },
 
     async searchItems(input) {
+      this.searchabEnabled = false;
+
       try {
         input = input.target.value;
         clearTimeout(this.timer);
@@ -213,6 +248,8 @@ export default {
           this.tmpCategoriesIdsInSearchable = [];
 
           this.isLoading = false;
+          this.searchabEnabled = true;
+
           // console.log(this.items);
         }, 500);
       } catch (error) {}
