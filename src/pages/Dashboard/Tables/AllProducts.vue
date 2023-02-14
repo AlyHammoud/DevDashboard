@@ -47,7 +47,10 @@
       ></PriceRange>
     </div>
 
-    <div class="item-search-field-wrapper" style="width: 75% ;">
+    <div
+      class="item-search-field-wrapper"
+      style="width: 75% ; margin-left: 30px;"
+    >
       Search an item by name:
       <input
         type="text"
@@ -633,19 +636,10 @@ body {
   > * {
     width: 200px;
   }
+}
 
-  .filter-price {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    // justify-content: start;
-    height: 50%;
-    max-width: 50px !important;
-
-    * {
-      width: 100px !important;
-    }
-  }
+.filter-price {
+  margin-left: 10px;
 }
 
 .item-search-field-wrapper {

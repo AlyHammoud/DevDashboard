@@ -264,7 +264,7 @@
             class="uppercase"
             style="background-color: white; padding: 1rem 3rem; border-radius: 1rem; color: #808080;   "
           >
-            Most Viewed Items
+            Most Viewed Products
           </h1>
         </div>
       </div>

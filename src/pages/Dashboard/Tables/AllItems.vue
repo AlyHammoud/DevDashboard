@@ -14,7 +14,10 @@
       </div>
     </div>
 
-    <div class="item-search-field-wrapper" style="width: 75%;">
+    <div
+      class="item-search-field-wrapper"
+      style="width: 75%; margin-left: 30px; max-width: 900px;"
+    >
       Search an item by name:
       <input
         type="text"
@@ -406,7 +409,8 @@ body {
 .items-cards {
   display: flex;
   align-items: center;
-  justify-content: center;
+  // justify-content: center;
+  padding-left: 30px;
   flex-wrap: wrap;
   width: 100%;
   gap: 20px;
