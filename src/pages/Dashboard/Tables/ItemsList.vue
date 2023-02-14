@@ -101,8 +101,15 @@
             <md-table-cell md-label="Name" md-sort-by="name"
               ><p class="pl-20">{{ item.name }}</p></md-table-cell
             >
-            <md-table-cell md-label="Description" md-sort-by="description"
-              ><p class="pl-20">
+            <md-table-cell md-label="Description" md-sort-by="description">
+              <p
+                class="pl-20"
+                v-if="item.description.length > 50"
+                title="open edit dialog to see full description"
+              >
+                {{ item.description.substring(0, 50) + "..." }}
+              </p>
+              <p class="pl-20" v-else>
                 {{ item.description }}
               </p></md-table-cell
             >

@@ -8,6 +8,7 @@ const state = {
   products: [],
   product: null,
   sales: [],
+  maxPrice: 0,
 };
 
 const mutations = {
@@ -19,6 +20,9 @@ const mutations = {
   },
   setSales: (state, sales) => {
     state.sales = sales;
+  },
+  setMaxPrice: (state, maxPrice) => {
+    state.maxPrice = maxPrice;
   },
 };
 
@@ -84,12 +88,18 @@ const actions = {
   async updateProduct({ commit, state }, { id, product }) {
     return await axios.post(`/product/${id}?_method=PUT`, product);
   },
+  async getMaxPrice({ commit }) {
+    return await axios.get(`/product-max-price`).then(({ data }) => {
+      commit("setMaxPrice", data);
+    });
+  },
 };
 
 const getters = {
   getAllProducts: (state) => state.products,
   getSingleProduct: (state) => state.product,
   getSales: (state) => state.sales,
+  getMaxPrice: (state) => state.maxPrice,
 };
 
 const products = {

@@ -21,7 +21,7 @@
           style="max-width: 200px;"
           @filterItems="setItemFilterOption"
         />
-        <br /><br />
+
         <SearchableCheckBox
           class="searcable"
           name="By Sales:"
@@ -29,34 +29,22 @@
           :selectOptions="salesList"
           :resets="resetSearchableBoxForSales"
           :isEnabled="searchableSalesEnabled"
-          style="max-width: 90px;"
+          style="max-width: 120px;"
           @filterItems="setSaleFilterOption"
         />
-
-        <label for="price" class="filter-price" style="width: 100%;">
-          <!-- <div>
-            <input
-              type="number"
-              min="0"
-              v-model="lowerPrice"
-              @input="setPriceFilterOption"
-              style="margin-left: 0 !important;"
-            />
-            <input
-              type="number"
-              min="0"
-              v-model="higherPrice"
-              @input="setPriceFilterOption"
-              style="margin-left: 1px !important;"
-            />
-            <button @click="resetPrice">reset</button>
-          </div> -->
-          <!-- <PriceRange @price="setPriceFilterOption"></PriceRange> -->
-        </label>
-        <div class="filter-price">
-          <PriceRange @price="setPriceFilterOption"></PriceRange>
-        </div>
       </div>
+    </div>
+
+    <div class="filter-price">
+      <PriceRange
+        @price="setPriceFilterOption"
+        :initialMaxPrice="maxPrice"
+        :resetPriceRange="resetPriceRange"
+        :style="{
+          'pointer-events': isLoading ? 'none' : 'all',
+          opacity: isLoading ? 0.4 : 1,
+        }"
+      ></PriceRange>
     </div>
 
     <div class="item-search-field-wrapper" style="width: 75% ;">
@@ -71,9 +59,23 @@
       />
       <div style="margin-top: -2px ;"></div>
     </div>
-
     <md-field>
-      <div class="items-cards">
+      <div
+        class="my-spinner"
+        style="display: flex; align-items: center; justify-content: center; overflow: hidden; height: 50px; width: 50px; position: absolute !important; top:0; left:50%; z-index: 1100000000;"
+        v-if="isLoading"
+      >
+        <md-progress-spinner
+          class="md-accent"
+          :md-diameter="30"
+          md-mode="indeterminate"
+        ></md-progress-spinner>
+      </div>
+      <div
+        class="items-cards"
+        v-if="products.length"
+        :style="{ opacity: isLoading ? 0.3 : 1 }"
+      >
         <div v-for="product in products" :key="product.id">
           <ProductCard
             :product="product"
@@ -83,6 +85,13 @@
             @deleteProduct="deleteProduct"
           />
         </div>
+      </div>
+      <div
+        style="text-align: center; font-size: 2rem; width: 100%; padding-block: 100px;"
+        :style="{ opacity: isLoading ? 0.3 : 1 }"
+        v-else
+      >
+        no product was found
       </div>
     </md-field>
 
@@ -104,7 +113,7 @@
       type="success"
     />
 
-    <LoaderFull v-if="isLoading" />
+    <!-- <LoaderFull v-if="isLoading" /> -->
     <AlertDialoge ref="showAlertDialog"></AlertDialoge>
   </div>
 </template>
@@ -114,7 +123,6 @@
 // import AddItem from "../ItemsManagement/AddItem";
 import EditProductDialoge from "./ProductsManagement/EditProductDialoge";
 import { Pagination } from "@/components";
-import { LoaderFull } from "@/components";
 import { SearchableCheckBox } from "@/components";
 import { AlertDialoge } from "@/components";
 import { PriceRange } from "@/components";
@@ -150,6 +158,8 @@ export default {
       searchableCategoryEnabled: false,
       searchableItemEnabled: false,
       searchableSalesEnabled: false,
+      maxPrice: 1,
+      resetPriceRange: false,
     };
   },
   components: {
@@ -157,7 +167,6 @@ export default {
     ProductCard,
     EditProductDialoge,
     Pagination,
-    LoaderFull,
     AlertDialoge,
     PriceRange,
   },
@@ -168,6 +177,7 @@ export default {
     this.getCategoriesNamesFunc();
     this.getItemsNamesFunc();
     this.getSales();
+    this.getMaxPrice();
 
     await this.$store.dispatch("myUser");
     this.user = await this.$store.getters.myUser;
@@ -176,6 +186,10 @@ export default {
   methods: {
     async getAllProducts(page = 1, search = "") {
       try {
+        this.searchableCategoryEnabled = false;
+        this.searchableItemEnabled = false;
+        this.searchableSalesEnabled = false;
+
         if (
           this.filterOptions.category.length ||
           this.filterOptions.item.length ||
@@ -205,6 +219,10 @@ export default {
           });
           // this.isLoading = false;
 
+          this.searchableCategoryEnabled = true;
+          this.searchableItemEnabled = true;
+          this.searchableSalesEnabled = true;
+
           return;
         }
 
@@ -217,6 +235,9 @@ export default {
         this.products = await this.$store.getters.getAllProducts.data;
         this.productsMeta = await this.$store.getters.getAllProducts.meta;
 
+        this.searchableCategoryEnabled = true;
+        this.searchableItemEnabled = true;
+        this.searchableSalesEnabled = true;
         this.isLoading = false;
       } catch (error) {
         this.isLoading = false;
@@ -232,8 +253,6 @@ export default {
             text: name.name,
           });
         });
-
-        this.searchableCategoryEnabled = true;
       } catch (error) {}
     },
 
@@ -245,6 +264,9 @@ export default {
       sales = null,
       search = "",
     }) {
+      this.searchableCategoryEnabled = false;
+      this.searchableItemEnabled = false;
+      this.searchableSalesEnabled = false;
       try {
         this.isLoading = true;
         await this.$store.dispatch("getAllIProductsFiltered", {
@@ -260,6 +282,10 @@ export default {
 
         this.isLoading = false;
 
+        this.searchableCategoryEnabled = true;
+        this.searchableItemEnabled = true;
+        this.searchableSalesEnabled = true;
+
         // console.log(this.products);
       } catch (error) {
         this.isLoading = false;
@@ -267,29 +293,31 @@ export default {
     },
 
     async setCategoryFilterOption(categoryIds) {
-      this.lowerPrice = 0;
-      this.higherPrice = 0;
+      this.lowerPrice = this.lowerPrice ? this.lowerPrice : 0;
+      this.higherPrice = this.higherPrice ? this.higherPrice : this.maxPrice;
       this.filterOptions.category = categoryIds;
       this.searchProduct = "";
 
       await this.getFilteredProducts({
         categoryIds: categoryIds.length ? categoryIds : null,
         itemIds: null,
-        prices: "",
-        sales: null,
+        prices: [Number(this.lowerPrice), Number(this.higherPrice)].sort(
+          (a, b) => a - b
+        ),
+        sales: this.filterOptions.sales ? this.filterOptions.sales : null,
       });
 
       this.resetSearchableBoxForItems = !this.resetSearchableBoxForItems;
-      this.resetSearchableBoxForSales = !this.resetSearchableBoxForSales;
+      // this.resetSearchableBoxForSales = !this.resetSearchableBoxForSales;
 
       this.getItemsNamesFunc(categoryIds);
     },
 
     setItemFilterOption(itemIds) {
-      this.lowerPrice = 0;
-      this.higherPrice = 0;
+      this.lowerPrice = this.lowerPrice ? this.lowerPrice : 0;
+      this.higherPrice = this.higherPrice ? this.higherPrice : this.maxPrice;
       this.filterOptions.item = itemIds;
-      this.resetSearchableBoxForSales = !this.resetSearchableBoxForSales;
+      // this.resetSearchableBoxForSales = !this.resetSearchableBoxForSales;
       this.searchProduct = "";
 
       this.getFilteredProducts({
@@ -297,8 +325,10 @@ export default {
           ? this.filterOptions.category
           : null,
         itemIds: itemIds.length ? itemIds : null,
-        prices: "",
-        sales: null,
+        prices: [Number(this.lowerPrice), Number(this.higherPrice)].sort(
+          (a, b) => a - b
+        ),
+        sales: this.filterOptions.sales ? this.filterOptions.sales : null,
       });
     },
 
@@ -331,25 +361,41 @@ export default {
       this.searchProduct = "";
       this.filterOptions.sales = salesNumber;
 
-      clearTimeout(this.timer);
+      this.getFilteredProducts({
+        categoryIds: this.filterOptions.category.length
+          ? this.filterOptions.category
+          : null,
+        itemIds: this.filterOptions.item.length
+          ? this.filterOptions.item
+          : null,
+        prices:
+          Number(this.lowerPrice) > 0 || Number(this.higherPrice) > 0
+            ? [Number(this.lowerPrice), Number(this.higherPrice)].sort(
+                (a, b) => a - b
+              )
+            : null,
+        sales: salesNumber,
+      });
 
-      this.timer = setTimeout(() => {
-        this.getFilteredProducts({
-          categoryIds: this.filterOptions.category.length
-            ? this.filterOptions.category
-            : null,
-          itemIds: this.filterOptions.item.length
-            ? this.filterOptions.item
-            : null,
-          prices:
-            Number(this.lowerPrice) > 0 || Number(this.higherPrice) > 0
-              ? [Number(this.lowerPrice), Number(this.higherPrice)].sort(
-                  (a, b) => a - b
-                )
-              : null,
-          sales: salesNumber,
-        });
-      }, 700);
+      // clearTimeout(this.timer);
+
+      // this.timer = setTimeout(() => {
+      //   this.getFilteredProducts({
+      //     categoryIds: this.filterOptions.category.length
+      //       ? this.filterOptions.category
+      //       : null,
+      //     itemIds: this.filterOptions.item.length
+      //       ? this.filterOptions.item
+      //       : null,
+      //     prices:
+      //       Number(this.lowerPrice) > 0 || Number(this.higherPrice) > 0
+      //         ? [Number(this.lowerPrice), Number(this.higherPrice)].sort(
+      //             (a, b) => a - b
+      //           )
+      //         : null,
+      //     sales: salesNumber,
+      //   });
+      // }, 700);
     },
 
     async getItemsNamesFunc(categoryIds = "") {
@@ -362,7 +408,6 @@ export default {
             text: name.name,
           });
         });
-        this.searchableItemEnabled = true;
       } catch (error) {}
     },
 
@@ -374,7 +419,10 @@ export default {
           text: sale.sale + "%",
         });
       });
-      this.searchableSalesEnabled = true;
+    },
+    async getMaxPrice() {
+      await this.$store.dispatch("getMaxPrice");
+      this.maxPrice = this.$store.getters.getMaxPrice || 1;
     },
 
     async searchProducts(input) {
@@ -385,7 +433,8 @@ export default {
       this.resetSearchableBoxForSales = !this.resetSearchableBoxForSales;
       this.resetSearchableBoxForCategory = !this.resetSearchableBoxForCategory;
       this.lowerPrice = 0;
-      this.higherPrice = 0;
+      this.higherPrice = this.higherPrice;
+      this.resetPriceRange = !this.resetPriceRange;
 
       this.timer = setTimeout(() => {
         this.getFilteredProducts({ search: input });
@@ -590,35 +639,11 @@ body {
     flex-direction: column;
     align-items: flex-start;
     // justify-content: start;
-    height: 100%;
+    height: 50%;
+    max-width: 50px !important;
 
-    p {
-      margin-top: -1px;
-      margin-left: 0px;
-    }
-
-    div {
-      display: grid;
-      grid-template-columns: 33px 33px 33px;
-      gap: 20px;
-      margin-top: -13px;
-      // place-items: center;
-
-      * {
-        width: 50px;
-        height: 32px;
-        margin-left: 50%;
-        border: 0.2px solid rgb(211, 200, 200);
-        border-radius: 3px;
-      }
-
-      button {
-        cursor: pointer;
-        border: none;
-        background-color: #fff;
-        //box-shadow: 0 1px 5px rgb(59, 54, 54);
-        box-shadow: 0 1px 3px 0px #3b3636;
-      }
+    * {
+      width: 100px !important;
     }
   }
 }

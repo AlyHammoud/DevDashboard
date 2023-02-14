@@ -303,7 +303,10 @@ export default {
       const formData = new FormData();
 
       formData.append("email", this.user.email);
-      formData.append("mobile", this.user.mobile);
+
+      if (this.user.mobile) {
+        formData.append("mobile", this.user.mobile);
+      }
       formData.append("name", this.user.name);
       formData.append("username", this.user.username);
 
