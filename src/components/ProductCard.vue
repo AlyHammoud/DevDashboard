@@ -67,7 +67,15 @@
         </div>
       </div>
       <div class="styled-price">
-        <p>{{ product.final_price }}$</p>
+        <p>
+          {{
+            new Intl.NumberFormat("en-US", {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 2,
+            }).format(product.final_price)
+          }}$
+        </p>
+        <!-- <p>{{ (Math.round(product.final_price * 100) / 100).toFixed(2) }}$</p> -->
         <p>{{ product.price }}$</p>
       </div>
     </div>
@@ -141,7 +149,14 @@
       </div>
       <div class="final price">
         <p>final price:</p>
-        <p>{{ (Math.round(product.final_price * 100) / 100).toFixed(2) }}$</p>
+        <p>
+          {{
+            new Intl.NumberFormat("en-US", {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 2,
+            }).format(product.final_price)
+          }}$
+        </p>
       </div>
 
       <div class="product-card-created">
