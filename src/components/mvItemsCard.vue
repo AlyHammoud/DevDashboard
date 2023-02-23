@@ -7,7 +7,7 @@
           :src="item.images[0].image_url"
           alt="People"
           class="most_view_products"
-          style="max-width:100%; max-height:100%; border-radius: 8px !important;"
+          style="height:300px; border-radius: 8px !important; object-fit: cover;"
         />
 
         <img
