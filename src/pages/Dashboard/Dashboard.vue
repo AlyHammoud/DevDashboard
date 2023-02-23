@@ -273,10 +273,10 @@
     <div class="md-layout md-alignment-center-space-around ">
       <div
         class="md-layout-item md-large-size-30 md-medium-size-33 md-small-size-50 md-xsmall-size-85"
-        v-for="mvItem in mvItems"
-        :key="mvItem.id"
+        v-for="mvItems in siteData.most_visited_products"
+        :key="mvItems.id"
       >
-        <mv-items-card :item="mvItem" />
+        <mv-items-card :item="mvItems" />
       </div>
     </div>
   </div>
@@ -376,6 +376,7 @@ export default {
     await this.$store.dispatch("setSiteVisits");
     await this.$store.dispatch("getAllSiteData");
     this.siteData = await this.$store.getters.getAllsiteData;
+
     const labels = [
       "Jan",
       "Feb",

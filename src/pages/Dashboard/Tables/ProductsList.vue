@@ -179,7 +179,14 @@
                 <md-table-cell md-label="Price/sale" md-sort-by="price"
                   ><p class="pl-20">
                     {{ item.price ? item.price : 0 }}$ / {{ item.sale }}% /
-                    <span style="color: red;">{{ item.final_price }}$</span>
+                    <span style="color: red;">
+                      {{
+                        new Intl.NumberFormat("en-US", {
+                          minimumFractionDigits: 0,
+                          maximumFractionDigits: 2,
+                        }).format(item.final_price)
+                      }}$</span
+                    >
                   </p>
                 </md-table-cell>
                 <md-table-cell md-label="Images">
@@ -208,15 +215,18 @@
                     ></div>
                   </div>
                 </md-table-cell>
-                <md-table-cell md-label="Sizes">
+                <md-table-cell
+                  md-label="Sizes"
+                  style="display: flex;  flex-wrap: wrap;  max-width: 400px !important; height: auto;"
+                >
                   <p v-if="!item.size ? true : false" class="pl-20">No Sizes</p>
                   <div
                     v-else
-                    style="display: flex; gap: 2px; margin-left: 20px; flex-wrap: wrap;"
+                    style="display: flex;gap: 2px; margin-left: 20px;width: 100%;flex-wrap: wrap; min-width: 100% !important; "
                   >
                     <div
-                      v-for="size in item.size"
-                      :key="size"
+                      v-for="(size, i) in item.size"
+                      :key="i"
                       style="border: 1px solid black;padding: 2px;"
                     >
                       {{ size }}

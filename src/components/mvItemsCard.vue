@@ -3,10 +3,19 @@
     <md-card-area>
       <md-card-media>
         <img
-          src="https://cdn.shopify.com/s/files/1/0559/0899/1136/products/s-l1600-32_1500x.png?v=1670788356"
+          v-if="item.images.length"
+          :src="item.images[0].image_url"
           alt="People"
           class="most_view_products"
-          style="max-width:100%; max-height:100%;"
+          style="max-width:100%; max-height:100%; border-radius: 8px !important;"
+        />
+
+        <img
+          v-else
+          src="../assets/images/eye.png"
+          alt="People"
+          class="most_view_products"
+          style="max-width:100%; max-height:100%; border-radius: 8px;"
         />
       </md-card-media>
 
@@ -24,17 +33,21 @@
           >
             {{ item.category }}
           </div>
+
           <div
-            class="md-layout-item md-size-10"
-            style="padding: 0; font-weight: bold; font-size: 20px;"
+            class="md-layout-item md-size-100"
+            style="display: flex;justify-content: center; color: black !important; font-weight: bold !important; font-size: 1rem !important; padding: 0 !important;"
           >
-            &dollar;
-          </div>
-          <div
-            class="md-layout-item md-size-30"
-            style="text-align: left !important; color: black !important; font-weight: bold !important; font-size: 1rem !important; padding: 0 !important;"
-          >
-            {{ item.price }}
+            <span style="text-decoration: line-through;">{{ item.price }}</span>
+            /
+            <span
+              >{{
+                new Intl.NumberFormat("en-US", {
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 2,
+                }).format(item.final_price)
+              }}$</span
+            >
           </div>
         </div>
       </md-card-header>
@@ -48,7 +61,7 @@
             class="md-layout-item md-size-85"
             style="font-weight: bold; padding: 0;"
           >
-            {{ item.views }}
+            {{ item.count }}
           </div>
         </div>
         <div
@@ -66,7 +79,7 @@
             class="md-layout-item md-size-85"
             style="font-weight: bold; padding: 0;"
           >
-            {{ item.purchases }}
+            {{ item.created_at }}
           </div>
         </div>
       </md-card-content>
@@ -75,31 +88,8 @@
 </template>
 
 <script>
-import { type } from "os";
-
 export default {
-  data() {
-    return {
-      //   item: {
-      //     //   type:Object
-      //     name: "pack 1",
-      //     category: "BackPacks",
-      //     price: 129,
-      //     views: 100,
-      //     purchases: 55,
-      //   },
-    };
-  },
-
   props: {
-    // item: {
-    //   //   type:Object
-    //   name: "pack 1",
-    //   category: "BackPacks",
-    //   price: 129,
-    //   views: 100,
-    //   purchases: 55,
-    // },
     item: {
       type: Object,
     },

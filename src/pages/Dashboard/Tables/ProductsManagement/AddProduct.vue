@@ -153,7 +153,7 @@
           </div>
         </div>
         <div class="md-layout-item md-layout md-size-100">
-          <div class="md-layout-item md-size-50">
+          <div class="md-layout-item md-size-100">
             <md-field>
               <label>Quantity</label>
               <md-input
@@ -168,8 +168,55 @@
               style="color: red"
             />
           </div>
-          <div class="md-layout-item md-size-50">
-            <md-field>
+        </div>
+
+        <!-- SIZES CONTROL -->
+        <!-- SIZES CONTROL -->
+        <!-- SIZES CONTROL -->
+        <div
+          class="md-layout-item  md-size-100"
+          style="display: flex; margin-bottom: 5px; justify-content: space-around; padding-inline: 70px;min-height: 60px !important; align-items: center;"
+        >
+          <div class="sizes-options" style="width: 50% !important;">
+            <label
+              for="no-size"
+              @click="setSelectOption('nosize')"
+              :style="{
+                'background-color':
+                  selectOption == 'nosize' ? 'lightgreen' : 'white',
+              }"
+            >
+              <span>no size</span>
+            </label>
+
+            <label
+              for="no-size"
+              @click="setSelectOption('xl')"
+              :style="{
+                'background-color':
+                  selectOption == 'xl' ? 'lightgreen' : 'white',
+              }"
+            >
+              <span>XL</span>
+            </label>
+
+            <label
+              for="no-size"
+              @click="setSelectOption('number')"
+              :style="{
+                'background-color':
+                  selectOption == 'number' ? 'lightgreen' : 'white',
+              }"
+            >
+              <span>Numbers</span>
+            </label>
+          </div>
+
+          <div class="selected-options" style="width: 50%; ">
+            <div v-if="selectOption == 'nosize'" style="text-align: center;">
+              No size selected
+            </div>
+            <md-field v-if="selectOption == 'xl'">
               <label for="movie">No size selected</label>
               <md-select
                 v-model="product.size"
@@ -185,19 +232,68 @@
                 >
               </md-select>
             </md-field>
+
+            <div
+              v-if="selectOption == 'number'"
+              style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center;"
+            >
+              <div
+                class="inputFieldNumber"
+                v-for="(numberField, i) in sizeNumberFieldCounter"
+                :key="i"
+                :ref="'inputField' + i"
+                :id="'inputFieldNumber' + i"
+              >
+                <input
+                  v-model="sizeNumbermodel[i]"
+                  type="text"
+                  @input="addOrRemoveInputField($event, i)"
+                />
+                <div
+                  v-if="
+                    sizeNumberFieldCounter.length > 2 &&
+                      i != sizeNumberFieldCounter.length - 1
+                  "
+                  @click="removeInputField(i)"
+                >
+                  X
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="md-layout-item md-layout md-size-100">
-          <div class="md-layout-item md-size-50">
-            <input type="color" @change="colorHandler" />
+
+        <!-- SIZES CONTROL -->
+        <!-- SIZES CONTROL -->
+        <!-- SIZES CONTROL -->
+
+        <div
+          class="md-layout-item md-layout md-size-100"
+          style="display: flex; justify-content: center; "
+        >
+          <div
+            class=""
+            style="width: 50% !important; display: flex; align-items: center; justify-content: center;"
+          >
+            <input
+              type="color"
+              @change="colorHandler"
+              style="margin-left: -160px;"
+            />
 
             <validation-error
               :errors="apiValidationErrors.color"
               style="color: red"
             />
           </div>
-          <div class="md-layout-item md-size-50">
-            <div v-if="!product.color.length" style="color: black">
+          <div
+            class=""
+            style="width: 50% !important; display: flex; align-items: center; justify-content: center;"
+          >
+            <div
+              v-if="!product.color.length"
+              style="color: black;  margin-left: -60px;"
+            >
               No Colors Selected
             </div>
             <!-- <div v-else style="display: flex; gap: 4px;  flex-wrap: wrap;">
@@ -278,6 +374,9 @@ export default {
       tmpImages: [],
       isLoading: false,
       sizeOptions: ["XS", "S", "M", "L", "XL", "XXL"],
+      selectOption: "nosize",
+      sizeNumberFieldCounter: [0],
+      sizeNumbermodel: [],
     };
   },
 
@@ -294,6 +393,40 @@ export default {
   },
 
   methods: {
+    setSelectOption(select) {
+      if (this.selectOption != select || this.selectOption == "nosize") {
+        this.product.size = [];
+        this.sizeNumberFieldCounter = [""];
+        this.sizeNumbermodel = [];
+      }
+      this.selectOption = select;
+    },
+
+    addOrRemoveInputField(e, index) {
+      this.sizeNumbermodel[index] = e.target.value;
+      this.sizeNumberFieldCounter[index] = e.target.value;
+      if (
+        e.target.value.length == 1 &&
+        index == this.sizeNumberFieldCounter.length - 1
+      ) {
+        this.sizeNumberFieldCounter.push("");
+      }
+
+      if (
+        e.target.value.length == 0 &&
+        this.sizeNumberFieldCounter.length > 1
+      ) {
+        if (index == this.sizeNumberFieldCounter.length - 2) {
+          this.sizeNumberFieldCounter.pop();
+        }
+      }
+    },
+
+    removeInputField(index) {
+      this.sizeNumberFieldCounter.splice(index, 1);
+      this.sizeNumbermodel.splice(index, 1);
+    },
+
     onUploadItemImages(e) {
       this.productImages = e.target.files;
 
@@ -323,19 +456,6 @@ export default {
     },
 
     async addProduct() {
-      // if (
-      //   this.product.price < 0 ||
-      //   this.product.quantity < 0 ||
-      //   this.product.sale < 0
-      // ) {
-      //    await this.$refs.showAlertDialog.response(
-      //     "Note",
-      //     "Price, quantity or sale must be greater than zero!",
-      //     "inform"
-      //   );
-      //   return;
-      // }
-
       this.isLoading = true;
       const formData = new FormData();
       formData.append("is_available", this.product.is_available ? 1 : 0);
@@ -368,6 +488,10 @@ export default {
 
       if (this.product.size.length) {
         this.product.size.forEach((size) => formData.append("size[]", size));
+      } else if (this.sizeNumbermodel.length) {
+        this.sizeNumbermodel.forEach((size) => {
+          if (size) formData.append("size[]", size);
+        });
       } else {
         formData.append("size", []);
       }
@@ -444,6 +568,52 @@ export default {
     * {
       font-size: 18px !important;
     }
+  }
+}
+
+.sizes-options {
+  display: flex;
+  align-items: center;
+
+  label {
+    display: flex;
+    margin-right: 10px;
+    padding: 2px;
+    border: 1px solid rgb(165, 154, 154);
+    cursor: pointer;
+  }
+
+  .selected-options {
+    // width: 10px !important;
+    // align-self: flex-end;
+    // justify-self: flex-end;
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+
+.inputFieldNumber {
+  max-width: 80px !important;
+  margin-left: 3px;
+  position: relative !important;
+  // margin: 0 auto;
+
+  input {
+    width: 100%;
+    padding-right: 12px;
+  }
+
+  div {
+    content: "X";
+    position: absolute !important;
+    top: 2px !important;
+    right: -10px !important;
+    color: red !important;
+    font-size: 16px !important;
+    width: 22px !important;
+    height: 22px !important;
+    z-index: 99;
+    cursor: pointer;
   }
 }
 </style>
