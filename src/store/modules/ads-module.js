@@ -6,7 +6,7 @@ import axios from "../../axios/index.js";
 
 const state = {
   ads: [],
-  ad: null,
+  ad: {},
 };
 
 const mutations = {
@@ -37,16 +37,23 @@ const actions = {
     return await axios.delete(`/delete-ad/${adId}`);
   },
 
-  async getSingleAd({ commit }, adId) {
-    return await axios.get(`/ads/${adId}`).then(({data}) => {
+  async getSingleAd({ commit }, adId,) {
+    
+    return await axios.get(`/get-ad/${adId}`,{
+      headers: {
+        'Access-Control-Allow-Origin': '*'
+      }
+    },
+  
+    ).then(({data}) => {
       
       commit("setSingleAd", data);
-    });
+    }).catch(e => console.log('eee',e))
   },
 
   async updateAd({ commit }, { id, formData }) {
     
-    return await axios.post(`/ads/${id}?_method=PUT`, formData);
+    return await axios.post(`/update-ad/${id}?_method=PUT`, formData);
   },
 
 //   async getCategoriesNames({ commit }) {
