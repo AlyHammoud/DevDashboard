@@ -32,6 +32,7 @@ import ItemsList from "../pages/Dashboard/Tables/ItemsList.vue";
 import ProductsList from "../pages/Dashboard/Tables/ProductsList.vue";
 import AllItems from "../pages/Dashboard/Tables/AllItems.vue";
 import AllProducts from "../pages/Dashboard/Tables/AllProducts.vue";
+import Ads from "../pages/Dashboard/Tables/Ads.vue";
 
 let componentsMenu = {
   path: "/components",
@@ -67,6 +68,12 @@ let componentsMenu = {
       path: "all-products",
       name: "All Products",
       components: { default: AllProducts },
+      meta: { middleware: auth },
+    },
+    {
+      path: "ads",
+      name: "Ads",
+      components: { default: Ads },
       meta: { middleware: auth },
     },
     {

@@ -101,6 +101,13 @@
             path: '/components/all-products',
           }"
         />
+        <sidebar-item
+          :link="{
+            name: 'Ads',
+            icon: 'add',
+            path: '/components/ads',
+          }"
+        />
 
         <!-- <sidebar-item
           v-if="$route.meta.rtlActive"

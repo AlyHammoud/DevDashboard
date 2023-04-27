@@ -21,38 +21,6 @@
       </p>
     </div>
 
-    <!-- <md-card
-      class="md-primary"
-      style="max-width: 60%; margin-inline: auto; margin-top: -12px; background-color: #00AEC5 !important;"
-    >
-      <md-card-header>
-        <md-card-header-text>
-          <div class="md-title" style="font-size: 1.3em; font-weight: bold;">
-            {{ category.name }}
-          </div>
-          <div class="" style="color: white ; font-weight: 300 ;">
-            Description: {{ category.description }}
-          </div>
-        </md-card-header-text>
-        <md-card-header-text>
-          <div class="md-title" style="font-size: 1.3em; font-weight: bold;">
-            {{ item.name }}
-          </div>
-          <div class="" style="color: white ; font-weight: 300 ;">
-            Description: {{ item.description }}
-          </div>
-        </md-card-header-text>
-
-        <md-card-media style="margin-top: 20px; ">
-          <img
-            :src="category.image_url"
-            style="height: 80px; width: 80px; border-radius: 50%; object-fit: cover;"
-            alt="Avatar"
-          />
-        </md-card-media>
-      </md-card-header>
-    </md-card> -->
-
     <div class="md-layout parent">
       <div class="md-layout-item md-size-33 md-xsmall-size-50">
         <div class="md-title" style="font-size: 1.3em; font-weight: bold;">
@@ -68,10 +36,6 @@
         </div>
         <div class="md-subhead" style="color: white; font-weight: 300;">
           {{ item.description }}
-          <!-- Lorem ipsum dolor sit amet consectetur adipisicing elit. Explicabo
-          sequi, placeat qui blanditiis ut earum illo excepturi? Asperiores
-          voluptates nostrum facere, doloremque fugit amet ipsa explicabo
-          necessitatibus, dolorem illo eum! -->
         </div>
       </div>
       <div
@@ -263,11 +227,7 @@
                     </div>
                   </div>
                 </md-table-cell>
-                <!-- <md-table-cell md-label="Created at" md-sort-by="created_at"
-                  ><p style="margin-right: 8px !important;">
-                    {{ item.created_at }}
-                  </p></md-table-cell
-                > -->
+
                 <md-table-cell md-label="Created At" md-sort-by="created_at">
                   <div class="md-layout md-align-center">
                     <div

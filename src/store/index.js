@@ -7,6 +7,7 @@ import categories from "./modules/categories-module";
 import items from "./modules/items-module";
 import products from "./modules/products-module";
 import siteData from "./modules/site-data";
+import ads from "./modules/ads-module";
 
 Vue.use(Vuex);
 
@@ -18,5 +19,6 @@ export default new Vuex.Store({
     items,
     products,
     siteData,
+    ads
   },
 });
