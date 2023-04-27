@@ -26,7 +26,12 @@
         </div>
         <div class="bottom">
           <div class="product" v-for="(product, i) in ad.products" :key="i">
-            <img :src="product.images[0].image_url" alt="" />
+            <img
+              v-if="product.images.length"
+              :src="product.images[0].image_url"
+              alt=""
+            />
+            <img v-else src="@/assets/images/no-image.jpg" alt="" />
             <p>{{ product.name }}</p>
           </div>
         </div>
@@ -79,7 +84,8 @@
                 <div class="delete" @click="removeSelectedProduct(product.id)">
                   <md-icon>delete</md-icon>
                 </div>
-                <img :src="product.image" alt="" />
+                <img v-if="product.image" :src="product.image" alt="" />
+                <img v-else src="@/assets/images/no-image.jpg" alt="" />
                 <p>{{ product.name }}</p>
               </div>
             </div>
@@ -103,10 +109,19 @@
           v-for="(product, index) in filteredProducts"
           :key="index"
           @click="
-            addToSelected(product.id, product.images[0].image_url, product.name)
+            addToSelected(
+              product.id,
+              product.images.length ? product.images[0].image_url : null,
+              product.name
+            )
           "
         >
-          <img :src="product.images[0].image_url" alt="" />
+          <img
+            v-if="product.images.length"
+            :src="product.images[0].image_url"
+            alt=""
+          />
+          <img v-else src="@/assets/images/no-image.jpg" alt="" />
           <p>{{ product.name }}</p>
         </div>
       </div>

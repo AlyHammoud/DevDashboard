@@ -48,7 +48,12 @@
                 <div class="delete" @click="deleteSelectedProduct(product.id)">
                   <md-icon>delete</md-icon>
                 </div>
-                <img :src="product.images[0].image_url" alt="" />
+                <img
+                  v-if="product.images.length"
+                  :src="product.images[0].image_url"
+                  alt=""
+                />
+                <img v-else src="@/assets/images/no-image.jpg" alt="" />
                 <p>{{ product.name }}</p>
               </div>
             </div>
@@ -72,10 +77,20 @@
           v-for="(product, index) in filteredProducts"
           :key="index"
           @click="
-            addToSelected(product.id, product.images[0].image_url, product.name)
+            addToSelected(
+              product.id,
+              product.images.length ? product.images[0].image_url : null,
+              product.name
+            )
           "
         >
-          <img :src="product.images[0].image_url" alt="" />
+          <img
+            v-if="product.images.length"
+            :src="product.images[0].image_url"
+            alt=""
+          />
+          <img v-else src="@/assets/images/no-image.jpg" alt="" />
+
           <p>{{ product.name }}</p>
         </div>
       </div>
@@ -163,7 +178,7 @@ export default {
       let newObj = {
         id,
         name,
-        images: [{ image_url: image }],
+        images: image ? [{ image_url: image }] : [],
       };
       this.ad.products = [...this.ad.products, newObj];
 
