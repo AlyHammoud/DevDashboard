@@ -39,16 +39,10 @@ const actions = {
 
   async getSingleAd({ commit }, adId,) {
     
-    return await axios.get(`/get-ad/${adId}`,{
-      headers: {
-        'Access-Control-Allow-Origin': '*'
-      }
-    },
-  
-    ).then(({data}) => {
+    return await axios.get(`/get-ad/${adId}`).then(({data}) => {
       
       commit("setSingleAd", data);
-    }).catch(e => console.log('eee',e))
+    })
   },
 
   async updateAd({ commit }, { id, formData }) {
