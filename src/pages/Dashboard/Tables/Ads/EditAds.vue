@@ -160,8 +160,7 @@ export default {
 
   async created() {
     await this.$store
-      .dispatch("getSingleAd", this.adId)
-      .catch((e) => console.log("e", e));
+      .dispatch("getSingleAd", this.adId);
     this.ad = await this.$store.getters.getSingleAd;
   },
 
