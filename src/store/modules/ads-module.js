@@ -21,7 +21,7 @@ const mutations = {
 const actions = {
   async getAllAds({ commit }, page=1) {
     return await axios
-      .get(`/get-all-ad?page=${page}`)
+      .get(`/get-all-advert?page=${page}`)
       .then(({ data }) => {
         
         commit("setAllAds", data);
