@@ -109,6 +109,14 @@
           }"
         />
 
+        <sidebar-item
+          :link="{
+            name: 'General Info',
+            icon: 'bubble_chart',
+            path: '/components/general-info',
+          }"
+        />
+
         <!-- <sidebar-item
           v-if="$route.meta.rtlActive"
           :link="{

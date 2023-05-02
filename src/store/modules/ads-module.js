@@ -7,6 +7,7 @@ import axios from "../../axios/index.js";
 const state = {
   ads: [],
   ad: {},
+  general_info: {}
 };
 
 const mutations = {
@@ -16,9 +17,27 @@ const mutations = {
   setSingleAd: (state, ad) => {
     state.ad = ad;
   },
+  setGeneralInfo: (state, general_info) => {
+    state.general_info = general_info
+  }
 };
 
 const actions = {
+  async getAllGeneralInfo({commit}){
+    return await axios.get('general-info').then(({data}) => {
+      commit('setGeneralInfo', data)
+    })
+  },
+
+  async storeGeneralInfo({}, formData){
+    return await axios.post('/general-info', formData)
+  },
+
+  async updateGeneralInfo({ commit }, { id, formData }) {
+    
+    return await axios.post(`/general-info/${id}?_method=PUT`, formData);
+  },
+
   async getAllAds({ commit }, page=1) {
     return await axios
       .get(`/get-all-advert?page=${page}`)
@@ -60,6 +79,7 @@ const actions = {
 const getters = {
   getAllAds: (state) => state.ads,
   getSingleAd: (state) => state.ad,
+  getGeneralInfo: (state) => state.general_info,
 };
 
 const ads = {

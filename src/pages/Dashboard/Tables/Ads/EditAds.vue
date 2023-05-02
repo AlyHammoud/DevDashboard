@@ -159,8 +159,8 @@ export default {
   },
 
   async created() {
-    await this.$store
-      .dispatch("getSingleAd", this.adId);
+    await this.$store.dispatch("getSingleAd", this.adId);
+
     this.ad = await this.$store.getters.getSingleAd;
   },
 
